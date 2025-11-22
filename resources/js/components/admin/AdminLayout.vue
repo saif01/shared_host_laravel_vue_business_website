@@ -1,5 +1,5 @@
 <template>
-    <v-app>
+    <div>
         <v-navigation-drawer v-model="drawer" app>
             <v-list>
                 <v-list-item prepend-icon="mdi-view-dashboard" title="Dashboard" :to="{ name: 'AdminDashboard' }"></v-list-item>
@@ -23,7 +23,7 @@
                 <router-view />
             </v-container>
         </v-main>
-    </v-app>
+    </div>
 </template>
 
 <script>

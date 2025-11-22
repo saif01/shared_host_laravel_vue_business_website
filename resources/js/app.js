@@ -78,17 +78,9 @@ window.Toast = Toast;
 
 
 
-const app = createApp({
-    data() {
-        return {
-            // For Preloader
-            preloader: false
-        }
-    }
-});
+import App from './components/app.vue';
 
-import IndexComponent from './components/app.vue';
-app.component('index-component', IndexComponent);
+const app = createApp(App);
 
 app.use(router)
 app.use(vuetify)

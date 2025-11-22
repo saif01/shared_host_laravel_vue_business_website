@@ -9,6 +9,8 @@ class Portfolio extends Model
 {
     use SoftDeletes;
 
+    protected $table = 'portfolio';
+
     protected $fillable = [
         'title',
         'slug',

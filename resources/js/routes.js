@@ -51,6 +51,10 @@ const routes = [
         meta: { requiresAuth: true },
         children: [
             {
+                path: '',
+                redirect: { name: 'AdminDashboard' }
+            },
+            {
                 path: 'dashboard',
                 component: () => import('./components/admin/AdminDashboard.vue'),
                 name: 'AdminDashboard',
@@ -112,10 +116,10 @@ const routes = [
 
     {
         path: '/:pathMatch(.*)*',
-        component: () => import('./components/pages/dashboard.vue'),
-        name: 'Error',
+        component: () => import('./components/public/HomePage.vue'),
+        name: 'NotFound',
         meta: {
-            title: 'Error',
+            title: 'Page Not Found',
         },
     }
 

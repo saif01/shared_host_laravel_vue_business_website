@@ -1,5 +1,5 @@
 <template>
-    <v-app>
+    <div>
         <v-app-bar app color="primary">
             <v-toolbar-title>{{ siteName }}</v-toolbar-title>
             <v-spacer></v-spacer>
@@ -17,7 +17,7 @@
                 <div class="text-caption">© {{ new Date().getFullYear() }} {{ siteName }}. All rights reserved.</div>
             </v-container>
         </v-footer>
-    </v-app>
+    </div>
 </template>
 
 <script>

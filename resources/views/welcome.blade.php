@@ -7,14 +7,7 @@
     @vite('resources/sass/app.scss')
 </head>
 <body>
-    <div id="app">
-     <div v-if="preloader" class="loader">
-          <div class="out_loader">
-            <div class="img_spinner_loader"></div>
-          </div> 
-        </div>
-    <index-component></index-component>
-    </div>
+    <div id="app"></div>
 
 <p>Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})</p>
 
