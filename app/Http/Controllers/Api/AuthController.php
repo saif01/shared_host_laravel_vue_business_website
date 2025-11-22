@@ -27,8 +27,8 @@ class AuthController extends Controller
 
         $token = $user->createToken('admin-token')->plainTextToken;
 
-        // Load roles relationship
-        $user->load('roles');
+        // Load roles with permissions relationship
+        $user->load(['roles.permissions']);
 
         return response()->json([
             'user' => $user,
@@ -46,8 +46,8 @@ class AuthController extends Controller
     public function user(Request $request)
     {
         $user = $request->user();
-        // Load roles relationship
-        $user->load('roles');
+        // Load roles with permissions relationship
+        $user->load(['roles.permissions']);
         return response()->json($user);
     }
 }
