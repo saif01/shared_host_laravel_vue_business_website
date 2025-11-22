@@ -12,26 +12,12 @@
             <v-card-text>
                 <v-row>
                     <v-col cols="12" md="6">
-                        <v-text-field
-                            v-model="search"
-                            label="Search by name or email"
-                            prepend-inner-icon="mdi-magnify"
-                            variant="outlined"
-                            density="compact"
-                            clearable
-                            @input="loadUsers"
-                        ></v-text-field>
+                        <v-text-field v-model="search" label="Search by name or email" prepend-inner-icon="mdi-magnify"
+                            variant="outlined" density="compact" clearable @input="loadUsers"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                        <v-select
-                            v-model="roleFilter"
-                            :items="roleOptions"
-                            label="Filter by Role"
-                            variant="outlined"
-                            density="compact"
-                            clearable
-                            @update:model-value="loadUsers"
-                        ></v-select>
+                        <v-select v-model="roleFilter" :items="roleOptions" label="Filter by Role" variant="outlined"
+                            density="compact" clearable @update:model-value="loadUsers"></v-select>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -70,14 +56,8 @@
                             <td>{{ formatDate(user.created_at) }}</td>
                             <td>
                                 <v-btn size="small" icon="mdi-pencil" @click="openDialog(user)" variant="text"></v-btn>
-                                <v-btn 
-                                    size="small" 
-                                    icon="mdi-delete" 
-                                    @click="deleteUser(user)" 
-                                    variant="text"
-                                    color="error"
-                                    :disabled="user.id === currentUserId"
-                                ></v-btn>
+                                <v-btn size="small" icon="mdi-delete" @click="deleteUser(user)" variant="text"
+                                    color="error" :disabled="user.id === currentUserId"></v-btn>
                             </td>
                         </tr>
                         <tr v-if="users.length === 0">
@@ -87,13 +67,8 @@
                 </v-table>
 
                 <!-- Pagination -->
-                <v-pagination
-                    v-if="pagination.last_page > 1"
-                    v-model="currentPage"
-                    :length="pagination.last_page"
-                    @update:model-value="loadUsers"
-                    class="mt-4"
-                ></v-pagination>
+                <v-pagination v-if="pagination.last_page > 1" v-model="currentPage" :length="pagination.last_page"
+                    @update:model-value="loadUsers" class="mt-4"></v-pagination>
             </v-card-text>
         </v-card>
 
@@ -105,33 +80,14 @@
                 </v-card-title>
                 <v-card-text>
                     <v-form ref="form" @submit.prevent="saveUser">
-                        <v-text-field
-                            v-model="form.name"
-                            label="Full Name"
-                            :rules="[rules.required]"
-                            required
-                            class="mb-4"
-                        ></v-text-field>
+                        <v-text-field v-model="form.name" label="Full Name" :rules="[rules.required]" required
+                            class="mb-4"></v-text-field>
 
-                        <v-text-field
-                            v-model="form.email"
-                            label="Email"
-                            type="email"
-                            :rules="[rules.required, rules.email]"
-                            required
-                            class="mb-4"
-                        ></v-text-field>
+                        <v-text-field v-model="form.email" label="Email" type="email"
+                            :rules="[rules.required, rules.email]" required class="mb-4"></v-text-field>
 
-                        <v-select
-                            v-model="form.role"
-                            :items="roles"
-                            item-title="label"
-                            item-value="value"
-                            label="Role"
-                            :rules="[rules.required]"
-                            required
-                            class="mb-4"
-                        >
+                        <v-select v-model="form.role" :items="roles" item-title="label" item-value="value" label="Role"
+                            :rules="[rules.required]" required class="mb-4">
                             <template v-slot:item="{ props, item }">
                                 <v-list-item v-bind="props">
                                     <template v-slot:title>
@@ -144,33 +100,32 @@
                             </template>
                         </v-select>
 
-                        <v-text-field
-                            v-model="form.password"
-                            label="Password"
-                            type="password"
-                            :rules="editingUser ? [] : [rules.required, rules.minLength]"
-                            :required="!editingUser"
-                            hint="Leave blank to keep current password"
-                            persistent-hint
-                            class="mb-4"
-                        ></v-text-field>
+                        <v-text-field v-model="form.password" label="Password"
+                            :type="showPassword ? 'text' : 'password'"
+                            :rules="editingUser ? [] : [rules.required, rules.minLength]" :required="!editingUser"
+                            hint="Leave blank to keep current password" persistent-hint class="mb-4">
+                            <template v-slot:append-inner>
+                                <v-btn icon variant="text" size="small" @click="showPassword = !showPassword">
+                                    <v-icon>{{ showPassword ? 'mdi-eye-off' : 'mdi-eye' }}</v-icon>
+                                </v-btn>
+                            </template>
+                        </v-text-field>
 
-                        <v-text-field
-                            v-if="!editingUser || form.password"
-                            v-model="form.password_confirmation"
-                            label="Confirm Password"
-                            type="password"
-                            :rules="form.password ? [rules.required, rules.matchPassword] : []"
-                            class="mb-4"
-                        ></v-text-field>
+                        <v-text-field v-if="!editingUser || form.password" v-model="form.password_confirmation"
+                            label="Confirm Password" :type="showPasswordConfirmation ? 'text' : 'password'" :rules="form.password ? [
+                                () => !!form.password_confirmation || 'Please confirm your password',
+                                () => form.password_confirmation === form.password || 'Passwords do not match'
+                            ] : []" :required="!!form.password" class="mb-4">
+                            <template v-slot:append-inner>
+                                <v-btn icon variant="text" size="small"
+                                    @click="showPasswordConfirmation = !showPasswordConfirmation">
+                                    <v-icon>{{ showPasswordConfirmation ? 'mdi-eye-off' : 'mdi-eye' }}</v-icon>
+                                </v-btn>
+                            </template>
+                        </v-text-field>
 
-                        <v-text-field
-                            v-model="form.avatar"
-                            label="Avatar URL"
-                            hint="URL to user's avatar image"
-                            persistent-hint
-                            class="mb-4"
-                        ></v-text-field>
+                        <v-text-field v-model="form.avatar" label="Avatar URL" hint="URL to user's avatar image"
+                            persistent-hint class="mb-4"></v-text-field>
                     </v-form>
                 </v-card-text>
                 <v-card-actions>
@@ -223,13 +178,13 @@ export default {
                     return pattern.test(value) || 'Invalid email'
                 },
                 minLength: value => {
+                    if (!value) return true; // Skip if empty (handled by required rule)
                     return value.length >= 8 || 'Password must be at least 8 characters'
                 },
-                matchPassword: value => {
-                    return value === this.form.password || 'Passwords do not match'
-                }
             },
-            currentUserId: null
+            currentUserId: null,
+            showPassword: false,
+            showPasswordConfirmation: false
         };
     },
     async mounted() {
@@ -326,11 +281,31 @@ export default {
                 password_confirmation: '',
                 avatar: ''
             };
+            this.showPassword = false;
+            this.showPasswordConfirmation = false;
             if (this.$refs.form) {
                 this.$refs.form.resetValidation();
             }
         },
         async saveUser() {
+            // Manual validation for password confirmation
+            if (this.form.password && this.form.password !== this.form.password_confirmation) {
+                this.showError('Passwords do not match');
+                return;
+            }
+
+            // If creating new user, password is required
+            if (!this.editingUser && !this.form.password) {
+                this.showError('Password is required for new users');
+                return;
+            }
+
+            // If editing and password is provided, confirmation is required
+            if (this.editingUser && this.form.password && !this.form.password_confirmation) {
+                this.showError('Please confirm the password');
+                return;
+            }
+
             if (!this.$refs.form.validate()) {
                 return;
             }
@@ -338,22 +313,24 @@ export default {
             this.saving = true;
             try {
                 const token = localStorage.getItem('admin_token');
-                const url = this.editingUser 
+                const url = this.editingUser
                     ? `/api/v1/users/${this.editingUser.id}`
                     : '/api/v1/users';
 
                 const data = { ...this.form };
-                
-                // Remove password confirmation from data
-                delete data.password_confirmation;
-                
-                // If editing and password is empty, don't send it
-                if (this.editingUser && !data.password) {
+
+                // Include password_confirmation for backend validation
+                // Backend uses Laravel's 'confirmed' rule
+                if (this.form.password) {
+                    data.password_confirmation = this.form.password_confirmation;
+                } else {
+                    // Remove password fields if password is not being changed
                     delete data.password;
+                    delete data.password_confirmation;
                 }
 
                 const method = this.editingUser ? 'put' : 'post';
-                
+
                 await axios[method](url, data, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
@@ -365,7 +342,20 @@ export default {
                 await this.loadUsers();
             } catch (error) {
                 console.error('Error saving user:', error);
-                const message = error.response?.data?.message || 'Error saving user';
+                let message = 'Error saving user';
+
+                if (error.response?.data?.errors) {
+                    // Handle validation errors
+                    const errors = error.response.data.errors;
+                    const errorMessages = [];
+                    Object.keys(errors).forEach(key => {
+                        errorMessages.push(errors[key][0]);
+                    });
+                    message = errorMessages.join(', ');
+                } else if (error.response?.data?.message) {
+                    message = error.response.data.message;
+                }
+
                 this.showError(message);
             } finally {
                 this.saving = false;
@@ -441,4 +431,3 @@ export default {
     gap: 8px;
 }
 </style>
-
