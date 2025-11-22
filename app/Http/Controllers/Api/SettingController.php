@@ -16,9 +16,23 @@ class SettingController extends Controller
             $query->where('group', $request->group);
         }
 
-        $settings = $query->get()->keyBy('key');
+        $settings = $query->orderBy('group')->orderBy('key')->get();
         
-        return response()->json($settings);
+        // Group settings by group
+        $grouped = $settings->groupBy('group')->map(function ($items) {
+            return $items->mapWithKeys(function ($item) {
+                return [$item->key => [
+                    'id' => $item->id,
+                    'key' => $item->key,
+                    'value' => $item->value ?? '',
+                    'type' => $item->type ?? 'text',
+                    'group' => $item->group ?? 'general',
+                    'description' => $item->description,
+                ]];
+            });
+        });
+        
+        return response()->json($grouped);
     }
 
     public function update(Request $request)
@@ -27,18 +41,26 @@ class SettingController extends Controller
             'settings' => 'required|array',
         ]);
 
-        foreach ($validated['settings'] as $key => $value) {
-            $setting = Setting::where('key', $key)->first();
-            if ($setting) {
-                $setting->update(['value' => $value]);
+        foreach ($validated['settings'] as $key => $settingData) {
+            if (is_array($settingData) && isset($settingData['value'])) {
+                $value = $settingData['value'];
+                $type = $settingData['type'] ?? 'text';
+                $group = $settingData['group'] ?? 'general';
             } else {
-                Setting::create([
-                    'key' => $key,
-                    'value' => $value,
-                    'type' => 'text',
-                    'group' => 'general',
-                ]);
+                // Backward compatibility: if just a value is passed
+                $value = $settingData;
+                $type = 'text';
+                $group = 'general';
             }
+
+            Setting::updateOrCreate(
+                ['key' => $key],
+                [
+                    'value' => $value,
+                    'type' => $type,
+                    'group' => $group,
+                ]
+            );
         }
 
         return response()->json(['message' => 'Settings updated successfully']);
