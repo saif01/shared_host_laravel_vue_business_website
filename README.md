@@ -1,66 +1,238 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Business Website Platform
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A comprehensive, generic business website platform built according to SRS specifications. This platform can represent almost any type of business with configurable modules.
 
-## About Laravel
+## 🚀 Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Core Features
+- ✅ Dynamic pages management
+- ✅ Menu/Navigation management
+- ✅ Settings management
+- ✅ Leads/Contact form management
+- ✅ Module system (enable/disable features)
+- ✅ Admin authentication (Laravel Sanctum)
+- ✅ SEO support (meta tags, OG tags)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Optional Modules
+- ✅ Services catalog
+- ✅ Products catalog
+- ✅ Portfolio/Projects
+- ✅ Blog/News
+- ✅ FAQ
+- ✅ Careers & Job Applications
+- ✅ Booking/Appointments
+- ✅ Events & Registrations
+- ✅ Multi-location/Branches
+- ✅ Media library
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Admin Panel
+- ✅ Dashboard with statistics
+- ✅ Content management (CRUD)
+- ✅ Leads management and export
+- ✅ Settings management
+- ✅ Role-based access control
 
-## Learning Laravel
+### Public Website
+- ✅ Responsive design (Vuetify)
+- ✅ Dynamic homepage
+- ✅ Services/Products display
+- ✅ Contact forms
+- ✅ SEO optimized
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 📋 Prerequisites
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- PHP 8.2 or higher
+- Composer
+- Node.js & npm
+- MySQL/PostgreSQL/SQLite
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🔧 Installation
 
-## Laravel Sponsors
+### 1. Clone and Install Dependencies
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+git clone <repository-url>
+cd s_h_micro_control
+composer install
+npm install
+```
 
-### Premium Partners
+### 2. Environment Setup
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-## Contributing
+Configure your `.env` file:
+- Database connection
+- `APP_URL`
+- Mail settings (for notifications)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 3. Database Setup
 
-## Code of Conduct
+```bash
+php artisan migrate
+php artisan db:seed
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+This will create:
+- All database tables
+- Module definitions (disabled by default)
+- Default admin user
 
-## Security Vulnerabilities
+### 4. Build Assets
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+npm run dev  # Development
+# or
+npm run build  # Production
+```
 
-## License
+### 5. Start Development Server
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+php artisan serve
+npm run dev
+```
+
+Visit:
+- Public website: `http://localhost:8000`
+- Admin panel: `http://localhost:8000/admin/login`
+
+## 🔑 Default Admin Credentials
+
+- **Email**: admin@example.com
+- **Password**: password
+
+⚠️ **Change these immediately in production!**
+
+## 📚 API Documentation
+
+### Admin API (`/api/v1/`)
+
+All admin endpoints require authentication via Bearer token.
+
+**Authentication:**
+- `POST /api/v1/auth/login` - Login
+- `POST /api/v1/auth/logout` - Logout
+- `GET /api/v1/auth/user` - Get current user
+
+**Resources (CRUD):**
+- `GET /api/v1/pages` - List pages
+- `POST /api/v1/pages` - Create page
+- `GET /api/v1/pages/{id}` - Get page
+- `PUT /api/v1/pages/{id}` - Update page
+- `DELETE /api/v1/pages/{id}` - Delete page
+
+Similar endpoints for: `services`, `products`, `leads`, etc.
+
+**Leads Export:**
+- `GET /api/v1/leads/export/csv` - Export leads to CSV
+
+### Public API (`/api/public/`)
+
+- `GET /api/public/home` - Homepage data
+- `GET /api/public/pages/{slug}` - Get page by slug
+- `GET /api/public/services` - List services
+- `GET /api/public/services/{slug}` - Get service by slug
+- `GET /api/public/products` - List products
+- `GET /api/public/products/{slug}` - Get product by slug
+- `POST /api/public/contact` - Submit contact form
+
+## 🎨 Module Configuration
+
+Modules are stored in the `modules` table. To enable a module:
+
+**Via Code:**
+```php
+Module::where('name', 'services')->update(['enabled' => true]);
+```
+
+**Via Database:**
+```sql
+UPDATE modules SET enabled = 1 WHERE name = 'services';
+```
+
+**Available Modules:**
+- `services` - Services catalog
+- `products` - Products catalog
+- `portfolio` - Portfolio/Projects
+- `blog` - Blog/News
+- `faq` - FAQ
+- `careers` - Careers & Recruitment
+- `booking` - Appointment booking
+- `events` - Events & Registrations
+- `branches` - Multi-location/Branches
+- `ecommerce` - E-commerce (future)
+- `multilanguage` - Multi-language support (future)
+
+## 📁 Project Structure
+
+```
+app/
+├── Http/
+│   ├── Controllers/
+│   │   ├── Api/          # Admin API controllers
+│   │   └── Public/       # Public website controllers
+│   └── Middleware/       # Authentication & authorization
+├── Models/               # Eloquent models
+
+database/
+├── migrations/           # Database migrations
+└── seeders/             # Database seeders
+
+resources/
+├── js/
+│   ├── components/
+│   │   ├── admin/       # Admin panel components
+│   │   └── public/      # Public website components
+│   └── routes.js        # Vue Router configuration
+└── views/
+    └── welcome.blade.php
+
+routes/
+├── api.php              # API routes
+└── web.php              # Web routes (includes public API)
+```
+
+## 🔒 Security
+
+- Admin routes protected with Laravel Sanctum
+- Password hashing
+- CSRF protection
+- XSS protection
+- SQL injection protection (Eloquent ORM)
+- Role-based access control
+
+## 📝 Notes
+
+- This is a foundational structure that can be expanded
+- All core models and relationships are set up
+- Additional features can be added incrementally
+- The platform is designed to be modular and configurable
+
+## 🛠️ Development
+
+### Adding a New Module
+
+1. Create migration: `php artisan make:migration create_[module]_table`
+2. Create model: `php artisan make:model [Module]`
+3. Create controller: `php artisan make:controller Api/[Module]Controller --api`
+4. Add to ModuleSeeder
+5. Create Vue components
+6. Update routes
+
+### Testing
+
+```bash
+php artisan test
+```
+
+## 📄 License
+
+This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.

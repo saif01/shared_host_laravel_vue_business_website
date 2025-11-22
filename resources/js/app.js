@@ -1,7 +1,38 @@
 import './bootstrap';
 import { createApp } from 'vue';
 import router from './routes'
+import axios from 'axios';
 
+// Configure axios
+axios.defaults.baseURL = '/';
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+axios.defaults.headers.common['Accept'] = 'application/json';
+
+// Add token to requests if available
+axios.interceptors.request.use(
+    config => {
+        const token = localStorage.getItem('admin_token');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    error => {
+        return Promise.reject(error);
+    }
+);
+
+// Handle 401 errors
+axios.interceptors.response.use(
+    response => response,
+    error => {
+        if (error.response && error.response.status === 401) {
+            localStorage.removeItem('admin_token');
+            router.push({ name: 'AdminLogin' });
+        }
+        return Promise.reject(error);
+    }
+);
 
 // Vuetify 
 import 'vuetify/styles'
