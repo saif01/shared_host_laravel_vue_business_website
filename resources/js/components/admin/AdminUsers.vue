@@ -49,9 +49,13 @@
                             </td>
                             <td>{{ user.email }}</td>
                             <td>
-                                <v-chip :color="getRoleColor(user.role)" size="small">
-                                    {{ getRoleLabel(user.role) }}
-                                </v-chip>
+                                <div v-if="user.roles && user.roles.length > 0" class="d-flex flex-wrap gap-1">
+                                    <v-chip v-for="role in user.roles" :key="role.id" :color="getRoleColor(role.slug)"
+                                        size="small">
+                                        {{ role.name }}
+                                    </v-chip>
+                                </div>
+                                <span v-else class="text-caption text-grey">No roles</span>
                             </td>
                             <td>{{ formatDate(user.created_at) }}</td>
                             <td>
@@ -86,17 +90,28 @@
                         <v-text-field v-model="form.email" label="Email" type="email"
                             :rules="[rules.required, rules.email]" required class="mb-4"></v-text-field>
 
-                        <v-select v-model="form.role" :items="roles" item-title="label" item-value="value" label="Role"
-                            :rules="[rules.required]" required class="mb-4">
+                        <v-select v-model="form.role_ids" :items="roles" item-title="label" item-value="value"
+                            label="Roles" :rules="[rules.required]" required multiple chips class="mb-4">
                             <template v-slot:item="{ props, item }">
                                 <v-list-item v-bind="props">
                                     <template v-slot:title>
                                         {{ item.raw.label }}
+                                        <v-chip v-if="item.raw.is_system" size="x-small" color="warning" class="ml-2">
+                                            System
+                                        </v-chip>
                                     </template>
                                     <template v-slot:subtitle>
                                         {{ item.raw.description }}
                                     </template>
                                 </v-list-item>
+                            </template>
+                            <template v-slot:selection="{ item, index }">
+                                <v-chip v-if="index < 2" size="small" class="mr-1">
+                                    {{ item.raw.label }}
+                                </v-chip>
+                                <span v-if="index === 2" class="text-grey text-caption align-self-center">
+                                    (+{{ form.role_ids.length - 2 }} others)
+                                </span>
                             </template>
                         </v-select>
 
@@ -150,12 +165,7 @@ export default {
             roles: [],
             search: '',
             roleFilter: null,
-            roleOptions: [
-                { title: 'Administrator', value: 'admin' },
-                { title: 'Editor', value: 'editor' },
-                { title: 'HR User', value: 'hr' },
-                { title: 'Staff', value: 'staff' },
-            ],
+            roleOptions: [],
             currentPage: 1,
             pagination: {
                 last_page: 1
@@ -166,13 +176,18 @@ export default {
             form: {
                 name: '',
                 email: '',
-                role: 'editor',
+                role_ids: [],
                 password: '',
                 password_confirmation: '',
                 avatar: ''
             },
             rules: {
-                required: value => !!value || 'This field is required',
+                required: value => {
+                    if (Array.isArray(value)) {
+                        return value.length > 0 || 'At least one role is required';
+                    }
+                    return !!value || 'This field is required';
+                },
                 email: value => {
                     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
                     return pattern.test(value) || 'Invalid email'
@@ -230,6 +245,12 @@ export default {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 this.roles = response.data.roles;
+
+                // Populate roleOptions for filter
+                this.roleOptions = this.roles.map(role => ({
+                    title: role.label,
+                    value: role.value // This is the role ID
+                }));
             } catch (error) {
                 console.error('Error loading roles:', error);
             }
@@ -249,20 +270,24 @@ export default {
         openDialog(user) {
             if (user) {
                 this.editingUser = user;
+                // Extract role IDs from user.roles array
+                const roleIds = user.roles ? user.roles.map(role => role.id) : [];
                 this.form = {
                     name: user.name,
                     email: user.email,
-                    role: user.role,
+                    role_ids: roleIds,
                     password: '',
                     password_confirmation: '',
                     avatar: user.avatar || ''
                 };
             } else {
                 this.editingUser = null;
+                // Set default role (Administrator) if available
+                const defaultRoleId = this.roles.length > 0 ? this.roles[0].value : null;
                 this.form = {
                     name: '',
                     email: '',
-                    role: 'editor',
+                    role_ids: defaultRoleId ? [defaultRoleId] : [],
                     password: '',
                     password_confirmation: '',
                     avatar: ''
@@ -273,10 +298,11 @@ export default {
         closeDialog() {
             this.dialog = false;
             this.editingUser = null;
+            const defaultRoleId = this.roles.length > 0 ? this.roles[0].value : null;
             this.form = {
                 name: '',
                 email: '',
-                role: 'editor',
+                role_ids: defaultRoleId ? [defaultRoleId] : [],
                 password: '',
                 password_confirmation: '',
                 avatar: ''
@@ -319,6 +345,13 @@ export default {
 
                 const data = { ...this.form };
 
+                // Convert role_ids to ensure it's an array
+                if (this.form.role_ids) {
+                    data.role_ids = Array.isArray(this.form.role_ids)
+                        ? this.form.role_ids
+                        : [this.form.role_ids];
+                }
+
                 // Include password_confirmation for backend validation
                 // Backend uses Laravel's 'confirmed' rule
                 if (this.form.password) {
@@ -328,6 +361,9 @@ export default {
                     delete data.password;
                     delete data.password_confirmation;
                 }
+
+                // Remove legacy role field if it exists
+                delete data.role;
 
                 const method = this.editingUser ? 'put' : 'post';
 
@@ -385,18 +421,19 @@ export default {
                 this.showError(message);
             }
         },
-        getRoleLabel(role) {
-            const roleObj = this.roles.find(r => r.value === role);
-            return roleObj ? roleObj.label : role;
+        getRoleLabel(roleSlug) {
+            const roleObj = this.roles.find(r => r.slug === roleSlug);
+            return roleObj ? roleObj.label : roleSlug;
         },
-        getRoleColor(role) {
+        getRoleColor(roleSlug) {
+            // Map role slugs to colors
             const colors = {
-                admin: 'error',
+                administrator: 'error',
                 editor: 'primary',
-                hr: 'success',
+                'hr-user': 'success',
                 staff: 'info'
             };
-            return colors[role] || 'default';
+            return colors[roleSlug] || 'primary';
         },
         formatDate(date) {
             if (!date) return '';
