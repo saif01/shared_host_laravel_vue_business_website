@@ -21,6 +21,13 @@
                             </template>
                             <v-list-item-title class="font-weight-medium">General</v-list-item-title>
                         </v-list-item>
+
+                        <v-list-item value="contact_page" @click="activeTab = 'contact_page'" :active="activeTab === 'contact_page'" rounded="lg" class="mb-1">
+                            <template v-slot:prepend>
+                                <v-icon icon="mdi-card-account-phone-outline"></v-icon>
+                            </template>
+                            <v-list-item-title class="font-weight-medium">Contact Page</v-list-item-title>
+                        </v-list-item>
                         
                         <v-list-item value="branding" @click="activeTab = 'branding'" :active="activeTab === 'branding'" rounded="lg" class="mb-1">
                             <template v-slot:prepend>
@@ -222,6 +229,65 @@
                                         </v-col>
                                     </v-row>
                                 </v-window-item>
+
+
+                                <!-- Contact Page Settings -->
+                                <v-window-item value="contact_page" transition="fade-transition" reverse-transition="fade-transition">
+                                    <div class="mb-6">
+                                        <h2 class="text-h5 font-weight-bold mb-1">Contact Page Settings</h2>
+                                        <p class="text-body-2 text-medium-emphasis">Customize the content of your Contact Us page</p>
+                                    </div>
+
+                                    <v-row>
+                                        <v-col cols="12" md="6">
+                                            <v-text-field v-model="settings.contact_page.contact_email.value" label="Contact Email"
+                                                type="email" variant="outlined" density="comfortable" color="primary"
+                                                prepend-inner-icon="mdi-email"
+                                                hint="Email displayed on Contact Page" persistent-hint></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="6">
+                                            <v-text-field v-model="settings.contact_page.contact_phone.value" label="Contact Phone"
+                                                variant="outlined" density="comfortable" color="primary"
+                                                prepend-inner-icon="mdi-phone"
+                                                hint="Phone displayed on Contact Page" persistent-hint></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-textarea v-model="settings.contact_page.contact_address.value" label="Physical Address"
+                                                variant="outlined" density="comfortable" color="primary"
+                                                prepend-inner-icon="mdi-map-marker"
+                                                hint="Address displayed on Contact Page" persistent-hint rows="3" auto-grow></v-textarea>
+                                        </v-col>
+                                        <v-col cols="12" md="6">
+                                            <v-text-field v-model="settings.contact_page.contact_hero_title.value" label="Hero Title"
+                                                variant="outlined" density="comfortable" color="primary"
+                                                hint="Title for the hero section" persistent-hint></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="6">
+                                            <v-textarea v-model="settings.contact_page.contact_hero_subtitle.value" label="Hero Subtitle"
+                                                variant="outlined" density="comfortable" color="primary"
+                                                hint="Subtitle for the hero section" persistent-hint rows="2" auto-grow></v-textarea>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-textarea v-model="settings.contact_page.contact_map_url.value" label="Google Maps Embed URL"
+                                                variant="outlined" density="comfortable" color="primary"
+                                                prepend-inner-icon="mdi-map"
+                                                hint="Paste the 'src' URL from the Google Maps embed code" persistent-hint rows="3"></v-textarea>
+                                            
+                                            <div v-if="settings.contact_page.contact_map_url.value" class="mt-4">
+                                                <div class="text-subtitle-2 mb-2">Map Preview:</div>
+                                                <iframe 
+                                                    :src="settings.contact_page.contact_map_url.value" 
+                                                    width="100%" 
+                                                    height="300" 
+                                                    style="border:0;" 
+                                                    allowfullscreen="" 
+                                                    loading="lazy" 
+                                                    referrerpolicy="no-referrer-when-downgrade"
+                                                ></iframe>
+                                            </div>
+                                        </v-col>
+                                    </v-row>
+                                </v-window-item>
                             </v-window>
                         </v-form>
                     </v-card-text>
@@ -245,6 +311,14 @@ export default {
                     contact_email: { value: '', type: 'email', group: 'general' },
                     contact_phone: { value: '', type: 'text', group: 'general' },
                     address: { value: '', type: 'textarea', group: 'general' },
+                },
+                contact_page: {
+                    contact_email: { value: '', type: 'email', group: 'contact_page' },
+                    contact_phone: { value: '', type: 'text', group: 'contact_page' },
+                    contact_address: { value: '', type: 'textarea', group: 'contact_page' },
+                    contact_hero_title: { value: 'Contact Us', type: 'text', group: 'contact_page' },
+                    contact_hero_subtitle: { value: 'We are here to help.', type: 'textarea', group: 'contact_page' },
+                    contact_map_url: { value: '', type: 'textarea', group: 'contact_page' },
                 },
                 social: {
                     facebook_url: { value: '', type: 'url', group: 'social' },

@@ -8,12 +8,15 @@
                 <v-fade-transition appear>
                     <div>
                         <div class="glass-pill d-inline-flex align-center px-4 py-2 rounded-pill mb-6">
-                            <v-icon icon="mdi-message-text-outline" color="amber-accent-4" size="small" class="mr-2"></v-icon>
+                            <v-icon icon="mdi-message-text-outline" color="amber-accent-4" size="small"
+                                class="mr-2"></v-icon>
                             <span class="text-subtitle-2 font-weight-bold tracking-wide text-white">GET IN TOUCH</span>
                         </div>
-                        <h1 class="text-h3 text-md-h2 font-weight-black text-white mb-6">Contact Us</h1>
+                        <h1 class="text-h3 text-md-h2 font-weight-black text-white mb-6">
+                            {{ contactInfo.contact_hero_title || 'Contact Us' }}
+                        </h1>
                         <p class="text-h6 text-white opacity-80 mw-600 mx-auto font-weight-light">
-                            Have a question or need a quote? Our team is ready to help you with all your power support needs.
+                            {{ contactInfo.contact_hero_subtitle }}
                         </p>
                     </div>
                 </v-fade-transition>
@@ -31,8 +34,9 @@
                             </div>
                             <h3 class="text-h6 font-weight-bold mb-2 text-grey-darken-3">Call Us</h3>
                             <p class="text-body-2 text-medium-emphasis mb-4">Available 24/7 for support</p>
-                            <a href="tel:+1234567890" class="text-h6 font-weight-bold text-primary text-decoration-none hover-link">
-                                +1 (234) 567-890
+                            <a :href="`tel:${contactInfo.contact_phone}`"
+                                class="text-h6 font-weight-bold text-primary text-decoration-none hover-link">
+                                {{ contactInfo.contact_phone || '+1 (234) 567-890' }}
                             </a>
                         </v-card>
                     </v-col>
@@ -43,8 +47,9 @@
                             </div>
                             <h3 class="text-h6 font-weight-bold mb-2 text-grey-darken-3">Email Us</h3>
                             <p class="text-body-2 text-medium-emphasis mb-4">We'll respond within 24 hours</p>
-                            <a href="mailto:info@microcontrol.com" class="text-h6 font-weight-bold text-primary text-decoration-none hover-link">
-                                info@microcontrol.com
+                            <a :href="`mailto:${contactInfo.contact_email}`"
+                                class="text-h6 font-weight-bold text-primary text-decoration-none hover-link">
+                                {{ contactInfo.contact_email || 'info@microcontrol.com' }}
                             </a>
                         </v-card>
                     </v-col>
@@ -55,8 +60,8 @@
                             </div>
                             <h3 class="text-h6 font-weight-bold mb-2 text-grey-darken-3">Visit Us</h3>
                             <p class="text-body-2 text-medium-emphasis mb-4">Our Corporate Office</p>
-                            <div class="text-body-1 font-weight-bold text-grey-darken-3">
-                                123 Power Lane, Tech City
+                            <div class="text-body-1 font-weight-bold text-grey-darken-3" style="white-space: pre-line;">
+                                {{ contactInfo.contact_address || '123 Power Lane, Tech City' }}
                             </div>
                         </v-card>
                     </v-col>
@@ -72,7 +77,8 @@
                     <!-- Contact Form -->
                     <v-col cols="12" md="6" class="mb-8 mb-md-0">
                         <div class="pr-md-8">
-                            <div class="text-overline text-primary font-weight-bold mb-2 tracking-widest">SEND A MESSAGE</div>
+                            <div class="text-overline text-primary font-weight-bold mb-2 tracking-widest">SEND A MESSAGE
+                            </div>
                             <h2 class="text-h4 font-weight-bold mb-6 text-grey-darken-3">How Can We Help?</h2>
                             <p class="text-body-1 text-medium-emphasis mb-8">
                                 Fill out the form below and our team will get back to you shortly.
@@ -81,54 +87,27 @@
                             <v-form ref="form" v-model="valid" @submit.prevent="submitForm">
                                 <v-row>
                                     <v-col cols="12" md="6">
-                                        <v-text-field
-                                            v-model="form.name"
-                                            label="Your Name"
-                                            variant="outlined"
-                                            color="primary"
-                                            bg-color="white"
-                                            :rules="[v => !!v || 'Name is required']"
-                                        ></v-text-field>
+                                        <v-text-field v-model="form.name" label="Your Name" variant="outlined"
+                                            color="primary" bg-color="white"
+                                            :rules="[v => !!v || 'Name is required']"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" md="6">
-                                        <v-text-field
-                                            v-model="form.email"
-                                            label="Email Address"
-                                            variant="outlined"
-                                            color="primary"
-                                            bg-color="white"
-                                            :rules="[v => !!v || 'Email is required', v => /.+@.+\..+/.test(v) || 'E-mail must be valid']"
-                                        ></v-text-field>
+                                        <v-text-field v-model="form.email" label="Email Address" variant="outlined"
+                                            color="primary" bg-color="white"
+                                            :rules="[v => !!v || 'Email is required', v => /.+@.+\..+/.test(v) || 'E-mail must be valid']"></v-text-field>
                                     </v-col>
                                     <v-col cols="12">
-                                        <v-text-field
-                                            v-model="form.subject"
-                                            label="Subject"
-                                            variant="outlined"
-                                            color="primary"
-                                            bg-color="white"
-                                        ></v-text-field>
+                                        <v-text-field v-model="form.subject" label="Subject" variant="outlined"
+                                            color="primary" bg-color="white"></v-text-field>
                                     </v-col>
                                     <v-col cols="12">
-                                        <v-textarea
-                                            v-model="form.message"
-                                            label="Message"
-                                            variant="outlined"
-                                            color="primary"
-                                            bg-color="white"
-                                            rows="4"
-                                            :rules="[v => !!v || 'Message is required']"
-                                        ></v-textarea>
+                                        <v-textarea v-model="form.message" label="Message" variant="outlined"
+                                            color="primary" bg-color="white" rows="4"
+                                            :rules="[v => !!v || 'Message is required']"></v-textarea>
                                     </v-col>
                                 </v-row>
-                                <v-btn
-                                    type="submit"
-                                    size="x-large"
-                                    color="primary"
-                                    rounded="pill"
-                                    class="mt-4 px-8 font-weight-bold elevation-4 hover-lift"
-                                    :loading="loading"
-                                >
+                                <v-btn type="submit" size="x-large" color="primary" rounded="pill"
+                                    class="mt-4 px-8 font-weight-bold elevation-4 hover-lift" :loading="loading">
                                     Send Message
                                     <v-icon end icon="mdi-send" class="ml-2"></v-icon>
                                 </v-btn>
@@ -139,14 +118,10 @@
                     <!-- Map -->
                     <v-col cols="12" md="6">
                         <v-card class="map-card h-100 rounded-xl overflow-hidden elevation-10 border-thin">
-                            <iframe 
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.1422937950147!2d-73.98731968482413!3d40.75889497932681!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25855c6480299%3A0x55194ec5a1ae072e!2sTimes%20Square!5e0!3m2!1sen!2sus!4v1622646639943!5m2!1sen!2sus" 
-                                width="100%" 
-                                height="100%" 
-                                style="border:0; min-height: 400px;" 
-                                allowfullscreen="" 
-                                loading="lazy"
-                            ></iframe>
+                            <iframe
+                                :src="contactInfo.contact_map_url || 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.1422937950147!2d-73.98731968482413!3d40.75889497932681!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25855c6480299%3A0x55194ec5a1ae072e!2sTimes%20Square!5e0!3m2!1sen!2sus!4v1622646639943!5m2!1sen!2sus'"
+                                width="100%" height="100%" style="border:0; min-height: 400px;" allowfullscreen=""
+                                loading="lazy"></iframe>
                         </v-card>
                     </v-col>
                 </v-row>
@@ -156,12 +131,22 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     name: 'ContactPage',
     data() {
         return {
             valid: false,
             loading: false,
+            contactInfo: {
+                contact_email: '',
+                contact_phone: '',
+                contact_address: '',
+                contact_hero_title: '',
+                contact_hero_subtitle: '',
+                contact_map_url: ''
+            },
             form: {
                 name: '',
                 email: '',
@@ -170,14 +155,31 @@ export default {
             }
         };
     },
+    mounted() {
+        this.loadContactInfo();
+    },
     methods: {
+        async loadContactInfo() {
+            try {
+                const response = await axios.get('/api/v1/public/settings', {
+                    params: { group: 'contact_page' }
+                });
+                // Response is a key-value object, merge it with contactInfo
+                if (response.data) {
+                    this.contactInfo = { ...this.contactInfo, ...response.data };
+                }
+            } catch (error) {
+                console.error('Error loading contact info:', error);
+                // Keep default values if API fails
+            }
+        },
         async submitForm() {
             if (!this.valid) return;
-            
+
             this.loading = true;
             // Simulate API call
             await new Promise(resolve => setTimeout(resolve, 1500));
-            
+
             // Reset form
             this.loading = false;
             this.form = { name: '', email: '', subject: '', message: '' };
@@ -209,7 +211,7 @@ export default {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
     background-size: 30px 30px;
     opacity: 0.3;
 }
@@ -227,7 +229,7 @@ export default {
 
 .contact-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.1) !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1) !important;
 }
 
 .icon-box {
@@ -249,7 +251,8 @@ export default {
 }
 
 .hover-link:hover {
-    color: #f59e0b !important; /* Amber */
+    color: #f59e0b !important;
+    /* Amber */
 }
 
 .bg-pattern-dots {
@@ -275,9 +278,23 @@ export default {
     transform: translateY(-2px);
 }
 
-.mw-600 { max-width: 600px; }
-.tracking-wide { letter-spacing: 0.05em; }
-.tracking-widest { letter-spacing: 0.15em; }
-.z-index-2 { z-index: 2; }
-.z-index-3 { z-index: 3; }
+.mw-600 {
+    max-width: 600px;
+}
+
+.tracking-wide {
+    letter-spacing: 0.05em;
+}
+
+.tracking-widest {
+    letter-spacing: 0.15em;
+}
+
+.z-index-2 {
+    z-index: 2;
+}
+
+.z-index-3 {
+    z-index: 3;
+}
 </style>

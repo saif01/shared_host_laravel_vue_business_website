@@ -65,4 +65,26 @@ class SettingController extends Controller
 
         return response()->json(['message' => 'Settings updated successfully']);
     }
+
+    public function publicIndex(Request $request)
+    {
+        $query = Setting::query();
+
+        if ($request->has('group')) {
+            $query->where('group', $request->group);
+        } else {
+            // By default, only show safe groups if no specific group requested, or maybe just return empty
+            // For safety, let's require a group or return specific public groups
+            $query->whereIn('group', ['general', 'contact_page', 'social', 'seo']);
+        }
+
+        $settings = $query->get();
+
+        // Return as key-value pair for easier frontend usage
+        $formatted = $settings->mapWithKeys(function ($item) {
+            return [$item->key => $item->value];
+        });
+
+        return response()->json($formatted);
+    }
 }

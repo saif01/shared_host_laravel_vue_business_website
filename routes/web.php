@@ -18,7 +18,7 @@ Route::prefix('api/public')->group(function () {
     Route::post('/contact', [ContactController::class, 'submit']);
 });
 
-// Catch-all route for Vue.js SPA
+// Catch-all route for Vue.js SPA (must be last to not interfere with API routes)
 Route::namespace('App\Http\Controllers')->group(function(){
     Route::get('{any?}', 'IndexController@index')->where('any', '^(?!api).*$');
 });
