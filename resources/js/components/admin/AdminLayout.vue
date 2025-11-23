@@ -63,6 +63,10 @@
                 <!-- Login Logs - Requires 'view-login-logs' permission -->
                 <v-list-item link router prepend-icon="mdi-login" title="Login Logs" :to="{ name: 'AdminLoginLogs' }"
                     value="LoginLogs" exact v-if="hasPermission('view-login-logs')"></v-list-item>
+
+                <!-- Visitor Logs - Requires 'view-visitor-logs' permission -->
+                <v-list-item link router prepend-icon="mdi-account-group" title="Visitor Logs" :to="{ name: 'AdminVisitorLogs' }"
+                    value="VisitorLogs" exact v-if="hasPermission('view-visitor-logs')"></v-list-item>
             </v-list>
 
             <template v-slot:append>

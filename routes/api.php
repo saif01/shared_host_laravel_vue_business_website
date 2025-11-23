@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\LoginLogController;
+use App\Http\Controllers\Api\VisitorLogController;
 
 Route::prefix('v1')->group(function () {
     // Public routes
@@ -82,6 +83,13 @@ Route::prefix('v1')->group(function () {
         Route::middleware('permission:view-login-logs')->group(function () {
             Route::get('login-logs/statistics', [LoginLogController::class, 'statistics']);
             Route::apiResource('login-logs', LoginLogController::class)->only(['index', 'show', 'destroy']);
+        });
+        
+        // Visitor Logs - requires view-visitor-logs permission
+        Route::middleware('permission:view-visitor-logs')->group(function () {
+            Route::get('visitor-logs/statistics', [VisitorLogController::class, 'statistics']);
+            Route::post('visitor-logs/delete-multiple', [VisitorLogController::class, 'destroyMultiple']);
+            Route::apiResource('visitor-logs', VisitorLogController::class)->only(['index', 'show', 'destroy']);
         });
     });
 });
