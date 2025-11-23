@@ -29,6 +29,29 @@ tbody .sortable:hover {
     padding: 6px 10px !important;
 }
 
+/* Vue Progress Bar Styles */
+vue-progress-bar,
+.vue-progressbar,
+.vue-progressbar__bar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 9999 !important;
+    height: 4px !important;
+    pointer-events: none !important;
+}
+
+.vue-progressbar__bar {
+    background: #66FE5E !important;
+    transition: width 0.2s ease, opacity 0.6s ease !important;
+    height: 100% !important;
+}
+
+.vue-progressbar__bar--failed {
+    background: #f44336 !important;
+}
+
 /* Reduce gap between prepend-icon and title in navigation menu */
 .v-navigation-drawer .v-list-item__prepend>.v-list-item__spacer {
     width: 8px !important;
