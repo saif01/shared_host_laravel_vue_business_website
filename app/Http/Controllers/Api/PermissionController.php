@@ -177,15 +177,79 @@ class PermissionController extends Controller
     }
 
     /**
-     * Get all available permission groups
+     * Get all available permission groups with permission counts
      */
     public function groups()
     {
         $groups = Permission::select('group')
-            ->distinct()
+            ->selectRaw('COUNT(*) as permissions_count')
+            ->groupBy('group')
             ->orderBy('group')
-            ->pluck('group');
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'name' => $item->group,
+                    'permissions_count' => $item->permissions_count
+                ];
+            });
         
         return response()->json($groups);
+    }
+
+    /**
+     * Rename a permission group
+     */
+    public function renameGroup(Request $request)
+    {
+        $validated = $request->validate([
+            'old_name' => 'required|string|max:255',
+            'new_name' => 'required|string|max:255',
+        ]);
+
+        $oldName = $validated['old_name'];
+        $newName = $validated['new_name'];
+
+        // Check if new name already exists
+        if (Permission::where('group', $newName)->exists() && $oldName !== $newName) {
+            return response()->json([
+                'message' => 'A group with this name already exists.'
+            ], 422);
+        }
+
+        // Update all permissions with the old group name
+        $updated = Permission::where('group', $oldName)
+            ->update(['group' => $newName]);
+
+        return response()->json([
+            'message' => 'Group renamed successfully',
+            'updated_count' => $updated
+        ]);
+    }
+
+    /**
+     * Delete a permission group (only if it has no permissions)
+     */
+    public function deleteGroup(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $groupName = $validated['name'];
+
+        // Check if group has any permissions
+        $permissionCount = Permission::where('group', $groupName)->count();
+
+        if ($permissionCount > 0) {
+            return response()->json([
+                'message' => 'Cannot delete group that contains permissions. Please remove or reassign all permissions first.'
+            ], 403);
+        }
+
+        // Since groups are just strings in the group column, and there are no permissions,
+        // there's nothing to delete. Just return success.
+        return response()->json([
+            'message' => 'Group deleted successfully'
+        ]);
     }
 }

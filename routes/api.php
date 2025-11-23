@@ -72,6 +72,8 @@ Route::prefix('v1')->group(function () {
         // Permission Management - requires manage-roles permission (same as roles)
         Route::middleware('permission:manage-roles')->group(function () {
             Route::get('permissions/groups', [PermissionController::class, 'groups']);
+            Route::post('permissions/groups/rename', [PermissionController::class, 'renameGroup']);
+            Route::post('permissions/groups/delete', [PermissionController::class, 'deleteGroup']);
             Route::apiResource('permissions', PermissionController::class);
         });
     });

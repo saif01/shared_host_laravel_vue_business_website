@@ -17,7 +17,9 @@
                             @update:model-value="onPerPageChange"></v-select>
                     </v-col>
                     <v-col cols="12" :md="viewMode === 'flat' ? 4 : 6">
-                        <v-select v-model="selectedGroup" :items="groups" label="Filter by Group"
+                        <v-select v-model="selectedGroup" :items="groups"
+                            :item-title="item => typeof item === 'string' ? item : item.name"
+                            :item-value="item => typeof item === 'string' ? item : item.name" label="Filter by Group"
                             prepend-inner-icon="mdi-filter" variant="outlined" density="compact" clearable
                             @update:model-value="loadPermissions"></v-select>
                     </v-col>
@@ -27,6 +29,30 @@
                             @update:model-value="loadPermissions"></v-text-field>
                     </v-col>
                 </v-row>
+            </v-card-text>
+        </v-card>
+
+        <!-- Permission Groups - Compact Clickable Chips -->
+        <v-card class="mb-4">
+            <v-card-text class="py-3">
+                <div class="d-flex align-center flex-wrap" style="gap: 8px;">
+                    <span class="text-caption text-grey mr-2">Filter by Group:</span>
+                    <v-chip v-for="group in groups" :key="group.name" :color="getGroupColor(group.name)" size="small"
+                        :variant="selectedGroup === group.name ? 'flat' : 'outlined'"
+                        :class="{ 'font-weight-bold': selectedGroup === group.name }" @click="filterByGroup(group.name)"
+                        style="cursor: pointer;" class="group-filter-chip">
+                        {{ group.name }}
+                        <v-chip size="x-small"
+                            :color="selectedGroup === group.name ? 'white' : getGroupColor(group.name)" variant="flat"
+                            class="ml-2">
+                            {{ group.permissions_count || 0 }}
+                        </v-chip>
+                    </v-chip>
+                    <v-chip v-if="selectedGroup" size="small" color="grey" variant="text" prepend-icon="mdi-close"
+                        @click="clearGroupFilter" style="cursor: pointer;" class="ml-2">
+                        Clear Filter
+                    </v-chip>
+                </div>
             </v-card-text>
         </v-card>
 
@@ -194,8 +220,11 @@
                             hint="URL-friendly identifier (auto-generated if empty)" persistent-hint
                             class="mb-4"></v-text-field>
 
-                        <v-select v-model="form.group" :items="groups" label="Group" :rules="[rules.required]" required
-                            hint="Category/group for organizing permissions" persistent-hint class="mb-4">
+                        <v-select v-model="form.group" :items="groups"
+                            :item-title="item => typeof item === 'string' ? item : item.name"
+                            :item-value="item => typeof item === 'string' ? item : item.name" label="Group"
+                            :rules="[rules.required]" required hint="Category/group for organizing permissions"
+                            persistent-hint class="mb-4">
                             <template v-slot:append-item>
                                 <v-list-item>
                                     <v-text-field v-model="newGroup" label="Add New Group" prepend-inner-icon="mdi-plus"
@@ -218,6 +247,7 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+
     </div>
 </template>
 
@@ -336,18 +366,31 @@ export default {
         },
 
         /**
-         * Load available permission groups
+         * Load available permission groups with permission counts
          */
         async loadGroups() {
             try {
                 const response = await axios.get('/api/v1/permissions/groups', {
                     headers: this.getAuthHeaders()
                 });
-                this.groups = response.data || [];
+                // Handle both old format (array of strings) and new format (array of objects)
+                if (response.data && response.data.length > 0) {
+                    if (typeof response.data[0] === 'string') {
+                        // Old format - convert to new format
+                        this.groups = response.data.map(name => ({
+                            name: name,
+                            permissions_count: 0
+                        }));
+                    } else {
+                        // New format
+                        this.groups = response.data;
+                    }
+                } else {
+                    this.groups = [];
+                }
             } catch (error) {
                 console.error('Error loading groups:', error);
-                // Default groups if API fails
-                this.groups = ['general', 'content', 'users', 'leads', 'careers', 'settings', 'system'];
+                this.groups = [];
             }
         },
 
@@ -405,15 +448,20 @@ export default {
         },
 
         /**
-         * Add a new group to the groups list
+         * Add a new group to the groups list (for permission form)
          */
         addNewGroup() {
-            if (this.newGroup && !this.groups.includes(this.newGroup)) {
-                this.groups.push(this.newGroup);
-                this.form.group = this.newGroup;
+            if (this.newGroup && !this.groups.find(g => g.name === this.newGroup || (typeof g === 'string' && g === this.newGroup))) {
+                const groupName = this.newGroup.trim();
+                this.groups.push({
+                    name: groupName,
+                    permissions_count: 0
+                });
+                this.form.group = groupName;
                 this.newGroup = '';
             }
         },
+
 
         /**
          * Save permission (create or update)
@@ -516,6 +564,30 @@ export default {
         },
         onSort(field) {
             this.handleSort(field);
+            this.loadPermissions();
+        },
+
+        /**
+         * Filter permissions by group
+         */
+        filterByGroup(groupName) {
+            if (this.selectedGroup === groupName) {
+                // If clicking the same group, clear the filter
+                this.clearGroupFilter();
+            } else {
+                // Set the selected group and reload permissions
+                this.selectedGroup = groupName;
+                this.resetPagination();
+                this.loadPermissions();
+            }
+        },
+
+        /**
+         * Clear group filter
+         */
+        clearGroupFilter() {
+            this.selectedGroup = null;
+            this.resetPagination();
             this.loadPermissions();
         }
     },
