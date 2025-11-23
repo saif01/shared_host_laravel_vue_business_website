@@ -36,6 +36,16 @@
         <v-card class="mb-4">
             <v-card-text class="py-3">
                 <div class="d-flex align-center flex-wrap" style="gap: 8px;">
+                    <v-btn-toggle v-model="viewMode" mandatory density="compact" class="mr-4">
+                        <v-btn value="flat" size="small">
+                            <v-icon start>mdi-format-list-bulleted</v-icon>
+                            Flat View
+                        </v-btn>
+                        <v-btn value="grouped" size="small">
+                            <v-icon start>mdi-folder</v-icon>
+                            Grouped View
+                        </v-btn>
+                    </v-btn-toggle>
                     <span class="text-caption text-grey mr-2">Filter by Group:</span>
                     <v-chip v-for="group in groups" :key="group.name" :color="getGroupColor(group.name)" size="small"
                         :variant="selectedGroup === group.name ? 'flat' : 'outlined'"
@@ -189,19 +199,6 @@
                 <v-pagination v-if="viewMode === 'flat' && pagination.last_page > 1" v-model="currentPage"
                     :length="pagination.last_page" @update:model-value="loadPermissions" class="mt-4"></v-pagination>
             </v-card-text>
-            <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn-toggle v-model="viewMode" mandatory>
-                    <v-btn value="flat" size="small">
-                        <v-icon start>mdi-format-list-bulleted</v-icon>
-                        Flat View
-                    </v-btn>
-                    <v-btn value="grouped" size="small">
-                        <v-icon start>mdi-folder</v-icon>
-                        Grouped View
-                    </v-btn>
-                </v-btn-toggle>
-            </v-card-actions>
         </v-card>
 
         <!-- Permission Dialog -->
