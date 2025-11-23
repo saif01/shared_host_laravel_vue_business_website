@@ -28,12 +28,17 @@
                     v-if="hasPermission('manage-users')"></v-list-item>
 
                 <!-- Roles & Permissions Management - Requires 'manage-roles' permission -->
-                <v-list-item prepend-icon="mdi-shield-account" title="Roles" :to="{ name: 'AdminRoles' }"
-                    v-if="hasPermission('manage-roles')"></v-list-item>
-                
-                <!-- Permissions Management - Requires 'manage-roles' permission -->
-                <v-list-item prepend-icon="mdi-key" title="Permissions" :to="{ name: 'AdminPermissions' }"
-                    v-if="hasPermission('manage-roles')"></v-list-item>
+                <v-list-group v-if="hasPermission('manage-roles')">
+                    <template v-slot:activator="{ props }">
+                        <v-list-item v-bind="props" prepend-icon="mdi-shield-account"
+                            title="Roles & Permissions"></v-list-item>
+                    </template>
+
+                    <v-list-item prepend-icon="mdi-shield-account" title="Roles"
+                        :to="{ name: 'AdminRoles' }"></v-list-item>
+                    <v-list-item prepend-icon="mdi-key" title="Permissions"
+                        :to="{ name: 'AdminPermissions' }"></v-list-item>
+                </v-list-group>
 
                 <!-- Settings Management - Requires 'manage-settings' permission -->
                 <v-list-item prepend-icon="mdi-cog" title="Settings" :to="{ name: 'AdminSettings' }"

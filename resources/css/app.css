@@ -7,3 +7,14 @@
 .sortable:hover {
     background-color: rgba(0, 0, 0, 0.04);
 }
+
+/* Reduce gap between prepend-icon and title in navigation menu */
+.v-navigation-drawer .v-list-item__prepend>.v-list-item__spacer {
+    width: 8px !important;
+    min-width: 8px !important;
+    max-width: 8px !important;
+}
+
+.v-navigation-drawer .v-list-item__prepend {
+    margin-inline-end: 0 !important;
+}
