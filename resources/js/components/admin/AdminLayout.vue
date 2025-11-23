@@ -59,6 +59,10 @@
                 <!-- Settings Management - Requires 'manage-settings' permission -->
                 <v-list-item link router prepend-icon="mdi-cog" title="Settings" :to="{ name: 'AdminSettings' }"
                     value="Settings" exact v-if="hasPermission('manage-settings')"></v-list-item>
+
+                <!-- Login Logs - Requires 'view-login-logs' permission -->
+                <v-list-item link router prepend-icon="mdi-login" title="Login Logs" :to="{ name: 'AdminLoginLogs' }"
+                    value="LoginLogs" exact v-if="hasPermission('view-login-logs')"></v-list-item>
             </v-list>
 
             <template v-slot:append>

@@ -46,6 +46,7 @@ class RolePermissionSeeder extends Seeder
             
             // System Permissions
             ['name' => 'System Administration', 'slug' => 'system-admin', 'group' => 'system', 'description' => 'Full system access'],
+            ['name' => 'View Login Logs', 'slug' => 'view-login-logs', 'group' => 'system', 'description' => 'View and manage login logs'],
         ];
 
         $createdPermissions = [];

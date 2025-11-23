@@ -108,6 +108,12 @@ const routes = [
                 name: 'AdminSettings',
                 meta: { title: 'Settings' }
             },
+            {
+                path: 'login-logs',
+                component: () => import('./components/admin/AdminLoginLogs.vue'),
+                name: 'AdminLoginLogs',
+                meta: { title: 'Login Logs Management' }
+            },
         ]
     },
 

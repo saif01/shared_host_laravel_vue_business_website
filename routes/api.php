@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\PermissionController;
+use App\Http\Controllers\Api\LoginLogController;
 
 Route::prefix('v1')->group(function () {
     // Public routes
@@ -75,6 +76,12 @@ Route::prefix('v1')->group(function () {
             Route::post('permissions/groups/rename', [PermissionController::class, 'renameGroup']);
             Route::post('permissions/groups/delete', [PermissionController::class, 'deleteGroup']);
             Route::apiResource('permissions', PermissionController::class);
+        });
+        
+        // Login Logs - requires view-login-logs permission
+        Route::middleware('permission:view-login-logs')->group(function () {
+            Route::get('login-logs/statistics', [LoginLogController::class, 'statistics']);
+            Route::apiResource('login-logs', LoginLogController::class)->only(['index', 'show', 'destroy']);
         });
     });
 });
