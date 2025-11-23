@@ -37,20 +37,20 @@
                 <v-table>
                     <thead>
                         <tr>
-                            <th class="sortable" @click="onSort('name')" style="cursor: pointer;">
+                            <th class="sortable" @click="onSort('name')" >
                                 <div class="d-flex align-center">
                                     Name
                                     <v-icon :icon="getSortIcon('name')" size="small" class="ml-1"></v-icon>
                                 </div>
                             </th>
-                            <th class="sortable" @click="onSort('slug')" style="cursor: pointer;">
+                            <th class="sortable" @click="onSort('slug')" >
                                 <div class="d-flex align-center">
                                     Slug
                                     <v-icon :icon="getSortIcon('slug')" size="small" class="ml-1"></v-icon>
                                 </div>
                             </th>
                             <th>Permissions</th>
-                            <th class="sortable" @click="onSort('is_active')" style="cursor: pointer;">
+                            <th class="sortable" @click="onSort('is_active')" >
                                 <div class="d-flex align-center">
                                     Status
                                     <v-icon :icon="getSortIcon('is_active')" size="small" class="ml-1"></v-icon>
@@ -501,9 +501,3 @@ export default {
     }
 };
 </script>
-
-<style scoped>
-.sortable:hover {
-    background-color: rgba(0, 0, 0, 0.04);
-}
-</style>

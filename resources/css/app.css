@@ -1,0 +1,9 @@
+/* Common Admin Table Styles */
+.sortable {
+    cursor: pointer;
+    user-select: none;
+}
+
+.sortable:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}

@@ -35,20 +35,20 @@
                 <v-table>
                     <thead>
                         <tr>
-                            <th class="sortable" @click="onSort('title')" style="cursor: pointer;">
+                            <th class="sortable" @click="onSort('title')">
                                 <div class="d-flex align-center">
                                     Title
                                     <v-icon :icon="getSortIcon('title')" size="small" class="ml-1"></v-icon>
                                 </div>
                             </th>
-                            <th class="sortable" @click="onSort('slug')" style="cursor: pointer;">
+                            <th class="sortable" @click="onSort('slug')">
                                 <div class="d-flex align-center">
                                     Slug
                                     <v-icon :icon="getSortIcon('slug')" size="small" class="ml-1"></v-icon>
                                 </div>
                             </th>
                             <th>Type</th>
-                            <th class="sortable" @click="onSort('published')" style="cursor: pointer;">
+                            <th class="sortable" @click="onSort('published')">
                                 <div class="d-flex align-center">
                                     Published
                                     <v-icon :icon="getSortIcon('published')" size="small" class="ml-1"></v-icon>
@@ -160,9 +160,3 @@ export default {
     }
 };
 </script>
-
-<style scoped>
-.sortable:hover {
-    background-color: rgba(0, 0, 0, 0.04);
-}
-</style>

@@ -40,37 +40,37 @@
                 <v-table>
                     <thead>
                         <tr>
-                            <th class="sortable" @click="onSort('name')" style="cursor: pointer;">
+                            <th class="sortable" @click="onSort('name')" >
                                 <div class="d-flex align-center">
                                     Name
                                     <v-icon :icon="getSortIcon('name')" size="small" class="ml-1"></v-icon>
                                 </div>
                             </th>
-                            <th class="sortable" @click="onSort('email')" style="cursor: pointer;">
+                            <th class="sortable" @click="onSort('email')" >
                                 <div class="d-flex align-center">
                                     Email
                                     <v-icon :icon="getSortIcon('email')" size="small" class="ml-1"></v-icon>
                                 </div>
                             </th>
-                            <th class="sortable" @click="onSort('phone')" style="cursor: pointer;">
+                            <th class="sortable" @click="onSort('phone')" >
                                 <div class="d-flex align-center">
                                     Phone
                                     <v-icon :icon="getSortIcon('phone')" size="small" class="ml-1"></v-icon>
                                 </div>
                             </th>
-                            <th class="sortable" @click="onSort('type')" style="cursor: pointer;">
+                            <th class="sortable" @click="onSort('type')" >
                                 <div class="d-flex align-center">
                                     Type
                                     <v-icon :icon="getSortIcon('type')" size="small" class="ml-1"></v-icon>
                                 </div>
                             </th>
-                            <th class="sortable" @click="onSort('status')" style="cursor: pointer;">
+                            <th class="sortable" @click="onSort('status')" >
                                 <div class="d-flex align-center">
                                     Status
                                     <v-icon :icon="getSortIcon('status')" size="small" class="ml-1"></v-icon>
                                 </div>
                             </th>
-                            <th class="sortable" @click="onSort('created_at')" style="cursor: pointer;">
+                            <th class="sortable" @click="onSort('created_at')" >
                                 <div class="d-flex align-center">
                                     Date
                                     <v-icon :icon="getSortIcon('created_at')" size="small" class="ml-1"></v-icon>
@@ -212,9 +212,3 @@ export default {
     }
 };
 </script>
-
-<style scoped>
-.sortable:hover {
-    background-color: rgba(0, 0, 0, 0.04);
-}
-</style>

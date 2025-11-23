@@ -35,25 +35,25 @@
                 <v-table>
                     <thead>
                         <tr>
-                            <th class="sortable" @click="onSort('title')" style="cursor: pointer;">
+                            <th class="sortable" @click="onSort('title')">
                                 <div class="d-flex align-center">
                                     Title
                                     <v-icon :icon="getSortIcon('title')" size="small" class="ml-1"></v-icon>
                                 </div>
                             </th>
-                            <th class="sortable" @click="onSort('sku')" style="cursor: pointer;">
+                            <th class="sortable" @click="onSort('sku')">
                                 <div class="d-flex align-center">
                                     SKU
                                     <v-icon :icon="getSortIcon('sku')" size="small" class="ml-1"></v-icon>
                                 </div>
                             </th>
-                            <th class="sortable" @click="onSort('price')" style="cursor: pointer;">
+                            <th class="sortable" @click="onSort('price')">
                                 <div class="d-flex align-center">
                                     Price
                                     <v-icon :icon="getSortIcon('price')" size="small" class="ml-1"></v-icon>
                                 </div>
                             </th>
-                            <th class="sortable" @click="onSort('published')" style="cursor: pointer;">
+                            <th class="sortable" @click="onSort('published')">
                                 <div class="d-flex align-center">
                                     Published
                                     <v-icon :icon="getSortIcon('published')" size="small" class="ml-1"></v-icon>
@@ -170,9 +170,3 @@ export default {
     }
 };
 </script>
-
-<style scoped>
-.sortable:hover {
-    background-color: rgba(0, 0, 0, 0.04);
-}
-</style>
