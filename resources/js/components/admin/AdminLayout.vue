@@ -9,7 +9,7 @@
             </div>
 
             <v-list-item v-if="currentUser" class="user-profile-header"
-                :prepend-avatar="currentUser.avatar || 'https://it.cpbangladesh.com/all-assets/common/logo/cpb/cpbit.png'"
+                :prepend-avatar="currentUser.avatar || '/assets/logo/logo.png'"
                 :title="currentUser.name || 'Admin Panel'"
                 :subtitle="userRoles && userRoles.length > 0 ? userRoles.map(r => r.name).join(', ') : 'No roles assigned'">
             </v-list-item>
@@ -85,8 +85,7 @@
                     <template v-slot:activator="{ props }">
                         <v-avatar v-bind="props" size="42" class="fill-image mr-2" :title="currentUser.name">
                             <v-img cover v-if="currentUser.avatar" :src="currentUser.avatar" :alt="currentUser.name" />
-                            <v-img cover v-else src="https://it.cpbangladesh.com/all-assets/common/logo/cpb/cpbit.png"
-                                alt="image" />
+                            <v-img cover v-else src="/assets/logo/logo.png" alt="image" />
                         </v-avatar>
                     </template>
                     <v-list>
@@ -111,8 +110,7 @@
             <div class="footer-content">
                 <div class="footer-brand">
                     <div class="logo-wrapper">
-                        <img src="https://it.cpbangladesh.com/all-assets/common/logo/cpb/cpbit.png" alt="cpb-it"
-                            height="24" class="footer-logo" />
+                        <img src="/assets/logo/logo.png" alt="cpb-it" height="24" class="footer-logo" />
                     </div>
                     <div class="brand-text">
                         <span class="brand-name">Powered By CPB-IT</span>
@@ -208,7 +206,7 @@ export default {
         async logout() {
             const authStore = useAuthStore();
             await authStore.logout();
-            
+
             // Clear local component state (optional but good for cleanup)
             this.currentUser = null;
             this.userRoles = [];
