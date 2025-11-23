@@ -53,35 +53,115 @@
 }
 
 // ============================================
-// Admin Table Header Styles
+// Admin Table Styles - Compact, Bordered & Responsive
 // ============================================
-// Apply admin-gradient-start color to all table headers in admin pages
 
-// Vuetify table headers - multiple selectors for compatibility
-.v-table thead th,
-.v-table thead tr th,
-.v-table table thead th {
-    background: var(--admin-gradient-start) !important;
-    color: var(--admin-text-primary) !important;
-    font-weight: 600 !important;
-    text-transform: uppercase !important;
-    font-size: 0.875rem !important;
-    letter-spacing: 0.5px !important;
-    padding: 12px 16px !important;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
+// Make all tables compact and bordered
+.v-table,
+table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    border-radius: 4px !important;
+    overflow: hidden !important;
+    background: #ffffff !important;
+
+    // Compact padding for all cells
+    thead th,
+    thead tr th,
+    tbody td,
+    tbody tr td {
+        padding: 8px 12px !important;
+        font-size: 0.875rem !important;
+        border: 1px solid rgba(0, 0, 0, 0.12) !important;
+        border-collapse: collapse !important;
+    }
+
+    // Table header styles
+    thead th,
+    thead tr th {
+        background: var(--admin-gradient-start) !important;
+        color: var(--admin-text-primary) !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
+        white-space: nowrap !important;
+
+        &:not(:last-child) {
+            border-right: 1px solid rgba(255, 255, 255, 0.2) !important;
+        }
+    }
+
+    // Table body styles
+    tbody {
+        tr {
+            transition: background-color 0.2s ease !important;
+
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.04) !important;
+            }
+
+            &:nth-child(even) {
+                background-color: rgba(0, 0, 0, 0.02) !important;
+            }
+
+            td {
+                border-right: 1px solid rgba(0, 0, 0, 0.12) !important;
+                vertical-align: middle !important;
+
+                &:last-child {
+                    border-right: none !important;
+                }
+            }
+        }
+
+        // Empty state
+        tr:last-child td[colspan] {
+            text-align: center !important;
+            padding: 24px !important;
+            color: rgba(0, 0, 0, 0.6) !important;
+            border: none !important;
+        }
+    }
 }
 
-// Standard HTML table headers (if used)
-table thead th,
-table thead tr th {
-    background: var(--admin-gradient-start) !important;
-    color: var(--admin-text-primary) !important;
-    font-weight: 600 !important;
-    text-transform: uppercase !important;
-    font-size: 0.875rem !important;
-    letter-spacing: 0.5px !important;
-    padding: 12px 16px !important;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
+// Responsive table wrapper
+.table-responsive,
+.v-card-text>.v-table,
+.v-card-text>table {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+}
+
+.table-responsive {
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    border-radius: 4px !important;
+
+    .v-table,
+    table {
+        margin: 0 !important;
+        min-width: 600px !important;
+    }
+}
+
+// Auto-wrap tables in card text areas for responsive behavior
+.v-card-text {
+
+    .v-table,
+    table {
+        position: relative !important;
+    }
+
+    @media (max-width: 960px) {
+
+        .v-table,
+        table {
+            display: block !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
+    }
 }
 
 // Sortable header hover effect
@@ -101,4 +181,62 @@ table thead th.sortable.active,
 table thead tr th.sortable.active {
     background: var(--admin-gradient-end) !important;
     box-shadow: inset 0 -3px 0 rgba(255, 255, 255, 0.5) !important;
+}
+
+// Responsive breakpoints
+@media (max-width: 960px) {
+
+    .v-table,
+    table {
+        font-size: 0.8125rem !important;
+
+        thead th,
+        thead tr th,
+        tbody td,
+        tbody tr td {
+            padding: 6px 10px !important;
+        }
+
+        thead th,
+        thead tr th {
+            font-size: 0.75rem !important;
+        }
+    }
+
+    .table-responsive {
+
+        .v-table,
+        table {
+            min-width: 500px !important;
+        }
+    }
+}
+
+@media (max-width: 600px) {
+
+    .v-table,
+    table {
+
+        thead th,
+        thead tr th,
+        tbody td,
+        tbody tr td {
+            padding: 6px 8px !important;
+            font-size: 0.75rem !important;
+        }
+
+        thead th,
+        thead tr th {
+            font-size: 0.6875rem !important;
+            letter-spacing: 0.3px !important;
+        }
+    }
+
+    .table-responsive {
+
+        .v-table,
+        table {
+            min-width: 450px !important;
+        }
+    }
 }

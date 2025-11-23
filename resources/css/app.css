@@ -11,6 +11,24 @@ tbody .sortable:hover {
 
 /* Table headers have their own hover styles defined in app.scss */
 
+/* Responsive table wrapper - wrap tables with this class for horizontal scrolling on mobile */
+.admin-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+/* Compact table utility class */
+.table-compact {
+    font-size: 0.8125rem !important;
+}
+
+.table-compact thead th,
+.table-compact tbody td {
+    padding: 6px 10px !important;
+}
+
 /* Reduce gap between prepend-icon and title in navigation menu */
 .v-navigation-drawer .v-list-item__prepend>.v-list-item__spacer {
     width: 8px !important;
