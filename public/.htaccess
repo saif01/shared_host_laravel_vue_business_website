@@ -33,6 +33,13 @@
     
     # Referrer Policy
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Allow CORS for fonts and images
+    <FilesMatch "\.(ttf|ttc|otf|eot|woff|woff2|font.css|css|js|png|jpg|jpeg|gif|svg|ico)$">
+        Header set Access-Control-Allow-Origin "*"
+        Header set Access-Control-Allow-Methods "GET, OPTIONS"
+        Header set Access-Control-Allow-Headers "*"
+    </FilesMatch>
 </IfModule>
 
 # Disable directory browsing
