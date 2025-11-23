@@ -1,32 +1,94 @@
 <template>
-    <v-container class="fill-height" fluid>
-        <v-row align="center" justify="center">
-            <v-col cols="12" sm="8" md="4">
-                <v-card>
-                    <v-card-title class="text-h5">Admin Login</v-card-title>
-                    <v-card-text>
-                        <v-form @submit.prevent="handleLogin">
-                            <v-text-field
-                                v-model="form.email"
-                                label="Email"
-                                type="email"
-                                required
-                                prepend-inner-icon="mdi-email"
-                            ></v-text-field>
-                            <v-text-field
-                                v-model="form.password"
-                                label="Password"
-                                type="password"
-                                required
-                                prepend-inner-icon="mdi-lock"
-                            ></v-text-field>
-                            <v-btn type="submit" color="primary" block :loading="loading" @click="handleLogin">Login</v-btn>
-                        </v-form>
-                    </v-card-text>
-                </v-card>
-            </v-col>
-        </v-row>
-    </v-container>
+    <div class="login-container fill-height">
+        <!-- Animated Background Shapes -->
+        <div class="background-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+
+        <v-container class="fill-height d-flex align-center justify-center" fluid>
+            <v-row justify="center">
+                <v-col cols="12" sm="10" md="8" lg="6" xl="4">
+                    <v-card class="login-card glass-effect" elevation="24">
+                        <v-row no-gutters>
+                            <!-- Left Side: Welcome/Branding (Hidden on small screens) -->
+                            <v-col cols="12" md="6" class="d-none d-md-flex flex-column align-center justify-center branding-section pa-8">
+                                <div class="brand-logo mb-6">
+                                    <v-img src="https://it.cpbangladesh.com/all-assets/common/logo/cpb/cpbit.png"
+                                        alt="CPB-IT Logo" width="120" class="drop-shadow"></v-img>
+                                </div>
+                                <h2 class="text-white text-h4 font-weight-bold mb-2 text-center">Welcome Back!</h2>
+                                <p class="text-white text-body-1 text-center opacity-80">
+                                    Sign in to access your dashboard and manage your business efficiently.
+                                </p>
+                            </v-col>
+
+                            <!-- Right Side: Login Form -->
+                            <v-col cols="12" md="6" class="form-section pa-8 bg-white">
+                                <div class="d-flex d-md-none justify-center mb-6">
+                                    <v-img src="https://it.cpbangladesh.com/all-assets/common/logo/cpb/cpbit.png"
+                                        alt="CPB-IT Logo" width="80"></v-img>
+                                </div>
+
+                                <h3 class="text-h5 font-weight-bold text-primary mb-1 text-center text-md-left">Admin Login</h3>
+                                <p class="text-caption text-grey mb-8 text-center text-md-left">Please enter your credentials to continue</p>
+
+                                <v-form @submit.prevent="handleLogin" ref="form">
+                                    <v-text-field
+                                        v-model="form.email"
+                                        label="Email Address"
+                                        placeholder="admin@example.com"
+                                        type="email"
+                                        variant="outlined"
+                                        color="primary"
+                                        prepend-inner-icon="mdi-email-outline"
+                                        :rules="[rules.required, rules.email]"
+                                        class="mb-2"
+                                        density="comfortable"
+                                    ></v-text-field>
+
+                                    <v-text-field
+                                        v-model="form.password"
+                                        label="Password"
+                                        placeholder="••••••••"
+                                        :type="showPassword ? 'text' : 'password'"
+                                        variant="outlined"
+                                        color="primary"
+                                        prepend-inner-icon="mdi-lock-outline"
+                                        :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                                        @click:append-inner="showPassword = !showPassword"
+                                        :rules="[rules.required]"
+                                        class="mb-6"
+                                        density="comfortable"
+                                    ></v-text-field>
+
+                                    <v-btn
+                                        type="submit"
+                                        color="primary"
+                                        block
+                                        size="large"
+                                        :loading="loading"
+                                        class="login-btn text-capitalize font-weight-bold mb-4"
+                                        elevation="4"
+                                    >
+                                        Sign In
+                                        <v-icon end icon="mdi-arrow-right" class="ml-2"></v-icon>
+                                    </v-btn>
+                                </v-form>
+
+                                <div class="text-center mt-4">
+                                    <p class="text-caption text-grey">
+                                        Protected by <span class="font-weight-bold text-primary">CPB-IT Security</span>
+                                    </p>
+                                </div>
+                            </v-col>
+                        </v-row>
+                    </v-card>
+                </v-col>
+            </v-row>
+        </v-container>
+    </div>
 </template>
 
 <script>
@@ -40,12 +102,20 @@ export default {
                 email: '',
                 password: ''
             },
-            loading: false
+            loading: false,
+            showPassword: false,
+            rules: {
+                required: v => !!v || 'This field is required',
+                email: v => /.+@.+\..+/.test(v) || 'E-mail must be valid'
+            }
         };
     },
     methods: {
         ...mapActions(useAuthStore, ['login']),
         async handleLogin() {
+            const { valid } = await this.$refs.form.validate();
+            if (!valid) return;
+
             this.loading = true;
             try {
                 await this.login(this.form);
@@ -65,8 +135,11 @@ export default {
                 if (window.Swal) {
                     window.Swal.fire({
                         icon: 'error',
-                        title: 'Login Failed',
-                        text: message
+                        title: 'Authentication Failed',
+                        text: message,
+                        confirmButtonColor: '#d33',
+                        background: '#fff',
+                        iconColor: '#d33'
                     });
                 } else {
                     alert(message);
@@ -78,4 +151,121 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.login-container {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    position: relative;
+    overflow: hidden;
+    min-height: 100vh;
+}
+
+/* Animated Background Shapes */
+.background-shapes .shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.6;
+    z-index: 0;
+    animation: float 20s infinite;
+}
+
+.shape-1 {
+    background: #4facfe;
+    width: 400px;
+    height: 400px;
+    top: -100px;
+    left: -100px;
+    animation-delay: 0s;
+}
+
+.shape-2 {
+    background: #00f2fe;
+    width: 300px;
+    height: 300px;
+    bottom: -50px;
+    right: -50px;
+    animation-delay: -5s;
+}
+
+.shape-3 {
+    background: #a18cd1;
+    width: 200px;
+    height: 200px;
+    top: 40%;
+    left: 40%;
+    animation-delay: -10s;
+}
+
+@keyframes float {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(30px, -50px) rotate(10deg); }
+    66% { transform: translate(-20px, 20px) rotate(-5deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+.login-card {
+    border-radius: 24px;
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    z-index: 1;
+}
+
+.glass-effect {
+    background: rgba(255, 255, 255, 0.8) !important;
+}
+
+.branding-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.branding-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
+    opacity: 0.3;
+}
+
+.drop-shadow {
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+}
+
+.form-section {
+    position: relative;
+}
+
+.login-btn {
+    border-radius: 12px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(118, 75, 162, 0.4);
+}
+
+/* Input Field Customization */
+:deep(.v-field--variant-outlined) {
+    border-radius: 12px;
+    background: #f8fafc;
+    border-color: #e2e8f0;
+}
+
+:deep(.v-field--focused .v-field__outline) {
+    --v-field-border-opacity: 1;
+    color: #764ba2 !important;
+}
+
+:deep(.v-label) {
+    font-size: 0.9rem;
+}
+</style>
 
