@@ -15,7 +15,8 @@
                             <div>
                                 <div class="glass-pill d-inline-flex align-center px-4 py-2 rounded-pill mb-6">
                                     <v-icon icon="mdi-flash" color="amber-accent-3" size="small" class="mr-2"></v-icon>
-                                    <span class="text-subtitle-2 font-weight-bold tracking-wide">POWERING YOUR SUCCESS</span>
+                                    <span class="text-subtitle-2 font-weight-bold tracking-wide">POWERING YOUR
+                                        SUCCESS</span>
                                 </div>
                                 <h1 class="text-h2 text-lg-h1 font-weight-black mb-6 lh-tight text-shadow-sm">
                                     {{ heroTitle }}
@@ -24,38 +25,29 @@
                                     {{ heroSubtitle }}
                                 </p>
                                 <div class="d-flex gap-4 flex-wrap">
-                                    <v-btn
-                                        size="x-large"
-                                        color="amber-accent-4"
-                                        variant="flat"
-                                        rounded="pill"
+                                    <v-btn size="x-large" color="amber-accent-4" variant="flat" rounded="pill"
                                         class="px-8 text-black font-weight-bold elevation-4 hover-scale"
-                                        :to="{ name: 'Contact' }"
-                                    >
+                                        :to="{ name: 'Contact' }">
                                         Get a Quote
                                         <v-icon end icon="mdi-arrow-right" class="ml-2"></v-icon>
                                     </v-btn>
-                                    <v-btn
-                                        size="x-large"
-                                        variant="outlined"
-                                        color="white"
-                                        rounded="pill"
-                                        class="px-8 font-weight-bold border-2 hover-fill"
-                                        to="/services"
-                                    >
+                                    <v-btn size="x-large" variant="outlined" color="white" rounded="pill"
+                                        class="px-8 font-weight-bold border-2 hover-fill" to="/services">
                                         Our Solutions
                                     </v-btn>
                                 </div>
                             </div>
                         </v-fade-transition>
                     </v-col>
-                    
+
                     <v-col cols="12" md="5" class="d-none d-md-flex justify-center align-center">
                         <div class="hero-visual-3d">
                             <div class="glass-card card-main">
-                                <v-icon icon="mdi-battery-charging-high" size="48" color="amber-accent-3" class="mb-4"></v-icon>
+                                <v-icon icon="mdi-battery-charging-high" size="48" color="amber-accent-3"
+                                    class="mb-4"></v-icon>
                                 <div class="text-h5 font-weight-bold text-white mb-2">Always On</div>
-                                <div class="text-body-2 text-white opacity-80">Uninterrupted power supply for critical operations.</div>
+                                <div class="text-body-2 text-white opacity-80">Uninterrupted power supply for critical
+                                    operations.</div>
                             </div>
                             <div class="glass-card card-float-1">
                                 <v-icon icon="mdi-shield-check" size="32" color="success"></v-icon>
@@ -69,11 +61,14 @@
                     </v-col>
                 </v-row>
             </v-container>
-            
+
             <!-- Wave Divider -->
             <div class="wave-divider">
-                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
+                    preserveAspectRatio="none">
+                    <path
+                        d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
+                        class="shape-fill"></path>
                 </svg>
             </div>
         </section>
@@ -84,11 +79,14 @@
                 <v-card elevation="10" rounded="xl" class="stats-card overflow-hidden">
                     <v-row no-gutters>
                         <v-col v-for="(stat, index) in stats" :key="index" cols="6" md="3">
-                            <div class="py-8 px-4 text-center stat-item h-100 d-flex flex-column justify-center align-center">
-                                <div class="text-h3 text-md-h2 font-weight-black text-transparent bg-clip-text gradient-text mb-2">
+                            <div
+                                class="py-8 px-4 text-center stat-item h-100 d-flex flex-column justify-center align-center">
+                                <div
+                                    class="text-h3 text-md-h2 font-weight-black text-transparent bg-clip-text gradient-text mb-2">
                                     {{ stat.value }}
                                 </div>
-                                <div class="text-subtitle-1 text-uppercase font-weight-bold text-medium-emphasis tracking-wide">
+                                <div
+                                    class="text-subtitle-1 text-uppercase font-weight-bold text-medium-emphasis tracking-wide">
                                     {{ stat.label }}
                                 </div>
                             </div>
@@ -107,7 +105,8 @@
                 <div class="marquee-container">
                     <div class="marquee-track">
                         <div v-for="(client, i) in [...clients, ...clients]" :key="i" class="marquee-item mx-8">
-                            <v-img :src="client.logo" width="120" height="60" class="client-logo grayscale hover-color transition-all"></v-img>
+                            <v-img :src="client.logo" width="120" height="60"
+                                class="client-logo grayscale hover-color transition-all"></v-img>
                         </div>
                     </div>
                 </div>
@@ -123,23 +122,22 @@
                     <h2 class="text-h3 font-weight-bold mb-6 text-grey-darken-3">Power Support Solutions</h2>
                     <div class="divider-center mx-auto mb-6"></div>
                     <p class="text-h6 text-medium-emphasis mx-auto mw-800 font-weight-regular">
-                        We ensure uninterrupted operations for businesses and households with high-quality power products and services.
+                        We ensure uninterrupted operations for businesses and households with high-quality power
+                        products and services.
                     </p>
                 </div>
 
                 <v-row v-if="services.length > 0">
                     <v-col v-for="(service, i) in services" :key="service.id" cols="12" md="4">
                         <v-hover v-slot="{ isHovering, props }">
-                            <v-card
-                                v-bind="props"
-                                :elevation="isHovering ? 16 : 2"
+                            <v-card v-bind="props" :elevation="isHovering ? 16 : 2"
                                 class="h-100 service-card-modern rounded-xl transition-all"
-                                :to="`/services/${service.slug}`"
-                            >
+                                :to="`/services/${service.slug}`">
                                 <div class="card-gradient-border"></div>
                                 <v-card-item class="pt-8 px-6 pb-6">
-                                    <div class="service-icon-box mb-6 rounded-lg elevation-3 d-inline-flex pa-4 bg-white text-primary">
-                                        <v-icon :icon="getServiceIcon(i)" size="32"></v-icon>
+                                    <div
+                                        class="service-icon-box mb-6 rounded-lg elevation-3 d-inline-flex pa-4 bg-white text-primary">
+                                        <v-icon :icon="service.icon || getServiceIcon(i)" size="32"></v-icon>
                                     </div>
                                     <v-card-title class="text-h5 font-weight-bold mb-3 text-grey-darken-3">
                                         {{ service.title }}
@@ -162,16 +160,17 @@
 
         <!-- Why Choose Us Section -->
         <section class="py-20 bg-surface position-relative overflow-hidden">
-             <!-- Decorative blobs -->
-             <div class="blob blob-1"></div>
-             <div class="blob blob-2"></div>
-             
-             <v-container class="position-relative z-index-1">
+            <!-- Decorative blobs -->
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+
+            <v-container class="position-relative z-index-1">
                 <v-row align="center">
                     <v-col cols="12" md="6" class="pr-md-12">
-                        <div class="text-overline text-primary font-weight-bold mb-2 tracking-widest">WHY CHOOSE US</div>
+                        <div class="text-overline text-primary font-weight-bold mb-2 tracking-widest">WHY CHOOSE US
+                        </div>
                         <h2 class="text-h3 font-weight-bold mb-8 text-grey-darken-3">Reliable Power, Guaranteed</h2>
-                        
+
                         <div class="feature-list">
                             <div v-for="(feature, i) in features" :key="i" class="feature-item d-flex align-start mb-8">
                                 <div class="feature-icon mr-6 rounded-circle bg-primary-lighten-5 pa-3 text-primary">
@@ -187,12 +186,10 @@
                     <v-col cols="12" md="6">
                         <div class="image-composition position-relative">
                             <div class="composition-bg rounded-xl bg-grey-lighten-3"></div>
-                            <v-img 
-                                src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                                class="rounded-xl elevation-10 position-relative z-index-2 composition-img"
-                                cover
-                                height="500"
-                            ></v-img>
+                            <v-img
+                                src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                                class="rounded-xl elevation-10 position-relative z-index-2 composition-img" cover
+                                height="500"></v-img>
                             <div class="composition-card glass-card-dark pa-6 rounded-lg elevation-10">
                                 <div class="d-flex align-center mb-2">
                                     <v-icon icon="mdi-check-decagram" color="success" class="mr-2"></v-icon>
@@ -203,7 +200,7 @@
                         </div>
                     </v-col>
                 </v-row>
-             </v-container>
+            </v-container>
         </section>
 
         <!-- Testimonials Section (Dark Premium) -->
@@ -216,7 +213,7 @@
             <v-container class="position-relative z-index-1">
                 <div class="text-center mb-16">
                     <div class="glass-pill-sm d-inline-flex align-center px-4 py-1 rounded-pill mb-4">
-                         <span class="text-caption font-weight-bold text-white tracking-widest">TESTIMONIALS</span>
+                        <span class="text-caption font-weight-bold text-white tracking-widest">TESTIMONIALS</span>
                     </div>
                     <h2 class="text-h3 font-weight-bold mb-6 text-white">Client Success Stories</h2>
                     <p class="text-h6 text-white opacity-70 mx-auto mw-600 font-weight-light">
@@ -224,41 +221,43 @@
                     </p>
                 </div>
 
-                <v-carousel
-                    cycle
-                    height="auto"
-                    hide-delimiters
-                    show-arrows="hover"
-                    interval="8000"
-                    class="testimonial-carousel pb-12"
-                >
+                <v-carousel cycle height="auto" hide-delimiters show-arrows="hover" interval="8000"
+                    class="testimonial-carousel pb-12">
                     <template v-slot:prev="{ props }">
-                        <v-btn variant="outlined" color="white" icon="mdi-chevron-left" @click="props.onClick" class="carousel-nav-btn"></v-btn>
+                        <v-btn variant="outlined" color="white" icon="mdi-chevron-left" @click="props.onClick"
+                            class="carousel-nav-btn"></v-btn>
                     </template>
                     <template v-slot:next="{ props }">
-                        <v-btn variant="outlined" color="white" icon="mdi-chevron-right" @click="props.onClick" class="carousel-nav-btn"></v-btn>
+                        <v-btn variant="outlined" color="white" icon="mdi-chevron-right" @click="props.onClick"
+                            class="carousel-nav-btn"></v-btn>
                     </template>
-                    
+
                     <v-carousel-item v-for="(testimonial, i) in testimonials" :key="i">
                         <v-row justify="center">
                             <v-col cols="12" md="9" lg="8">
-                                <v-card class="testimonial-glass-card text-center pa-10 pa-md-16 rounded-xl elevation-0 position-relative">
+                                <v-card
+                                    class="testimonial-glass-card text-center pa-10 pa-md-16 rounded-xl elevation-0 position-relative">
                                     <div class="d-flex flex-column align-center position-relative z-index-2">
                                         <div class="avatar-glow mb-8">
                                             <v-avatar size="90" class="elevation-4 border-2-white">
                                                 <v-img :src="testimonial.avatar" cover></v-img>
                                             </v-avatar>
                                         </div>
-                                        
-                                        <v-icon icon="mdi-format-quote-open" size="48" color="white" class="mb-6 opacity-50"></v-icon>
-                                        
-                                        <p class="text-h5 text-md-h4 font-weight-light font-italic mb-8 text-white lh-relaxed testimonial-text">
+
+                                        <v-icon icon="mdi-format-quote-open" size="48" color="white"
+                                            class="mb-6 opacity-50"></v-icon>
+
+                                        <p
+                                            class="text-h5 text-md-h4 font-weight-light font-italic mb-8 text-white lh-relaxed testimonial-text">
                                             "{{ testimonial.text }}"
                                         </p>
-                                        
+
                                         <div class="text-center">
-                                            <div class="text-h6 font-weight-bold text-white mb-1">{{ testimonial.name }}</div>
-                                            <div class="text-subtitle-2 text-primary-lighten-2 font-weight-bold text-uppercase tracking-wide">{{ testimonial.role }}</div>
+                                            <div class="text-h6 font-weight-bold text-white mb-1">{{ testimonial.name }}
+                                            </div>
+                                            <div
+                                                class="text-subtitle-2 text-primary-lighten-2 font-weight-bold text-uppercase tracking-wide">
+                                                {{ testimonial.role }}</div>
                                         </div>
                                     </div>
                                 </v-card>
@@ -277,7 +276,8 @@
                         <div class="text-overline text-primary font-weight-bold mb-2 tracking-widest">OUR PRODUCTS</div>
                         <h2 class="text-h3 font-weight-bold text-grey-darken-3">Featured Power Systems</h2>
                     </div>
-                    <v-btn variant="outlined" color="primary" to="/products" class="mt-4 mt-sm-0 rounded-pill px-6 font-weight-bold">
+                    <v-btn variant="outlined" color="primary" to="/products"
+                        class="mt-4 mt-sm-0 rounded-pill px-6 font-weight-bold">
                         View All Products
                     </v-btn>
                 </div>
@@ -285,23 +285,19 @@
                 <v-row v-if="products.length > 0">
                     <v-col v-for="product in products" :key="product.id" cols="12" md="4">
                         <v-hover v-slot="{ isHovering, props }">
-                            <v-card
-                                v-bind="props"
-                                :elevation="isHovering ? 12 : 0"
+                            <v-card v-bind="props" :elevation="isHovering ? 12 : 0"
                                 class="h-100 product-card-modern bg-white rounded-xl overflow-hidden border-thin"
-                                :to="`/products/${product.slug}`"
-                            >
+                                :to="`/products/${product.slug}`">
                                 <div class="img-wrapper overflow-hidden position-relative" style="height: 260px;">
                                     <v-img
                                         :src="product.thumbnail || 'https://via.placeholder.com/400x300?text=Product'"
-                                        height="100%"
-                                        cover
-                                        class="product-img transition-transform"
-                                        :class="{ 'scale-110': isHovering }"
-                                    >
+                                        height="100%" cover class="product-img transition-transform"
+                                        :class="{ 'scale-110': isHovering }">
                                         <template v-slot:placeholder>
-                                            <div class="d-flex align-center justify-center fill-height bg-grey-lighten-3">
-                                                <v-progress-circular indeterminate color="primary"></v-progress-circular>
+                                            <div
+                                                class="d-flex align-center justify-center fill-height bg-grey-lighten-3">
+                                                <v-progress-circular indeterminate
+                                                    color="primary"></v-progress-circular>
                                             </div>
                                         </template>
                                     </v-img>
@@ -311,7 +307,8 @@
                                     </div>
                                 </div>
                                 <v-card-item class="pt-6 px-6">
-                                    <div class="text-caption text-primary font-weight-bold mb-1 text-uppercase">Category</div>
+                                    <div class="text-caption text-primary font-weight-bold mb-1 text-uppercase">Category
+                                    </div>
                                     <v-card-title class="text-h6 font-weight-bold mb-2 text-grey-darken-3 px-0">
                                         {{ product.title }}
                                     </v-card-title>
@@ -342,25 +339,17 @@
                             Secure Your Power Today
                         </h2>
                         <p class="text-h6 text-white opacity-90 mb-10 font-weight-light mw-800 mx-auto">
-                            Don't let power outages disrupt your life or business. Contact us for reliable backup solutions.
+                            Don't let power outages disrupt your life or business. Contact us for reliable backup
+                            solutions.
                         </p>
                         <div class="d-flex flex-column flex-sm-row justify-center gap-4">
-                            <v-btn
-                                size="x-large"
-                                color="amber-accent-4"
-                                variant="flat"
+                            <v-btn size="x-large" color="amber-accent-4" variant="flat"
                                 class="text-black font-weight-bold px-10 rounded-pill elevation-6 hover-lift"
-                                :to="{ name: 'Contact' }"
-                            >
+                                :to="{ name: 'Contact' }">
                                 Get Started
                             </v-btn>
-                            <v-btn
-                                size="x-large"
-                                variant="outlined"
-                                color="white"
-                                class="font-weight-bold px-10 rounded-pill border-2"
-                                :to="{ name: 'Contact' }"
-                            >
+                            <v-btn size="x-large" variant="outlined" color="white"
+                                class="font-weight-bold px-10 rounded-pill border-2" :to="{ name: 'Contact' }">
                                 Contact Support
                             </v-btn>
                         </div>
@@ -382,6 +371,7 @@ export default {
             heroSubtitle: 'Reliable technical power support solutions, including UPS systems, industrial backup, batteries, and professional maintenance services.',
             services: [],
             products: [],
+            posts: [],
             stats: [
                 { value: '500+', label: 'Systems Installed' },
                 { value: '99.9%', label: 'Power Uptime' },
@@ -389,18 +379,18 @@ export default {
                 { value: '10+', label: 'Years Experience' }
             ],
             features: [
-                { 
-                    title: 'Uninterrupted Operations', 
+                {
+                    title: 'Uninterrupted Operations',
                     desc: 'We ensure your business never stops with our reliable backup power solutions and UPS systems.',
                     icon: 'mdi-lightning-bolt-circle'
                 },
-                { 
-                    title: 'High-Quality Products', 
+                {
+                    title: 'High-Quality Products',
                     desc: 'We supply top-tier batteries, inverters, and power management systems built for long-term performance.',
                     icon: 'mdi-shield-star'
                 },
-                { 
-                    title: 'Responsive Support', 
+                {
+                    title: 'Responsive Support',
                     desc: 'Our professional maintenance team is available 24/7 to handle installation and repairs.',
                     icon: 'mdi-headset'
                 }
@@ -441,15 +431,31 @@ export default {
     methods: {
         async loadHomeData() {
             try {
-                const response = await axios.get('/api/public/home');
-                if (response.data.homePage) {
-                    this.heroTitle = response.data.homePage.title || this.heroTitle;
-                    this.heroSubtitle = response.data.homePage.content || this.heroSubtitle;
+                const response = await axios.get('/api/openapi/home');
+                const data = response.data;
+
+                // Handle homePage data
+                if (data.homePage) {
+                    this.heroTitle = data.homePage.title || this.heroTitle;
+                    // Use content or short description from homePage, or keep default
+                    if (data.homePage.content) {
+                        // If content is HTML, extract text or use as is
+                        this.heroSubtitle = data.homePage.content.replace(/<[^>]*>/g, '').substring(0, 200) || this.heroSubtitle;
+                    }
                 }
-                if (response.data.services) {
-                    this.services = response.data.services;
+
+                // Handle services - map API response to component format
+                if (data.services && Array.isArray(data.services) && data.services.length > 0) {
+                    this.services = data.services.map(service => ({
+                        id: service.id,
+                        title: service.title || '',
+                        slug: service.slug || '',
+                        short_description: service.short_description || service.description || '',
+                        icon: service.icon || null,
+                        image: service.image || null,
+                    }));
                 } else {
-                    // Fallback services if API returns empty
+                    // Fallback services if API returns empty or services module not enabled
                     this.services = [
                         { id: 1, title: 'UPS Systems', slug: 'ups-systems', short_description: 'Reliable Uninterruptible Power Supply systems for critical equipment.' },
                         { id: 2, title: 'Industrial Backup', slug: 'industrial-backup', short_description: 'Heavy-duty power backup solutions for industrial applications.' },
@@ -459,20 +465,37 @@ export default {
                         { id: 6, title: 'Installation Services', slug: 'installation', short_description: 'Expert installation of all power systems and wiring.' }
                     ];
                 }
-                if (response.data.products) {
-                    this.products = response.data.products;
+
+                // Handle products - map API response to component format
+                if (data.products && Array.isArray(data.products) && data.products.length > 0) {
+                    this.products = data.products.map(product => ({
+                        id: product.id,
+                        title: product.title || '',
+                        slug: product.slug || '',
+                        short_description: product.short_description || product.description || '',
+                        thumbnail: product.thumbnail || (product.images && product.images[0]) || null,
+                        price: product.price || product.price_range || null,
+                        show_price: product.show_price !== false,
+                    }));
                 }
+
+                // Handle blog posts if blog module is enabled (optional)
+                if (data.posts && Array.isArray(data.posts) && data.posts.length > 0) {
+                    // Store posts if needed for future use
+                    this.posts = data.posts;
+                }
+
             } catch (error) {
                 console.error('Error loading home data:', error);
                 // Fallback for demo purposes if API fails
-                 this.services = [
-                        { id: 1, title: 'UPS Systems', slug: 'ups-systems', short_description: 'Reliable Uninterruptible Power Supply systems for critical equipment.' },
-                        { id: 2, title: 'Industrial Backup', slug: 'industrial-backup', short_description: 'Heavy-duty power backup solutions for industrial applications.' },
-                        { id: 3, title: 'Home Power Solutions', slug: 'home-power', short_description: 'Keep your home running smoothly during outages.' },
-                        { id: 4, title: 'Battery Maintenance', slug: 'battery-maintenance', short_description: 'Professional testing, replacement, and disposal services.' },
-                        { id: 5, title: 'Power Management', slug: 'power-management', short_description: 'Smart energy monitoring and efficiency optimization.' },
-                        { id: 6, title: 'Installation Services', slug: 'installation', short_description: 'Expert installation of all power systems and wiring.' }
-                    ];
+                this.services = [
+                    { id: 1, title: 'UPS Systems', slug: 'ups-systems', short_description: 'Reliable Uninterruptible Power Supply systems for critical equipment.' },
+                    { id: 2, title: 'Industrial Backup', slug: 'industrial-backup', short_description: 'Heavy-duty power backup solutions for industrial applications.' },
+                    { id: 3, title: 'Home Power Solutions', slug: 'home-power', short_description: 'Keep your home running smoothly during outages.' },
+                    { id: 4, title: 'Battery Maintenance', slug: 'battery-maintenance', short_description: 'Professional testing, replacement, and disposal services.' },
+                    { id: 5, title: 'Power Management', slug: 'power-management', short_description: 'Smart energy monitoring and efficiency optimization.' },
+                    { id: 6, title: 'Installation Services', slug: 'installation', short_description: 'Expert installation of all power systems and wiring.' }
+                ];
             }
         },
         getServiceIcon(index) {
@@ -485,19 +508,57 @@ export default {
 
 <style scoped>
 /* General Utilities */
-.z-index-1 { z-index: 1; }
-.z-index-2 { z-index: 2; }
-.lh-tight { line-height: 1.1; }
-.lh-relaxed { line-height: 1.6; }
-.mw-600 { max-width: 600px; }
-.mw-800 { max-width: 800px; }
-.tracking-wide { letter-spacing: 0.05em; }
-.tracking-widest { letter-spacing: 0.15em; }
-.gap-4 { gap: 1rem; }
-.text-shadow-sm { text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-.border-thin { border: 1px solid rgba(0,0,0,0.08) !important; }
-.border-2 { border-width: 2px !important; }
-.border-2-white { border: 2px solid white !important; }
+.z-index-1 {
+    z-index: 1;
+}
+
+.z-index-2 {
+    z-index: 2;
+}
+
+.lh-tight {
+    line-height: 1.1;
+}
+
+.lh-relaxed {
+    line-height: 1.6;
+}
+
+.mw-600 {
+    max-width: 600px;
+}
+
+.mw-800 {
+    max-width: 800px;
+}
+
+.tracking-wide {
+    letter-spacing: 0.05em;
+}
+
+.tracking-widest {
+    letter-spacing: 0.15em;
+}
+
+.gap-4 {
+    gap: 1rem;
+}
+
+.text-shadow-sm {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.border-thin {
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+.border-2 {
+    border-width: 2px !important;
+}
+
+.border-2-white {
+    border: 2px solid white !important;
+}
 
 /* Hero Section */
 .hero-section {
@@ -513,15 +574,24 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(-45deg, #1e3a8a, #2563eb, #d97706, #1e3a8a); /* Blue to Amber */
+    background: linear-gradient(-45deg, #1e3a8a, #2563eb, #d97706, #1e3a8a);
+    /* Blue to Amber */
     background-size: 400% 400%;
     animation: gradientBG 15s ease infinite;
 }
 
 @keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 .hero-shapes .shape {
@@ -543,7 +613,8 @@ export default {
 .shape-2 {
     width: 300px;
     height: 300px;
-    background: #f59e0b; /* Amber */
+    background: #f59e0b;
+    /* Amber */
     bottom: 10%;
     right: 10%;
     animation-delay: -5s;
@@ -559,8 +630,13 @@ export default {
 }
 
 @keyframes floatShape {
-    0% { transform: translate(0, 0) rotate(0deg); }
-    100% { transform: translate(50px, 50px) rotate(20deg); }
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(50px, 50px) rotate(20deg);
+    }
 }
 
 .glass-pill {
@@ -619,8 +695,15 @@ export default {
 }
 
 @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-20px); }
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
 }
 
 .wave-divider {
@@ -651,7 +734,7 @@ export default {
 }
 
 .stat-item:not(:last-child) {
-    border-right: 1px solid rgba(0,0,0,0.05);
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .gradient-text {
@@ -693,8 +776,13 @@ export default {
 }
 
 @keyframes scroll {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
 }
 
 /* Services Section */
@@ -720,7 +808,7 @@ export default {
     background: white;
     position: relative;
     overflow: hidden;
-    border: 1px solid rgba(0,0,0,0.04);
+    border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .card-gradient-border {
@@ -880,7 +968,7 @@ export default {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.3);
+    background: rgba(0, 0, 0, 0.3);
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -905,7 +993,7 @@ export default {
     width: 100%;
     height: 100%;
     background: radial-gradient(circle at top right, #2563eb, transparent 40%),
-                radial-gradient(circle at bottom left, #d97706, transparent 40%);
+        radial-gradient(circle at bottom left, #d97706, transparent 40%);
     opacity: 0.6;
 }
 
@@ -920,10 +1008,29 @@ export default {
 
 /* Responsive */
 @media (max-width: 960px) {
-    .hero-section { min-height: auto; padding-top: 60px; padding-bottom: 60px; }
-    .stat-item:not(:last-child) { border-right: none; border-bottom: 1px solid rgba(0,0,0,0.05); }
-    .composition-bg { display: none; }
-    .glass-card-dark { left: 20px; bottom: 20px; }
-    .huge-quote-mark { font-size: 200px; top: 0; }
+    .hero-section {
+        min-height: auto;
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
+
+    .stat-item:not(:last-child) {
+        border-right: none;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .composition-bg {
+        display: none;
+    }
+
+    .glass-card-dark {
+        left: 20px;
+        bottom: 20px;
+    }
+
+    .huge-quote-mark {
+        font-size: 200px;
+        top: 0;
+    }
 }
 </style>

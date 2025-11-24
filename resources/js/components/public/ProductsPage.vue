@@ -194,7 +194,7 @@ export default {
     methods: {
         async loadProducts() {
             try {
-                const response = await axios.get('/api/public/products');
+                const response = await axios.get('/api/openapi/products');
                 this.products = response.data.map(p => this.enhanceProductData(p));
             } catch (error) {
                 console.error('Error loading products:', error);

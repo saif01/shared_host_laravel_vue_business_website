@@ -132,7 +132,7 @@ export default {
     methods: {
         async loadServices() {
             try {
-                const response = await axios.get('/api/public/services');
+                const response = await axios.get('/api/openapi/services');
                 this.services = response.data;
             } catch (error) {
                 console.error('Error loading services:', error);
