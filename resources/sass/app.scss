@@ -240,3 +240,27 @@ table thead tr th.sortable.active {
         }
     }
 }
+
+// ============================================
+// SweetAlert2 Z-Index Override
+// ============================================
+// Ensure SweetAlert modals and toasts appear above Vuetify dialogs
+// Vuetify dialogs typically use z-index around 200-300
+// Setting SweetAlert to 20000 ensures it's always on top
+
+.swal2-container {
+    z-index: 20000 !important;
+}
+
+.swal2-backdrop-show {
+    z-index: 19999 !important;
+}
+
+.swal2-popup {
+    z-index: 20001 !important;
+}
+
+// Toast notifications should also appear above dialogs
+.swal2-toast {
+    z-index: 20002 !important;
+}

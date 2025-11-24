@@ -148,333 +148,356 @@
                     <span class="text-h5 font-weight-bold">
                         {{ editingProduct ? 'Edit Product' : 'Create New Product' }}
                     </span>
-                    <v-btn icon="mdi-close" variant="text" color="white" @click="closeDialog"></v-btn>
+                    <v-btn icon="mdi-close" variant="text" color="white" @click="closeDialog"
+                        :disabled="loadingProduct"></v-btn>
                 </v-card-title>
 
                 <v-card-text class="pa-0">
-                    <v-tabs v-model="formTab" color="primary" bg-color="grey-lighten-4">
-                        <v-tab value="basic">
-                            <v-icon icon="mdi-information" class="mr-2"></v-icon>
-                            Basic Info
-                        </v-tab>
-                        <v-tab value="media">
-                            <v-icon icon="mdi-image" class="mr-2"></v-icon>
-                            Media
-                        </v-tab>
-                        <v-tab value="pricing">
-                            <v-icon icon="mdi-currency-usd" class="mr-2"></v-icon>
-                            Pricing
-                        </v-tab>
-                        <v-tab value="categories">
-                            <v-icon icon="mdi-folder" class="mr-2"></v-icon>
-                            Categories & Tags
-                        </v-tab>
-                        <v-tab value="specs">
-                            <v-icon icon="mdi-cog" class="mr-2"></v-icon>
-                            Specifications
-                        </v-tab>
-                        <v-tab value="features">
-                            <v-icon icon="mdi-star" class="mr-2"></v-icon>
-                            Features
-                        </v-tab>
-                        <v-tab value="downloads">
-                            <v-icon icon="mdi-download" class="mr-2"></v-icon>
-                            Downloads
-                        </v-tab>
-                        <v-tab value="faq">
-                            <v-icon icon="mdi-help-circle" class="mr-2"></v-icon>
-                            FAQs
-                        </v-tab>
-                        <v-tab value="warranty">
-                            <v-icon icon="mdi-shield-check" class="mr-2"></v-icon>
-                            Warranty & Service
-                        </v-tab>
-                        <v-tab value="seo">
-                            <v-icon icon="mdi-search-web" class="mr-2"></v-icon>
-                            SEO
-                        </v-tab>
-                        <v-tab value="settings">
-                            <v-icon icon="mdi-cog-outline" class="mr-2"></v-icon>
-                            Settings
-                        </v-tab>
-                    </v-tabs>
+                    <!-- Loading State -->
+                    <div v-if="loadingProduct" class="d-flex align-center justify-center pa-12">
+                        <div class="text-center">
+                            <v-progress-circular indeterminate color="primary" size="64"></v-progress-circular>
+                            <p class="text-body-1 text-medium-emphasis mt-4">Loading product data...</p>
+                        </div>
+                    </div>
 
-                    <v-divider></v-divider>
+                    <!-- Form Content -->
+                    <div v-else>
+                        <v-tabs v-model="formTab" color="primary" bg-color="grey-lighten-4">
+                            <v-tab value="basic">
+                                <v-icon icon="mdi-information" class="mr-2"></v-icon>
+                                Basic Info
+                            </v-tab>
+                            <v-tab value="media">
+                                <v-icon icon="mdi-image" class="mr-2"></v-icon>
+                                Media
+                            </v-tab>
+                            <v-tab value="pricing">
+                                <v-icon icon="mdi-currency-usd" class="mr-2"></v-icon>
+                                Pricing
+                            </v-tab>
+                            <v-tab value="categories">
+                                <v-icon icon="mdi-folder" class="mr-2"></v-icon>
+                                Categories & Tags
+                            </v-tab>
+                            <v-tab value="specs">
+                                <v-icon icon="mdi-cog" class="mr-2"></v-icon>
+                                Specifications
+                            </v-tab>
+                            <v-tab value="features">
+                                <v-icon icon="mdi-star" class="mr-2"></v-icon>
+                                Features
+                            </v-tab>
+                            <v-tab value="downloads">
+                                <v-icon icon="mdi-download" class="mr-2"></v-icon>
+                                Downloads
+                            </v-tab>
+                            <v-tab value="faq">
+                                <v-icon icon="mdi-help-circle" class="mr-2"></v-icon>
+                                FAQs
+                            </v-tab>
+                            <v-tab value="warranty">
+                                <v-icon icon="mdi-shield-check" class="mr-2"></v-icon>
+                                Warranty & Service
+                            </v-tab>
+                            <v-tab value="seo">
+                                <v-icon icon="mdi-search-web" class="mr-2"></v-icon>
+                                SEO
+                            </v-tab>
+                            <v-tab value="settings">
+                                <v-icon icon="mdi-cog-outline" class="mr-2"></v-icon>
+                                Settings
+                            </v-tab>
+                        </v-tabs>
 
-                    <v-window v-model="formTab" class="pa-6">
-                        <!-- Basic Info Tab -->
-                        <v-window-item value="basic">
-                            <v-row>
-                                <v-col cols="12">
-                                    <v-text-field v-model="form.title" label="Product Title *" variant="outlined"
-                                        :rules="[v => !!v || 'Title is required']"></v-text-field>
-                                </v-col>
-                                <v-col cols="12" md="6">
-                                    <v-text-field v-model="form.slug" label="Slug *" variant="outlined"
-                                        hint="URL-friendly version of title" :rules="[v => !!v || 'Slug is required']">
-                                        <template v-slot:append>
-                                            <v-btn icon="mdi-refresh" size="small" variant="text"
-                                                @click="generateSlug"></v-btn>
-                                        </template>
-                                    </v-text-field>
-                                </v-col>
-                                <v-col cols="12" md="6">
-                                    <v-text-field v-model="form.sku" label="SKU" variant="outlined"
-                                        hint="Stock Keeping Unit"></v-text-field>
-                                </v-col>
-                                <v-col cols="12">
-                                    <v-textarea v-model="form.short_description" label="Short Description"
-                                        variant="outlined" rows="2" hint="Brief description for listings"></v-textarea>
-                                </v-col>
-                                <v-col cols="12">
-                                    <v-textarea v-model="form.description" label="Full Description" variant="outlined"
-                                        rows="6" hint="Detailed product description (supports HTML)"></v-textarea>
-                                </v-col>
-                            </v-row>
-                        </v-window-item>
+                        <v-divider></v-divider>
 
-                        <!-- Media Tab -->
-                        <v-window-item value="media">
-                            <v-row>
-                                <v-col cols="12">
-                                    <v-text-field v-model="form.thumbnail" label="Thumbnail URL" variant="outlined"
-                                        prepend-inner-icon="mdi-image" hint="Main product image URL"></v-text-field>
-                                    <div v-if="form.thumbnail" class="mt-2">
-                                        <v-img :src="form.thumbnail" max-height="200" contain class="rounded"></v-img>
-                                    </div>
-                                </v-col>
-                                <v-col cols="12">
-                                    <div class="text-subtitle-1 font-weight-bold mb-2">Product Images (Gallery)</div>
-                                    <div v-for="(img, index) in form.images" :key="index" class="mb-3">
-                                        <v-text-field v-model="form.images[index]" :label="`Image ${index + 1} URL`"
-                                            variant="outlined" prepend-inner-icon="mdi-image">
-                                            <template v-slot:append>
-                                                <v-btn icon="mdi-delete" size="small" variant="text" color="error"
-                                                    @click="removeImage(index)"></v-btn>
-                                            </template>
-                                        </v-text-field>
-                                        <div v-if="form.images[index]" class="mt-2">
-                                            <v-img :src="form.images[index]" max-height="150" contain
-                                                class="rounded"></v-img>
-                                        </div>
-                                    </div>
-                                    <v-btn color="primary" variant="outlined" prepend-icon="mdi-plus"
-                                        @click="addImage">Add Image</v-btn>
-                                </v-col>
-                            </v-row>
-                        </v-window-item>
-
-                        <!-- Pricing Tab -->
-                        <v-window-item value="pricing">
-                            <v-row>
-                                <v-col cols="12" md="6">
-                                    <v-text-field v-model.number="form.price" label="Price" variant="outlined"
-                                        type="number" step="0.01" prepend-inner-icon="mdi-currency-usd"
-                                        hint="Numeric price value"></v-text-field>
-                                </v-col>
-                                <v-col cols="12" md="6">
-                                    <v-text-field v-model="form.price_range" label="Price Range" variant="outlined"
-                                        hint="e.g., '$50 - $100' or 'Contact for Price'"></v-text-field>
-                                </v-col>
-                                <v-col cols="12">
-                                    <v-switch v-model="form.show_price" label="Show Price on Website"
-                                        color="primary"></v-switch>
-                                </v-col>
-                            </v-row>
-                        </v-window-item>
-
-                        <!-- Categories & Tags Tab -->
-                        <v-window-item value="categories">
-                            <v-row>
-                                <v-col cols="12">
-                                    <div class="text-subtitle-1 font-weight-bold mb-2">Categories</div>
-                                    <v-select v-model="form.category_ids" :items="availableCategories" item-title="name"
-                                        item-value="id" label="Select Categories" variant="outlined" multiple chips
-                                        :loading="loadingCategories"></v-select>
-                                </v-col>
-                                <v-col cols="12">
-                                    <div class="text-subtitle-1 font-weight-bold mb-2">Tags</div>
-                                    <v-combobox v-model="form.tag_names" :items="availableTags" label="Tags"
-                                        variant="outlined" multiple chips closable-chips
-                                        hint="Type to add new tags"></v-combobox>
-                                </v-col>
-                            </v-row>
-                        </v-window-item>
-
-                        <!-- Specifications Tab -->
-                        <v-window-item value="specs">
-                            <div class="text-subtitle-1 font-weight-bold mb-4">Technical Specifications</div>
-                            <div v-for="(spec, index) in specificationsList" :key="index" class="mb-3">
+                        <v-window v-model="formTab" class="pa-6">
+                            <!-- Basic Info Tab -->
+                            <v-window-item value="basic">
                                 <v-row>
-                                    <v-col cols="12" md="5">
-                                        <v-text-field v-model="spec.key" label="Specification Name" variant="outlined"
-                                            placeholder="e.g., Capacity, Input Voltage"></v-text-field>
+                                    <v-col cols="12">
+                                        <v-text-field v-model="form.title" label="Product Title *" variant="outlined"
+                                            :rules="[v => !!v || 'Title is required']"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" md="6">
-                                        <v-text-field v-model="spec.value" label="Value" variant="outlined"
-                                            placeholder="e.g., 2000VA / 1800W"></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" md="1">
-                                        <v-btn icon="mdi-delete" color="error" variant="text"
-                                            @click="removeSpecification(index)"></v-btn>
-                                    </v-col>
-                                </v-row>
-                            </div>
-                            <v-btn color="primary" variant="outlined" prepend-icon="mdi-plus"
-                                @click="addSpecification">Add
-                                Specification</v-btn>
-                        </v-window-item>
-
-                        <!-- Features Tab -->
-                        <v-window-item value="features">
-                            <div class="text-subtitle-1 font-weight-bold mb-4">Key Features</div>
-                            <div v-for="(feature, index) in featuresList" :key="index" class="mb-3">
-                                <v-text-field v-model="featuresList[index]" :label="`Feature ${index + 1}`"
-                                    variant="outlined">
-                                    <template v-slot:append>
-                                        <v-btn icon="mdi-delete" color="error" variant="text"
-                                            @click="removeFeature(index)"></v-btn>
-                                    </template>
-                                </v-text-field>
-                            </div>
-                            <v-btn color="primary" variant="outlined" prepend-icon="mdi-plus" @click="addFeature">Add
-                                Feature</v-btn>
-                        </v-window-item>
-
-                        <!-- Downloads Tab -->
-                        <v-window-item value="downloads">
-                            <div class="text-subtitle-1 font-weight-bold mb-4">Product Downloads</div>
-                            <div v-for="(download, index) in downloadsList" :key="index"
-                                class="mb-4 pa-4 border rounded">
-                                <v-row>
-                                    <v-col cols="12" md="4">
-                                        <v-text-field v-model="download.title" label="Title" variant="outlined"
-                                            placeholder="e.g., Product Datasheet"></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" md="3">
-                                        <v-select v-model="download.type" :items="downloadTypes" label="Type"
-                                            variant="outlined"></v-select>
-                                    </v-col>
-                                    <v-col cols="12" md="3">
-                                        <v-text-field v-model="download.size" label="Size" variant="outlined"
-                                            placeholder="e.g., 1.2 MB"></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12" md="2">
-                                        <v-btn icon="mdi-delete" color="error" variant="text"
-                                            @click="removeDownload(index)"></v-btn>
-                                    </v-col>
-                                    <v-col cols="12">
-                                        <v-text-field v-model="download.url" label="File URL" variant="outlined"
-                                            placeholder="https://..."></v-text-field>
-                                    </v-col>
-                                </v-row>
-                            </div>
-                            <v-btn color="primary" variant="outlined" prepend-icon="mdi-plus" @click="addDownload">Add
-                                Download</v-btn>
-                        </v-window-item>
-
-                        <!-- FAQs Tab -->
-                        <v-window-item value="faq">
-                            <div class="text-subtitle-1 font-weight-bold mb-4">Frequently Asked Questions</div>
-                            <div v-for="(faq, index) in faqsList" :key="index" class="mb-4 pa-4 border rounded">
-                                <v-row>
-                                    <v-col cols="12">
-                                        <v-text-field v-model="faq.question" label="Question" variant="outlined"
-                                            placeholder="What is the warranty period?"></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12">
-                                        <v-textarea v-model="faq.answer" label="Answer" variant="outlined" rows="3"
-                                            placeholder="This product comes with..."></v-textarea>
-                                    </v-col>
-                                    <v-col cols="12">
-                                        <v-btn color="error" variant="outlined" prepend-icon="mdi-delete"
-                                            @click="removeFAQ(index)">Remove
-                                            FAQ</v-btn>
-                                    </v-col>
-                                </v-row>
-                            </div>
-                            <v-btn color="primary" variant="outlined" prepend-icon="mdi-plus" @click="addFAQ">Add
-                                FAQ</v-btn>
-                        </v-window-item>
-
-                        <!-- Warranty & Service Tab -->
-                        <v-window-item value="warranty">
-                            <v-row>
-                                <v-col cols="12">
-                                    <v-text-field v-model="warrantyInfo.period" label="Warranty Period"
-                                        variant="outlined" placeholder="e.g., 2 Years"></v-text-field>
-                                </v-col>
-                                <v-col cols="12">
-                                    <div class="text-subtitle-2 font-weight-bold mb-2">What's Covered</div>
-                                    <div v-for="(item, index) in warrantyInfo.coverage" :key="index" class="mb-2">
-                                        <v-text-field v-model="warrantyInfo.coverage[index]" variant="outlined"
-                                            :label="`Coverage Item ${index + 1}`">
+                                        <v-text-field v-model="form.slug" label="Slug *" variant="outlined"
+                                            hint="URL-friendly version of title"
+                                            :rules="[v => !!v || 'Slug is required']">
                                             <template v-slot:append>
-                                                <v-btn icon="mdi-delete" size="small" color="error" variant="text"
-                                                    @click="removeCoverageItem(index)"></v-btn>
+                                                <v-btn icon="mdi-refresh" size="small" variant="text"
+                                                    @click="generateSlug"></v-btn>
                                             </template>
                                         </v-text-field>
-                                    </div>
-                                    <v-btn color="primary" variant="outlined" prepend-icon="mdi-plus"
-                                        @click="addCoverageItem">Add Coverage
-                                        Item</v-btn>
-                                </v-col>
-                                <v-col cols="12">
-                                    <v-textarea v-model="warrantyInfo.terms" label="Terms & Conditions"
-                                        variant="outlined" rows="4"></v-textarea>
-                                </v-col>
-                            </v-row>
-                        </v-window-item>
+                                    </v-col>
+                                    <v-col cols="12" md="6">
+                                        <v-text-field v-model="form.sku" label="SKU" variant="outlined"
+                                            hint="Stock Keeping Unit"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <v-textarea v-model="form.short_description" label="Short Description"
+                                            variant="outlined" rows="2"
+                                            hint="Brief description for listings"></v-textarea>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <v-textarea v-model="form.description" label="Full Description"
+                                            variant="outlined" rows="6"
+                                            hint="Detailed product description (supports HTML)"></v-textarea>
+                                    </v-col>
+                                </v-row>
+                            </v-window-item>
 
-                        <!-- SEO Tab -->
-                        <v-window-item value="seo">
-                            <v-row>
-                                <v-col cols="12">
-                                    <v-text-field v-model="form.meta_title" label="Meta Title" variant="outlined"
-                                        hint="SEO title (50-60 characters recommended)"></v-text-field>
-                                </v-col>
-                                <v-col cols="12">
-                                    <v-textarea v-model="form.meta_description" label="Meta Description"
-                                        variant="outlined" rows="3"
-                                        hint="SEO description (150-160 characters recommended)"></v-textarea>
-                                </v-col>
-                                <v-col cols="12">
-                                    <v-text-field v-model="form.meta_keywords" label="Meta Keywords" variant="outlined"
-                                        hint="Comma-separated keywords"></v-text-field>
-                                </v-col>
-                                <v-col cols="12">
-                                    <v-text-field v-model="form.og_image" label="Open Graph Image URL"
-                                        variant="outlined" hint="Image for social media sharing"></v-text-field>
-                                </v-col>
-                            </v-row>
-                        </v-window-item>
+                            <!-- Media Tab -->
+                            <v-window-item value="media">
+                                <v-row>
+                                    <v-col cols="12">
+                                        <v-text-field v-model="form.thumbnail" label="Thumbnail URL" variant="outlined"
+                                            prepend-inner-icon="mdi-image" hint="Main product image URL"></v-text-field>
+                                        <div v-if="form.thumbnail" class="mt-2">
+                                            <v-img :src="form.thumbnail" max-height="200" contain
+                                                class="rounded"></v-img>
+                                        </div>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <div class="text-subtitle-1 font-weight-bold mb-2">Product Images (Gallery)
+                                        </div>
+                                        <div v-for="(img, index) in form.images" :key="index" class="mb-3">
+                                            <v-text-field v-model="form.images[index]" :label="`Image ${index + 1} URL`"
+                                                variant="outlined" prepend-inner-icon="mdi-image">
+                                                <template v-slot:append>
+                                                    <v-btn icon="mdi-delete" size="small" variant="text" color="error"
+                                                        @click="removeImage(index)"></v-btn>
+                                                </template>
+                                            </v-text-field>
+                                            <div v-if="form.images[index]" class="mt-2">
+                                                <v-img :src="form.images[index]" max-height="150" contain
+                                                    class="rounded"></v-img>
+                                            </div>
+                                        </div>
+                                        <v-btn color="primary" variant="outlined" prepend-icon="mdi-plus"
+                                            @click="addImage">Add Image</v-btn>
+                                    </v-col>
+                                </v-row>
+                            </v-window-item>
 
-                        <!-- Settings Tab -->
-                        <v-window-item value="settings">
-                            <v-row>
-                                <v-col cols="12" md="6">
-                                    <v-switch v-model="form.published" label="Published" color="success"></v-switch>
-                                </v-col>
-                                <v-col cols="12" md="6">
-                                    <v-switch v-model="form.featured" label="Featured Product" color="amber"></v-switch>
-                                </v-col>
-                                <v-col cols="12" md="6">
-                                    <v-text-field v-model.number="form.stock" label="Stock Quantity" variant="outlined"
-                                        type="number"></v-text-field>
-                                </v-col>
-                                <v-col cols="12" md="6">
-                                    <v-text-field v-model.number="form.order" label="Display Order" variant="outlined"
-                                        type="number" hint="Lower numbers appear first"></v-text-field>
-                                </v-col>
-                            </v-row>
-                        </v-window-item>
-                    </v-window>
+                            <!-- Pricing Tab -->
+                            <v-window-item value="pricing">
+                                <v-row>
+                                    <v-col cols="12" md="6">
+                                        <v-text-field v-model.number="form.price" label="Price" variant="outlined"
+                                            type="number" step="0.01" prepend-inner-icon="mdi-currency-usd"
+                                            hint="Numeric price value"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" md="6">
+                                        <v-text-field v-model="form.price_range" label="Price Range" variant="outlined"
+                                            hint="e.g., '$50 - $100' or 'Contact for Price'"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <v-switch v-model="form.show_price" label="Show Price on Website"
+                                            color="primary"></v-switch>
+                                    </v-col>
+                                </v-row>
+                            </v-window-item>
+
+                            <!-- Categories & Tags Tab -->
+                            <v-window-item value="categories">
+                                <v-row>
+                                    <v-col cols="12">
+                                        <div class="text-subtitle-1 font-weight-bold mb-2">Categories</div>
+                                        <v-select v-model="form.category_ids" :items="availableCategories"
+                                            item-title="name" item-value="id" label="Select Categories"
+                                            variant="outlined" multiple chips :loading="loadingCategories"></v-select>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <div class="text-subtitle-1 font-weight-bold mb-2">Tags</div>
+                                        <v-combobox v-model="form.tag_names" :items="availableTags" label="Tags"
+                                            variant="outlined" multiple chips closable-chips
+                                            hint="Type to add new tags"></v-combobox>
+                                    </v-col>
+                                </v-row>
+                            </v-window-item>
+
+                            <!-- Specifications Tab -->
+                            <v-window-item value="specs">
+                                <div class="text-subtitle-1 font-weight-bold mb-4">Technical Specifications</div>
+                                <div v-for="(spec, index) in specificationsList" :key="index" class="mb-3">
+                                    <v-row>
+                                        <v-col cols="12" md="5">
+                                            <v-text-field v-model="spec.key" label="Specification Name"
+                                                variant="outlined"
+                                                placeholder="e.g., Capacity, Input Voltage"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="6">
+                                            <v-text-field v-model="spec.value" label="Value" variant="outlined"
+                                                placeholder="e.g., 2000VA / 1800W"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="1">
+                                            <v-btn icon="mdi-delete" color="error" variant="text"
+                                                @click="removeSpecification(index)"></v-btn>
+                                        </v-col>
+                                    </v-row>
+                                </div>
+                                <v-btn color="primary" variant="outlined" prepend-icon="mdi-plus"
+                                    @click="addSpecification">Add
+                                    Specification</v-btn>
+                            </v-window-item>
+
+                            <!-- Features Tab -->
+                            <v-window-item value="features">
+                                <div class="text-subtitle-1 font-weight-bold mb-4">Key Features</div>
+                                <div v-for="(feature, index) in featuresList" :key="index" class="mb-3">
+                                    <v-text-field v-model="featuresList[index]" :label="`Feature ${index + 1}`"
+                                        variant="outlined">
+                                        <template v-slot:append>
+                                            <v-btn icon="mdi-delete" color="error" variant="text"
+                                                @click="removeFeature(index)"></v-btn>
+                                        </template>
+                                    </v-text-field>
+                                </div>
+                                <v-btn color="primary" variant="outlined" prepend-icon="mdi-plus"
+                                    @click="addFeature">Add
+                                    Feature</v-btn>
+                            </v-window-item>
+
+                            <!-- Downloads Tab -->
+                            <v-window-item value="downloads">
+                                <div class="text-subtitle-1 font-weight-bold mb-4">Product Downloads</div>
+                                <div v-for="(download, index) in downloadsList" :key="index"
+                                    class="mb-4 pa-4 border rounded">
+                                    <v-row>
+                                        <v-col cols="12" md="4">
+                                            <v-text-field v-model="download.title" label="Title" variant="outlined"
+                                                placeholder="e.g., Product Datasheet"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="3">
+                                            <v-select v-model="download.type" :items="downloadTypes" label="Type"
+                                                variant="outlined"></v-select>
+                                        </v-col>
+                                        <v-col cols="12" md="3">
+                                            <v-text-field v-model="download.size" label="Size" variant="outlined"
+                                                placeholder="e.g., 1.2 MB"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="2">
+                                            <v-btn icon="mdi-delete" color="error" variant="text"
+                                                @click="removeDownload(index)"></v-btn>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-text-field v-model="download.url" label="File URL" variant="outlined"
+                                                placeholder="https://..."></v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                </div>
+                                <v-btn color="primary" variant="outlined" prepend-icon="mdi-plus"
+                                    @click="addDownload">Add
+                                    Download</v-btn>
+                            </v-window-item>
+
+                            <!-- FAQs Tab -->
+                            <v-window-item value="faq">
+                                <div class="text-subtitle-1 font-weight-bold mb-4">Frequently Asked Questions</div>
+                                <div v-for="(faq, index) in faqsList" :key="index" class="mb-4 pa-4 border rounded">
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <v-text-field v-model="faq.question" label="Question" variant="outlined"
+                                                placeholder="What is the warranty period?"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-textarea v-model="faq.answer" label="Answer" variant="outlined" rows="3"
+                                                placeholder="This product comes with..."></v-textarea>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-btn color="error" variant="outlined" prepend-icon="mdi-delete"
+                                                @click="removeFAQ(index)">Remove
+                                                FAQ</v-btn>
+                                        </v-col>
+                                    </v-row>
+                                </div>
+                                <v-btn color="primary" variant="outlined" prepend-icon="mdi-plus" @click="addFAQ">Add
+                                    FAQ</v-btn>
+                            </v-window-item>
+
+                            <!-- Warranty & Service Tab -->
+                            <v-window-item value="warranty">
+                                <v-row>
+                                    <v-col cols="12">
+                                        <v-text-field v-model="warrantyInfo.period" label="Warranty Period"
+                                            variant="outlined" placeholder="e.g., 2 Years"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <div class="text-subtitle-2 font-weight-bold mb-2">What's Covered</div>
+                                        <div v-for="(item, index) in warrantyInfo.coverage" :key="index" class="mb-2">
+                                            <v-text-field v-model="warrantyInfo.coverage[index]" variant="outlined"
+                                                :label="`Coverage Item ${index + 1}`">
+                                                <template v-slot:append>
+                                                    <v-btn icon="mdi-delete" size="small" color="error" variant="text"
+                                                        @click="removeCoverageItem(index)"></v-btn>
+                                                </template>
+                                            </v-text-field>
+                                        </div>
+                                        <v-btn color="primary" variant="outlined" prepend-icon="mdi-plus"
+                                            @click="addCoverageItem">Add Coverage
+                                            Item</v-btn>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <v-textarea v-model="warrantyInfo.terms" label="Terms & Conditions"
+                                            variant="outlined" rows="4"></v-textarea>
+                                    </v-col>
+                                </v-row>
+                            </v-window-item>
+
+                            <!-- SEO Tab -->
+                            <v-window-item value="seo">
+                                <v-row>
+                                    <v-col cols="12">
+                                        <v-text-field v-model="form.meta_title" label="Meta Title" variant="outlined"
+                                            hint="SEO title (50-60 characters recommended)"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <v-textarea v-model="form.meta_description" label="Meta Description"
+                                            variant="outlined" rows="3"
+                                            hint="SEO description (150-160 characters recommended)"></v-textarea>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <v-text-field v-model="form.meta_keywords" label="Meta Keywords"
+                                            variant="outlined" hint="Comma-separated keywords"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <v-text-field v-model="form.og_image" label="Open Graph Image URL"
+                                            variant="outlined" hint="Image for social media sharing"></v-text-field>
+                                    </v-col>
+                                </v-row>
+                            </v-window-item>
+
+                            <!-- Settings Tab -->
+                            <v-window-item value="settings">
+                                <v-row>
+                                    <v-col cols="12" md="6">
+                                        <v-switch v-model="form.published" label="Published" color="success"></v-switch>
+                                    </v-col>
+                                    <v-col cols="12" md="6">
+                                        <v-switch v-model="form.featured" label="Featured Product"
+                                            color="amber"></v-switch>
+                                    </v-col>
+                                    <v-col cols="12" md="6">
+                                        <v-text-field v-model.number="form.stock" label="Stock Quantity"
+                                            variant="outlined" type="number"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" md="6">
+                                        <v-text-field v-model.number="form.order" label="Display Order"
+                                            variant="outlined" type="number"
+                                            hint="Lower numbers appear first"></v-text-field>
+                                    </v-col>
+                                </v-row>
+                            </v-window-item>
+                        </v-window>
+                    </div>
                 </v-card-text>
 
-                <v-card-actions class="pa-4 bg-grey-lighten-4">
+                <v-card-actions class="pa-4 bg-grey-lighten-4" v-if="!loadingProduct">
                     <v-spacer></v-spacer>
-                    <v-btn variant="text" @click="closeDialog">Cancel</v-btn>
-                    <v-btn color="primary" variant="flat" @click="saveProduct" :loading="saving">
+                    <v-btn variant="text" @click="closeDialog" :disabled="saving">Cancel</v-btn>
+                    <v-btn color="primary" variant="flat" @click="saveProduct" :loading="saving"
+                        :disabled="loadingProduct">
                         {{ editingProduct ? 'Update' : 'Create' }} Product
                     </v-btn>
                 </v-card-actions>
@@ -496,6 +519,7 @@ export default {
             formTab: 'basic',
             editingProduct: null,
             saving: false,
+            loadingProduct: false,
             publishedFilter: null,
             featuredFilter: null,
             publishedOptions: [
@@ -642,21 +666,37 @@ export default {
                 this.availableTags = [];
             }
         },
-        openDialog(product = null) {
+        async openDialog(product = null) {
             this.editingProduct = product;
+            this.showDialog = true;
+
             if (product) {
-                this.loadProductForEdit(product);
+                try {
+                    await this.loadProductForEdit(product);
+                } catch (error) {
+                    console.error('Error loading product for edit:', error);
+                    // Keep dialog open but show error
+                }
             } else {
                 this.resetForm();
             }
-            this.showDialog = true;
         },
         async loadProductForEdit(product) {
+            this.loadingProduct = true;
             try {
+                // Use product.id for the API call
                 const response = await axios.get(`/api/v1/products/${product.id}`, {
                     headers: this.getAuthHeaders()
                 });
-                const data = response.data;
+
+                // Handle different response structures
+                const data = response.data?.data || response.data;
+
+                if (!data) {
+                    throw new Error('No product data received from server');
+                }
+
+                console.log('Loaded product data:', data);
 
                 this.form = {
                     title: data.title || '',
@@ -736,8 +776,20 @@ export default {
                         terms: ''
                     };
                 }
+
+                // Reset form tab to basic after loading
+                this.formTab = 'basic';
             } catch (error) {
-                this.handleApiError(error, 'Failed to load product');
+                console.error('Error loading product:', error);
+                const errorMessage = error.response?.data?.message ||
+                    error.response?.data?.error ||
+                    'Failed to load product data';
+                this.showError(errorMessage);
+                // Close dialog on error
+                this.closeDialog();
+                throw error;
+            } finally {
+                this.loadingProduct = false;
             }
         },
         resetForm() {
@@ -836,31 +888,48 @@ export default {
                     }
                 });
 
-                // Prepare form data
+                // Prepare form data - ensure all fields are included
                 const formData = {
-                    ...this.form,
+                    title: this.form.title,
+                    slug: this.form.slug,
+                    sku: this.form.sku || null,
+                    short_description: this.form.short_description || null,
+                    description: this.form.description || null,
+                    thumbnail: this.form.thumbnail || null,
                     images: this.form.images.filter(img => img),
+                    price: this.form.price ? parseFloat(this.form.price) : null,
+                    price_range: this.form.price_range || null,
+                    show_price: this.form.show_price !== false,
                     specifications: Object.keys(specifications).length > 0 ? specifications : null,
-                    key_features: this.featuresList.filter(f => f),
-                    downloads: this.downloadsList.filter(d => d.title && d.url),
-                    faqs: this.faqsList.filter(f => f.question && f.answer),
-                    warranty_info: this.warrantyInfo
+                    downloads: this.downloadsList.filter(d => d.title && d.url).length > 0
+                        ? this.downloadsList.filter(d => d.title && d.url)
+                        : null,
+                    key_features: this.featuresList.filter(f => f).length > 0
+                        ? this.featuresList.filter(f => f)
+                        : null,
+                    faqs: this.faqsList.filter(f => f.question && f.answer).length > 0
+                        ? this.faqsList.filter(f => f.question && f.answer)
+                        : null,
+                    warranty_info: this.warrantyInfo,
+                    meta_title: this.form.meta_title || null,
+                    meta_description: this.form.meta_description || null,
+                    meta_keywords: this.form.meta_keywords || null,
+                    og_image: this.form.og_image || null,
+                    published: this.form.published || false,
+                    featured: this.form.featured || false,
+                    stock: this.form.stock ? parseInt(this.form.stock) : null,
+                    order: this.form.order ? parseInt(this.form.order) : 0,
+                    category_ids: this.form.category_ids || [],
+                    tag_names: this.form.tag_names || []
                 };
 
-                // Handle tags - create if they don't exist
-                if (this.form.tag_names && this.form.tag_names.length > 0) {
-                    // For now, we'll send tag names and let backend handle creation
-                    formData.tag_ids = [];
-                    // Backend should handle tag creation by name
-                }
-
                 if (this.editingProduct) {
-                    await axios.put(`/api/v1/products/${this.editingProduct.id}`, formData, {
+                    const response = await axios.put(`/api/v1/products/${this.editingProduct.id}`, formData, {
                         headers: this.getAuthHeaders()
                     });
                     this.showSuccess('Product updated successfully');
                 } else {
-                    await axios.post('/api/v1/products', formData, {
+                    const response = await axios.post('/api/v1/products', formData, {
                         headers: this.getAuthHeaders()
                     });
                     this.showSuccess('Product created successfully');
@@ -869,7 +938,11 @@ export default {
                 this.closeDialog();
                 await this.loadProducts();
             } catch (error) {
-                this.handleApiError(error, 'Failed to save product');
+                console.error('Error saving product:', error);
+                const errorMessage = error.response?.data?.message ||
+                    error.response?.data?.error ||
+                    'Failed to save product';
+                this.showError(errorMessage);
             } finally {
                 this.saving = false;
             }
@@ -891,8 +964,12 @@ export default {
             }
         },
         closeDialog() {
+            if (this.loadingProduct || this.saving) {
+                return; // Prevent closing while loading or saving
+            }
             this.showDialog = false;
             this.editingProduct = null;
+            this.loadingProduct = false;
             this.resetForm();
         },
         onPerPageChange() {
