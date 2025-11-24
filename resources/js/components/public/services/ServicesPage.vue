@@ -160,10 +160,6 @@ export default {
 
 /* Responsive Styles */
 @media (max-width: 960px) {
-    .page-hero {
-        height: 350px;
-    }
-
     .service-icon-side {
         width: 100%;
         min-height: 120px;
@@ -179,11 +175,6 @@ export default {
 }
 
 @media (max-width: 600px) {
-    .page-hero {
-        height: 280px;
-        padding: 40px 0;
-    }
-
     .service-card-detailed {
         margin-bottom: 16px;
     }

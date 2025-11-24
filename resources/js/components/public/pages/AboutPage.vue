@@ -8,12 +8,15 @@
                 <v-fade-transition appear>
                     <div>
                         <div class="glass-pill d-inline-flex align-center px-4 py-2 rounded-pill mb-6">
-                            <v-icon icon="mdi-information-outline" color="amber-accent-4" size="small" class="mr-2"></v-icon>
+                            <v-icon icon="mdi-information-outline" color="amber-accent-4" size="small"
+                                class="mr-2"></v-icon>
                             <span class="text-subtitle-2 font-weight-bold tracking-wide text-white">WHO WE ARE</span>
                         </div>
-                        <h1 class="text-h4 text-lg-h3 font-weight-black text-white mb-6 lh-tight text-shadow-sm">Empowering Your World</h1>
+                        <h1 class="text-h4 text-lg-h3 font-weight-black text-white mb-6 lh-tight text-shadow-sm">
+                            Empowering Your World</h1>
                         <p class="text-h6 text-white opacity-80 mw-800 mx-auto font-weight-light">
-                            We are dedicated to providing reliable, efficient, and sustainable power solutions for businesses and homes across the globe.
+                            We are dedicated to providing reliable, efficient, and sustainable power solutions for
+                            businesses and homes across the globe.
                         </p>
                     </div>
                 </v-fade-transition>
@@ -26,38 +29,43 @@
                 <v-row align="center">
                     <v-col cols="12" md="6" class="pr-md-12">
                         <div class="text-overline text-primary font-weight-bold mb-2 tracking-widest">OUR STORY</div>
-                        <h2 class="text-h3 font-weight-bold mb-6 text-grey-darken-3">Decades of Excellence in Power Solutions</h2>
+                        <h2 class="text-h3 font-weight-bold mb-6 text-grey-darken-3">Decades of Excellence in Power
+                            Solutions</h2>
                         <p class="text-body-1 text-medium-emphasis mb-6 lh-relaxed">
-                            Founded in 2010, Micro Control Technology began with a simple mission: to ensure that no business or home has to suffer from power interruptions. What started as a small local service has grown into a leading provider of comprehensive power support solutions.
+                            Founded in 2010, Micro Control Technology began with a simple mission: to ensure that no
+                            business or home has to suffer from power interruptions. What started as a small local
+                            service has grown into a leading provider of comprehensive power support solutions.
                         </p>
                         <p class="text-body-1 text-medium-emphasis mb-8 lh-relaxed">
-                            We specialize in UPS systems, industrial backup power, battery maintenance, and smart energy management. Our team of certified engineers works tirelessly to deliver products and services that you can trust.
+                            We specialize in UPS systems, industrial backup power, battery maintenance, and smart energy
+                            management. Our team of certified engineers works tirelessly to deliver products and
+                            services that you can trust.
                         </p>
-                        
+
                         <div class="d-flex gap-8 mt-8">
                             <div>
                                 <div class="text-h3 font-weight-black text-primary mb-1">15+</div>
-                                <div class="text-caption font-weight-bold text-uppercase text-medium-emphasis">Years Experience</div>
+                                <div class="text-caption font-weight-bold text-uppercase text-medium-emphasis">Years
+                                    Experience</div>
                             </div>
                             <div>
                                 <div class="text-h3 font-weight-black text-primary mb-1">500+</div>
-                                <div class="text-caption font-weight-bold text-uppercase text-medium-emphasis">Projects Completed</div>
+                                <div class="text-caption font-weight-bold text-uppercase text-medium-emphasis">Projects
+                                    Completed</div>
                             </div>
                             <div>
                                 <div class="text-h3 font-weight-black text-primary mb-1">50+</div>
-                                <div class="text-caption font-weight-bold text-uppercase text-medium-emphasis">Team Members</div>
+                                <div class="text-caption font-weight-bold text-uppercase text-medium-emphasis">Team
+                                    Members</div>
                             </div>
                         </div>
                     </v-col>
                     <v-col cols="12" md="6">
                         <div class="position-relative pl-md-8">
                             <div class="image-border-effect"></div>
-                            <v-img 
-                                src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                                class="rounded-xl elevation-10 position-relative z-index-2"
-                                cover
-                                height="500"
-                            ></v-img>
+                            <v-img
+                                src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                                class="rounded-xl elevation-10 position-relative z-index-2" cover height="500"></v-img>
                         </div>
                     </v-col>
                 </v-row>
@@ -78,7 +86,8 @@
                 <v-row>
                     <v-col v-for="(value, i) in values" :key="i" cols="12" md="4">
                         <v-card class="value-card h-100 pa-8 rounded-xl elevation-2 border-thin text-center">
-                            <div class="value-icon mb-6 mx-auto rounded-circle bg-white elevation-4 text-primary d-flex align-center justify-center">
+                            <div
+                                class="value-icon mb-6 mx-auto rounded-circle bg-white elevation-4 text-primary d-flex align-center justify-center">
                                 <v-icon :icon="value.icon" size="36"></v-icon>
                             </div>
                             <h3 class="text-h5 font-weight-bold mb-4 text-grey-darken-3">{{ value.title }}</h3>
@@ -100,7 +109,8 @@
                 <v-row justify="center">
                     <v-col v-for="(member, i) in team" :key="i" cols="12" sm="6" md="3">
                         <v-card class="team-card text-center elevation-0 bg-transparent">
-                            <div class="team-img-wrapper mb-6 mx-auto rounded-circle overflow-hidden elevation-6 position-relative">
+                            <div
+                                class="team-img-wrapper mb-6 mx-auto rounded-circle overflow-hidden elevation-6 position-relative">
                                 <v-img :src="member.image" cover height="100%"></v-img>
                                 <div class="team-socials d-flex align-center justify-center gap-2">
                                     <v-btn icon="mdi-linkedin" size="small" color="white" variant="text"></v-btn>
@@ -108,7 +118,8 @@
                                 </div>
                             </div>
                             <h4 class="text-h6 font-weight-bold text-grey-darken-3">{{ member.name }}</h4>
-                            <div class="text-subtitle-2 text-primary font-weight-bold text-uppercase tracking-wide">{{ member.role }}</div>
+                            <div class="text-subtitle-2 text-primary font-weight-bold text-uppercase tracking-wide">{{
+                                member.role }}</div>
                         </v-card>
                     </v-col>
                 </v-row>
@@ -167,11 +178,6 @@ export default {
 </script>
 
 <style scoped>
-.page-hero {
-    height: 500px;
-    overflow: hidden;
-}
-
 .hero-bg-image {
     position: absolute;
     top: 0;
@@ -204,10 +210,6 @@ export default {
 
 /* Responsive Styles */
 @media (max-width: 960px) {
-    .page-hero {
-        height: 400px;
-    }
-
     .image-border-effect {
         display: none;
     }
@@ -232,11 +234,6 @@ export default {
 }
 
 @media (max-width: 600px) {
-    .page-hero {
-        height: 300px;
-        padding: 40px 0;
-    }
-
     .value-card {
         padding: 24px !important;
         margin-bottom: 16px;
@@ -262,7 +259,7 @@ export default {
         flex-direction: column;
     }
 
-    .gap-8 > div {
+    .gap-8>div {
         text-align: center;
     }
 

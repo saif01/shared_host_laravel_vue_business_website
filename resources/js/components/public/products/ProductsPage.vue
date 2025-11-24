@@ -1,7 +1,7 @@
 <template>
     <div class="products-page-modern">
         <!-- Hero Section -->
-        <section class="hero-section position-relative d-flex align-center justify-center text-center overflow-hidden">
+        <section class="page-hero position-relative d-flex align-center justify-center text-center overflow-hidden">
             <div class="hero-background" />
             <div class="hero-pattern" />
 
@@ -178,11 +178,6 @@ onMounted(async () => {
 
 /* Responsive */
 @media (max-width: 960px) {
-    .hero-section {
-        height: 280px;
-        padding: 40px 0;
-    }
-
     .hero-badge {
         padding: 8px 16px !important;
         font-size: 0.7rem !important;
@@ -190,11 +185,6 @@ onMounted(async () => {
 }
 
 @media (max-width: 600px) {
-    .hero-section {
-        height: 240px;
-        padding: 30px 0;
-    }
-
     .hero-badge {
         padding: 6px 12px !important;
         font-size: 0.65rem !important;
