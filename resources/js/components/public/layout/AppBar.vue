@@ -1,0 +1,185 @@
+<template>
+    <v-app-bar app class="main-app-bar px-md-12 transition-all" :class="{ 'scrolled-app-bar': isScrolled }"
+        height="80" elevation="0">
+        <div class="d-flex align-center w-100 position-relative z-index-2">
+            <!-- Logo Area -->
+            <router-link to="/" class="text-decoration-none d-flex align-center mr-8 logo-group">
+                <div class="logo-box mr-3 elevation-4">
+                    <v-icon icon="mdi-flash" color="amber-accent-4" size="28" class="logo-icon"></v-icon>
+                </div>
+                <div class="d-flex flex-column">
+                    <span class="text-h6 font-weight-black text-grey-darken-4 lh-1 tracking-tight logo-text">{{
+                        siteName.toUpperCase() }}</span>
+                    <span class="text-caption font-weight-bold text-primary tracking-widest">{{ siteTagline
+                        }}</span>
+                </div>
+            </router-link>
+
+            <v-spacer></v-spacer>
+
+            <!-- Desktop Navigation -->
+            <div class="d-none d-md-flex align-center gap-8">
+                <router-link v-for="item in menuItems" :key="item.id" :to="item.url"
+                    class="nav-link text-body-2 font-weight-bold text-grey-darken-3" active-class="active-nav-link">
+                    {{ item.label }}
+                </router-link>
+            </div>
+
+            <v-spacer></v-spacer>
+
+            <!-- CTA Button -->
+            <div class="d-none d-md-flex">
+                <v-btn color="primary" variant="flat" rounded="pill"
+                    class="font-weight-bold px-6 text-capitalize elevation-3 hover-glow" :to="{ name: 'Contact' }">
+                    Get a Quote
+                </v-btn>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <v-app-bar-nav-icon class="d-md-none ml-2" @click="$emit('toggle-drawer')"></v-app-bar-nav-icon>
+        </div>
+
+        <!-- Gradient Border Bottom (Visible on Scroll) -->
+        <div class="app-bar-border"></div>
+    </v-app-bar>
+</template>
+
+<script>
+export default {
+    name: 'AppBar',
+    props: {
+        isScrolled: {
+            type: Boolean,
+            default: false
+        },
+        siteName: {
+            type: String,
+            required: true
+        },
+        siteTagline: {
+            type: String,
+            required: true
+        },
+        menuItems: {
+            type: Array,
+            required: true
+        }
+    },
+    emits: ['toggle-drawer']
+};
+</script>
+
+<style scoped>
+/* Topbar Styles */
+.main-app-bar {
+    background: rgba(255, 255, 255, 0.0) !important;
+    backdrop-filter: blur(0px);
+    border-bottom: 1px solid transparent;
+}
+
+.scrolled-app-bar {
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05) !important;
+}
+
+.app-bar-border {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.scrolled-app-bar .app-bar-border {
+    opacity: 1;
+}
+
+.logo-box {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.logo-group:hover .logo-box {
+    transform: rotate(10deg) scale(1.05);
+}
+
+.logo-icon {
+    transition: transform 0.3s ease;
+}
+
+.logo-group:hover .logo-icon {
+    transform: scale(1.1);
+}
+
+.lh-1 {
+    line-height: 1;
+}
+
+.tracking-tight {
+    letter-spacing: -0.025em;
+}
+
+.tracking-widest {
+    letter-spacing: 0.1em;
+}
+
+.gap-8 {
+    gap: 32px;
+}
+
+.nav-link {
+    text-decoration: none;
+    position: relative;
+    padding: 8px 0;
+    transition: color 0.2s ease;
+}
+
+.nav-link:hover,
+.active-nav-link {
+    color: #2563eb !important;
+    /* Primary Blue */
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #2563eb, #f59e0b);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+.nav-link:hover::after,
+.active-nav-link::after {
+    width: 100%;
+}
+
+.hover-glow {
+    transition: all 0.3s ease;
+}
+
+.hover-glow:hover {
+    box-shadow: 0 0 15px rgba(37, 99, 235, 0.4) !important;
+    transform: translateY(-1px);
+}
+
+/* Transitions */
+.transition-all {
+    transition: all 0.3s ease;
+}
+</style>
+
