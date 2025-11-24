@@ -4,7 +4,7 @@
         <section class="product-hero position-relative d-flex align-center overflow-hidden">
             <div class="hero-background"></div>
             <div class="hero-overlay"></div>
-            
+
             <v-container class="position-relative z-index-2">
                 <v-row align="center">
                     <v-col cols="12" md="8">
@@ -18,45 +18,29 @@
                                 </span>
                             </template>
                         </v-breadcrumbs>
-                        
+
                         <div class="d-flex align-center gap-3 mb-4">
-                            <v-chip 
-                                v-if="product.featured"
-                                color="amber-accent-4"
-                                variant="flat"
-                                size="small"
-                                class="font-weight-bold"
-                            >
+                            <v-chip v-if="product.featured" color="amber-accent-4" variant="flat" size="small"
+                                class="font-weight-bold">
                                 FEATURED
                             </v-chip>
-                            <v-chip 
-                                color="white"
-                                variant="flat"
-                                size="small"
-                                class="font-weight-bold text-primary"
-                            >
+                            <v-chip color="white" variant="flat" size="small" class="font-weight-bold text-primary">
                                 {{ getCategoryName(product) }}
                             </v-chip>
                         </div>
-                        
-                        <h1 class="text-h3 text-md-h1 font-weight-black text-white mb-4">
+
+                        <h1 class="text-h4 text-lg-h3 font-weight-black text-white mb-6 lh-tight text-shadow-sm">
                             {{ product.title }}
                         </h1>
-                        
+
                         <p class="text-h6 text-grey-lighten-1 opacity-90 mb-6">
                             {{ product.short_description || product.description }}
                         </p>
-                        
+
                         <div class="d-flex align-center gap-6 flex-wrap">
                             <div v-if="product.rating" class="d-flex align-center">
-                                <v-rating
-                                    :model-value="product.rating"
-                                    color="amber"
-                                    density="compact"
-                                    half-increments
-                                    readonly
-                                    size="small"
-                                ></v-rating>
+                                <v-rating :model-value="product.rating" color="amber" density="compact" half-increments
+                                    readonly size="small"></v-rating>
                                 <span class="text-body-2 text-white ml-2">
                                     ({{ product.reviewCount || 0 }} Reviews)
                                 </span>
@@ -73,21 +57,11 @@
                             <div class="text-h3 font-weight-black text-primary mb-4">
                                 {{ formatPrice(product) }}
                             </div>
-                            <v-btn 
-                                color="primary" 
-                                size="large" 
-                                rounded="lg" 
-                                class="w-100 font-weight-bold elevation-2"
-                                prepend-icon="mdi-file-document-edit-outline"
-                            >
+                            <v-btn color="primary" size="large" rounded="lg" class="w-100 font-weight-bold elevation-2"
+                                prepend-icon="mdi-file-document-edit-outline">
                                 Request Quote
                             </v-btn>
-                            <v-btn 
-                                variant="text" 
-                                color="primary" 
-                                class="w-100 mt-2"
-                                prepend-icon="mdi-download"
-                            >
+                            <v-btn variant="text" color="primary" class="w-100 mt-2" prepend-icon="mdi-download">
                                 Download Datasheet
                             </v-btn>
                         </div>
@@ -101,38 +75,22 @@
                 <!-- Product Gallery -->
                 <v-col cols="12" md="6">
                     <div class="gallery-container position-sticky top-20">
-                        <v-card class="main-image-card rounded-xl overflow-hidden elevation-2 mb-4 bg-white d-flex align-center justify-center position-relative">
-                            <v-chip
-                                v-if="product.featured"
-                                color="amber-accent-4"
-                                variant="flat"
-                                class="position-absolute top-0 left-0 ma-4 z-index-2 font-weight-bold"
-                            >
+                        <v-card
+                            class="main-image-card rounded-xl overflow-hidden elevation-2 mb-4 bg-white d-flex align-center justify-center position-relative">
+                            <v-chip v-if="product.featured" color="amber-accent-4" variant="flat"
+                                class="position-absolute top-0 left-0 ma-4 z-index-2 font-weight-bold">
                                 NEW
                             </v-chip>
-                            <v-img
-                                :src="activeImage"
-                                max-height="500"
-                                contain
-                                class="product-main-img"
-                            ></v-img>
-                            <v-btn
-                                icon="mdi-magnify-plus-outline"
-                                variant="text"
-                                color="grey-darken-2"
+                            <v-img :src="activeImage" max-height="500" contain class="product-main-img"></v-img>
+                            <v-btn icon="mdi-magnify-plus-outline" variant="text" color="grey-darken-2"
                                 class="position-absolute bottom-0 right-0 ma-4 bg-white elevation-2"
-                                @click="showImageZoom = true"
-                            ></v-btn>
+                                @click="showImageZoom = true"></v-btn>
                         </v-card>
-                        
+
                         <div class="d-flex gap-3 overflow-x-auto py-2 hide-scrollbar">
-                            <div 
-                                v-for="(img, i) in productImages" 
-                                :key="i"
+                            <div v-for="(img, i) in productImages" :key="i"
                                 class="thumbnail-card rounded-lg overflow-hidden cursor-pointer transition-all"
-                                :class="{ 'active-thumb': activeImage === img }"
-                                @click="activeImage = img"
-                            >
+                                :class="{ 'active-thumb': activeImage === img }" @click="activeImage = img">
                                 <v-img :src="img" width="80" height="80" cover></v-img>
                             </div>
                         </div>
@@ -146,27 +104,19 @@
                         <div class="price-block mb-6 pa-5 bg-white rounded-xl border-thin elevation-1">
                             <div class="d-flex align-end lh-1 mb-2">
                                 <span class="text-h3 font-weight-black text-primary">{{ formatPrice(product) }}</span>
-                                <span v-if="product.oldPrice" class="text-h6 text-medium-emphasis text-decoration-line-through ml-3 mb-1">
+                                <span v-if="product.oldPrice"
+                                    class="text-h6 text-medium-emphasis text-decoration-line-through ml-3 mb-1">
                                     ${{ product.oldPrice }}
                                 </span>
                             </div>
                             <div class="d-flex align-center gap-4 flex-wrap mt-4">
-                                <v-btn 
-                                    color="primary" 
-                                    size="large" 
-                                    rounded="lg" 
+                                <v-btn color="primary" size="large" rounded="lg"
                                     class="flex-grow-1 font-weight-bold elevation-2"
-                                    prepend-icon="mdi-file-document-edit-outline"
-                                >
+                                    prepend-icon="mdi-file-document-edit-outline">
                                     Request Quote
                                 </v-btn>
-                                <v-btn 
-                                    variant="outlined" 
-                                    color="grey-darken-1" 
-                                    size="large" 
-                                    rounded="lg"
-                                    icon="mdi-heart-outline"
-                                ></v-btn>
+                                <v-btn variant="outlined" color="grey-darken-1" size="large" rounded="lg"
+                                    icon="mdi-heart-outline"></v-btn>
                             </div>
                         </div>
 
@@ -179,8 +129,10 @@
                             <v-card-text class="pa-4">
                                 <div v-if="keyFeatures.length > 0">
                                     <div v-for="(feature, i) in keyFeatures" :key="i" class="d-flex align-center mb-3">
-                                        <v-icon icon="mdi-check-circle" color="success" size="small" class="mr-3"></v-icon>
-                                        <span class="text-body-1 font-weight-medium text-grey-darken-2">{{ feature }}</span>
+                                        <v-icon icon="mdi-check-circle" color="success" size="small"
+                                            class="mr-3"></v-icon>
+                                        <span class="text-body-1 font-weight-medium text-grey-darken-2">{{ feature
+                                        }}</span>
                                     </div>
                                 </div>
                                 <div v-else class="text-body-2 text-medium-emphasis">
@@ -197,11 +149,7 @@
                             </v-card-title>
                             <v-card-text class="pa-0">
                                 <v-list lines="two" density="compact">
-                                    <v-list-item 
-                                        v-for="(value, key) in quickSpecs" 
-                                        :key="key"
-                                        class="border-bottom"
-                                    >
+                                    <v-list-item v-for="(value, key) in quickSpecs" :key="key" class="border-bottom">
                                         <v-list-item-title class="text-caption text-medium-emphasis">
                                             {{ formatSpecLabel(key) }}
                                         </v-list-item-title>
@@ -215,21 +163,26 @@
 
                         <!-- Trust Badges -->
                         <div class="trust-badges d-flex gap-4 flex-wrap">
-                            <div class="trust-badge d-flex align-center pa-3 bg-white rounded-lg border-thin flex-grow-1">
-                                <v-icon icon="mdi-shield-check-outline" color="primary" size="large" class="mr-3"></v-icon>
+                            <div
+                                class="trust-badge d-flex align-center pa-3 bg-white rounded-lg border-thin flex-grow-1">
+                                <v-icon icon="mdi-shield-check-outline" color="primary" size="large"
+                                    class="mr-3"></v-icon>
                                 <div>
                                     <div class="text-caption font-weight-bold text-grey-darken-3">Warranty</div>
                                     <div class="text-caption text-medium-emphasis">{{ warrantyInfo.period }}</div>
                                 </div>
                             </div>
-                            <div class="trust-badge d-flex align-center pa-3 bg-white rounded-lg border-thin flex-grow-1">
-                                <v-icon icon="mdi-truck-fast-outline" color="primary" size="large" class="mr-3"></v-icon>
+                            <div
+                                class="trust-badge d-flex align-center pa-3 bg-white rounded-lg border-thin flex-grow-1">
+                                <v-icon icon="mdi-truck-fast-outline" color="primary" size="large"
+                                    class="mr-3"></v-icon>
                                 <div>
                                     <div class="text-caption font-weight-bold text-grey-darken-3">Delivery</div>
                                     <div class="text-caption text-medium-emphasis">Fast Shipping</div>
                                 </div>
                             </div>
-                            <div class="trust-badge d-flex align-center pa-3 bg-white rounded-lg border-thin flex-grow-1">
+                            <div
+                                class="trust-badge d-flex align-center pa-3 bg-white rounded-lg border-thin flex-grow-1">
                                 <v-icon icon="mdi-headset" color="primary" size="large" class="mr-3"></v-icon>
                                 <div>
                                     <div class="text-caption font-weight-bold text-grey-darken-3">Support</div>
@@ -277,17 +230,26 @@
                                 <!-- Overview Tab -->
                                 <v-window-item value="overview">
                                     <div class="mw-900">
-                                        <h3 class="text-h5 font-weight-bold mb-4 text-grey-darken-3">Product Overview</h3>
-                                        <div class="text-body-1 text-grey-darken-1 lh-relaxed mb-6" v-html="formattedDescription"></div>
-                                        
-                                        <h4 class="text-h6 font-weight-bold mb-4 text-grey-darken-3">Why Choose This Product?</h4>
+                                        <h3 class="text-h5 font-weight-bold mb-4 text-grey-darken-3">Product Overview
+                                        </h3>
+                                        <div class="text-body-1 text-grey-darken-1 lh-relaxed mb-6"
+                                            v-html="formattedDescription"></div>
+
+                                        <h4 class="text-h6 font-weight-bold mb-4 text-grey-darken-3">Why Choose This
+                                            Product?
+                                        </h4>
                                         <v-row>
                                             <v-col cols="12" md="6" v-for="(benefit, i) in productBenefits" :key="i">
                                                 <div class="d-flex align-start mb-3">
-                                                    <v-icon icon="mdi-check-circle" color="success" class="mr-3 mt-1"></v-icon>
+                                                    <v-icon icon="mdi-check-circle" color="success"
+                                                        class="mr-3 mt-1"></v-icon>
                                                     <div>
-                                                        <div class="font-weight-bold text-grey-darken-2 mb-1">{{ benefit.title }}</div>
-                                                        <div class="text-body-2 text-medium-emphasis">{{ benefit.description }}</div>
+                                                        <div class="font-weight-bold text-grey-darken-2 mb-1">{{
+                                                            benefit.title
+                                                        }}</div>
+                                                        <div class="text-body-2 text-medium-emphasis">{{
+                                                            benefit.description }}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </v-col>
@@ -298,11 +260,14 @@
                                 <!-- Technical Specs Tab -->
                                 <v-window-item value="specs">
                                     <div>
-                                        <h3 class="text-h5 font-weight-bold mb-6 text-grey-darken-3">Technical Specifications</h3>
+                                        <h3 class="text-h5 font-weight-bold mb-6 text-grey-darken-3">Technical
+                                            Specifications
+                                        </h3>
                                         <v-table density="comfortable" class="specs-table">
                                             <tbody>
                                                 <tr v-for="(value, key) in allSpecifications" :key="key">
-                                                    <td class="font-weight-bold text-grey-darken-2 bg-grey-lighten-5" width="300">
+                                                    <td class="font-weight-bold text-grey-darken-2 bg-grey-lighten-5"
+                                                        width="300">
                                                         {{ formatSpecLabel(key) }}
                                                     </td>
                                                     <td class="text-grey-darken-3">{{ value }}</td>
@@ -315,20 +280,20 @@
                                 <!-- Features Tab -->
                                 <v-window-item value="features">
                                     <div>
-                                        <h3 class="text-h5 font-weight-bold mb-6 text-grey-darken-3">Product Features</h3>
+                                        <h3 class="text-h5 font-weight-bold mb-6 text-grey-darken-3">Product Features
+                                        </h3>
                                         <v-row>
-                                            <v-col 
-                                                cols="12" 
-                                                md="6" 
-                                                v-for="(feature, i) in detailedFeatures" 
-                                                :key="i"
-                                            >
+                                            <v-col cols="12" md="6" v-for="(feature, i) in detailedFeatures" :key="i">
                                                 <v-card class="feature-card pa-4 rounded-lg border-thin mb-4">
                                                     <div class="d-flex align-start">
-                                                        <v-icon :icon="feature.icon || 'mdi-check-circle'" color="primary" class="mr-3 mt-1"></v-icon>
+                                                        <v-icon :icon="feature.icon || 'mdi-check-circle'"
+                                                            color="primary" class="mr-3 mt-1"></v-icon>
                                                         <div>
-                                                            <div class="font-weight-bold text-grey-darken-2 mb-2">{{ feature.title }}</div>
-                                                            <div class="text-body-2 text-medium-emphasis">{{ feature.description }}</div>
+                                                            <div class="font-weight-bold text-grey-darken-2 mb-2">{{
+                                                                feature.title }}</div>
+                                                            <div class="text-body-2 text-medium-emphasis">{{
+                                                                feature.description
+                                                            }}</div>
                                                         </div>
                                                     </div>
                                                 </v-card>
@@ -336,34 +301,28 @@
                                         </v-row>
                                     </div>
                                 </v-window-item>
-                                
+
                                 <!-- Downloads Tab -->
                                 <v-window-item value="downloads">
                                     <div>
-                                        <h3 class="text-h5 font-weight-bold mb-6 text-grey-darken-3">Product Downloads</h3>
+                                        <h3 class="text-h5 font-weight-bold mb-6 text-grey-darken-3">Product Downloads
+                                        </h3>
                                         <v-list lines="two" class="bg-transparent">
-                                            <v-list-item 
-                                                v-for="(doc, idx) in downloadableFiles" 
-                                                :key="idx"
-                                                rounded="lg"
-                                                class="mb-3 border-thin bg-grey-lighten-5"
-                                            >
+                                            <v-list-item v-for="(doc, idx) in downloadableFiles" :key="idx" rounded="lg"
+                                                class="mb-3 border-thin bg-grey-lighten-5">
                                                 <template v-slot:prepend>
                                                     <v-avatar color="primary-lighten-5" size="48" class="text-primary">
                                                         <v-icon :icon="getFileIcon(doc.type)" size="large"></v-icon>
                                                     </v-avatar>
                                                 </template>
-                                                <v-list-item-title class="font-weight-bold">{{ doc.title }}</v-list-item-title>
+                                                <v-list-item-title class="font-weight-bold">{{ doc.title
+                                                }}</v-list-item-title>
                                                 <v-list-item-subtitle>
                                                     {{ doc.size || 'N/A' }} • {{ doc.type || 'Document' }}
                                                 </v-list-item-subtitle>
                                                 <template v-slot:append>
-                                                    <v-btn 
-                                                        variant="text" 
-                                                        color="primary" 
-                                                        icon="mdi-download"
-                                                        @click="downloadFile(doc)"
-                                                    ></v-btn>
+                                                    <v-btn variant="text" color="primary" icon="mdi-download"
+                                                        @click="downloadFile(doc)"></v-btn>
                                                 </template>
                                             </v-list-item>
                                         </v-list>
@@ -373,13 +332,11 @@
                                 <!-- FAQs Tab -->
                                 <v-window-item value="faq">
                                     <div>
-                                        <h3 class="text-h5 font-weight-bold mb-6 text-grey-darken-3">Frequently Asked Questions</h3>
+                                        <h3 class="text-h5 font-weight-bold mb-6 text-grey-darken-3">Frequently Asked
+                                            Questions
+                                        </h3>
                                         <v-expansion-panels variant="accordion" class="faq-panels">
-                                            <v-expansion-panel 
-                                                v-for="(faq, i) in productFAQs" 
-                                                :key="i"
-                                                class="mb-2"
-                                            >
+                                            <v-expansion-panel v-for="(faq, i) in productFAQs" :key="i" class="mb-2">
                                                 <v-expansion-panel-title class="font-weight-bold">
                                                     {{ faq.question }}
                                                 </v-expansion-panel-title>
@@ -394,8 +351,9 @@
                                 <!-- Warranty & Service Tab -->
                                 <v-window-item value="warranty">
                                     <div>
-                                        <h3 class="text-h5 font-weight-bold mb-6 text-grey-darken-3">Warranty & Service Information</h3>
-                                        
+                                        <h3 class="text-h5 font-weight-bold mb-6 text-grey-darken-3">Warranty & Service
+                                            Information</h3>
+
                                         <v-card class="mb-6 rounded-lg border-thin">
                                             <v-card-title class="bg-primary text-white">
                                                 <v-icon icon="mdi-shield-check" class="mr-2"></v-icon>
@@ -409,14 +367,16 @@
                                                 <div class="mb-4">
                                                     <div class="text-h6 font-weight-bold mb-2">What's Covered</div>
                                                     <ul class="pl-4">
-                                                        <li v-for="(item, i) in warrantyInfo.coverage" :key="i" class="mb-2">
+                                                        <li v-for="(item, i) in warrantyInfo.coverage" :key="i"
+                                                            class="mb-2">
                                                             {{ item }}
                                                         </li>
                                                     </ul>
                                                 </div>
                                                 <div>
                                                     <div class="text-h6 font-weight-bold mb-2">Terms & Conditions</div>
-                                                    <div class="text-body-2 text-medium-emphasis">{{ warrantyInfo.terms }}</div>
+                                                    <div class="text-body-2 text-medium-emphasis">{{ warrantyInfo.terms
+                                                    }}</div>
                                                 </div>
                                             </v-card-text>
                                         </v-card>
@@ -428,12 +388,16 @@
                                             </v-card-title>
                                             <v-card-text class="pa-6">
                                                 <v-row>
-                                                    <v-col cols="12" md="6" v-for="(service, i) in serviceInfo" :key="i">
+                                                    <v-col cols="12" md="6" v-for="(service, i) in serviceInfo"
+                                                        :key="i">
                                                         <div class="d-flex align-start mb-4">
-                                                            <v-icon :icon="service.icon" color="primary" size="large" class="mr-3"></v-icon>
+                                                            <v-icon :icon="service.icon" color="primary" size="large"
+                                                                class="mr-3"></v-icon>
                                                             <div>
-                                                                <div class="font-weight-bold text-grey-darken-2 mb-1">{{ service.title }}</div>
-                                                                <div class="text-body-2 text-medium-emphasis">{{ service.description }}</div>
+                                                                <div class="font-weight-bold text-grey-darken-2 mb-1">{{
+                                                                    service.title }}</div>
+                                                                <div class="text-body-2 text-medium-emphasis">{{
+                                                                    service.description }}</div>
                                                             </div>
                                                         </div>
                                                     </v-col>
@@ -456,19 +420,21 @@
                         View All Products
                     </v-btn>
                 </div>
-                
+
                 <v-row>
                     <v-col v-for="item in relatedProducts" :key="item.id" cols="12" sm="6" md="3">
-                        <v-card 
-                            class="h-100 rounded-lg border-thin elevation-0 bg-white group-hover-card" 
-                            :to="`/products/${item.slug}`"
-                        >
-                            <div class="position-relative pa-4 bg-grey-lighten-5 d-flex align-center justify-center" style="height: 180px;">
+                        <v-card class="h-100 rounded-lg border-thin elevation-0 bg-white group-hover-card"
+                            :to="`/products/${item.slug}`">
+                            <div class="position-relative pa-4 bg-grey-lighten-5 d-flex align-center justify-center"
+                                style="height: 180px;">
                                 <v-img :src="getProductImage(item)" max-height="140" contain></v-img>
                             </div>
                             <div class="pa-4">
-                                <div class="text-caption text-primary font-weight-bold mb-1">{{ getCategoryName(item) }}</div>
-                                <h4 class="text-subtitle-1 font-weight-bold text-grey-darken-3 mb-2 text-truncate">{{ item.title }}</h4>
+                                <div class="text-caption text-primary font-weight-bold mb-1">{{ getCategoryName(item) }}
+                                </div>
+                                <h4 class="text-subtitle-1 font-weight-bold text-grey-darken-3 mb-2 text-truncate">{{
+                                    item.title
+                                }}</h4>
                                 <div class="font-weight-bold text-body-1">{{ formatPrice(item) }}</div>
                             </div>
                         </v-card>
@@ -823,7 +789,7 @@ export default {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 100%);
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, transparent 100%);
 }
 
 .hero-price-card {
@@ -858,7 +824,7 @@ export default {
 
 /* Specs Table */
 .specs-table tr:not(:last-child) td {
-    border-bottom: 1px solid rgba(0,0,0,0.08);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .specs-table td {
@@ -872,7 +838,7 @@ export default {
 
 .feature-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
 }
 
 /* FAQs */
@@ -887,7 +853,7 @@ export default {
 
 .trust-badge:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
 }
 
 /* Related Products */
@@ -902,7 +868,7 @@ export default {
 
 /* Utilities */
 .border-thin {
-    border: 1px solid rgba(0,0,0,0.08) !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
 }
 
 .lh-relaxed {
@@ -944,11 +910,11 @@ export default {
         min-height: 300px;
         padding: 40px 0;
     }
-    
+
     .gallery-container {
         position: static;
     }
-    
+
     .main-image-card {
         height: 400px;
     }
@@ -959,7 +925,7 @@ export default {
         min-height: 250px;
         padding: 30px 0;
     }
-    
+
     .main-image-card {
         height: 300px;
     }
