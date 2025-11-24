@@ -379,14 +379,31 @@ export default {
                 // Try to load categories from API, fallback to default
                 const response = await axios.get('/api/openapi/categories?type=product').catch(() => null);
                 if (response && response.data) {
-                    this.categories = [
-                        { id: 'all', name: 'All Products', icon: 'mdi-view-grid' },
-                        ...response.data.map(c => ({
-                            id: c.id,
-                            name: c.name,
-                            icon: this.getCategoryIcon(c.slug || c.name)
-                        }))
-                    ];
+                    // Handle different response structures (paginated or direct array)
+                    const categoriesData = Array.isArray(response.data)
+                        ? response.data
+                        : (response.data.data || response.data.categories || []);
+
+                    if (Array.isArray(categoriesData) && categoriesData.length > 0) {
+                        this.categories = [
+                            { id: 'all', name: 'All Products', icon: 'mdi-view-grid' },
+                            ...categoriesData.map(c => ({
+                                id: c.id,
+                                name: c.name,
+                                icon: this.getCategoryIcon(c.slug || c.name)
+                            }))
+                        ];
+                    } else {
+                        // Use default categories if API returns empty or invalid data
+                        this.categories = [
+                            { id: 'all', name: 'All Products', icon: 'mdi-view-grid' },
+                            { id: 'ups', name: 'UPS Systems', icon: 'mdi-power' },
+                            { id: 'batteries', name: 'Batteries', icon: 'mdi-battery' },
+                            { id: 'inverters', name: 'Inverters', icon: 'mdi-flash' },
+                            { id: 'solar', name: 'Solar', icon: 'mdi-solar-power' },
+                            { id: 'accessories', name: 'Accessories', icon: 'mdi-package-variant' }
+                        ];
+                    }
                 } else {
                     // Default categories
                     this.categories = [
