@@ -15,11 +15,20 @@
 
                 <!-- Quick Actions Overlay -->
                 <div class="actions-overlay d-flex align-center justify-center gap-2">
-                    <v-btn icon="mdi-eye-outline" variant="flat" color="white" size="small" class="hover-scale"
-                        :to="`/products/${product.slug}`" aria-label="View product details" />
-                    <v-btn icon="mdi-scale-balance" variant="flat" color="primary" size="small" class="hover-scale"
-                        :disabled="comparisonDisabled" @click.prevent="$emit('toggle-comparison', product)"
-                        aria-label="Add to comparison" />
+                    <v-tooltip text="View product details" location="top">
+                        <template v-slot:activator="{ props: tooltipProps }">
+                            <v-btn icon="mdi-eye-outline" variant="flat" color="white" size="small" class="hover-scale"
+                                v-bind="tooltipProps" :to="`/products/${product.slug}`"
+                                aria-label="View product details" />
+                        </template>
+                    </v-tooltip>
+                    <v-tooltip text="Add to comparison" location="top">
+                        <template v-slot:activator="{ props: tooltipProps }">
+                            <v-btn icon="mdi-scale-balance" variant="flat" color="primary" size="small"
+                                class="hover-scale" v-bind="tooltipProps" :disabled="comparisonDisabled"
+                                @click.prevent="$emit('toggle-comparison', product)" aria-label="Add to comparison" />
+                        </template>
+                    </v-tooltip>
                 </div>
             </div>
 
