@@ -9,16 +9,27 @@ import router from '../routes';
  * Configure axios base URL based on environment
  */
 function configureBaseURL() {
-    const isDevelopment = window.location.protocol === 'file:' ||
-        window.location.hostname === 'localhost' ||
-        window.location.hostname === '127.0.0.1';
-
-    if (isDevelopment && window.location.protocol === 'file:') {
-        console.warn('Warning: File:// protocol detected. Please use a local server (http://localhost) to avoid CORS issues.');
-        axios.defaults.baseURL = 'http://localhost/';
-    } else {
-        axios.defaults.baseURL = window.location.origin + '/';
+    // Prefer meta tag (set in Blade) so subdirectory installs use the correct base
+    const metaApiBase = document.querySelector('meta[name="api-base-url"]')?.getAttribute('content');
+    if (metaApiBase) {
+        try {
+            const metaUrl = new URL(metaApiBase, window.location.origin);
+            // Strip trailing /api or /api/vX so we get the actual app base path
+            const basePath = metaUrl.pathname.replace(/\/api(\/v\d+)?\/?$/, '');
+            axios.defaults.baseURL = `${metaUrl.origin}${basePath || ''}/`;
+            return;
+        } catch (err) {
+            console.warn('Invalid api-base-url meta tag, falling back to origin.', err);
+        }
     }
+
+    // Fallback: include "/public" if the app is served from a subdirectory
+    const origin = window.location.origin;
+    const path = window.location.pathname || '/';
+    const publicIndex = path.indexOf('/public');
+    const basePath = publicIndex !== -1 ? path.slice(0, publicIndex + '/public'.length) : '';
+
+    axios.defaults.baseURL = `${origin}${basePath}/`;
 }
 
 /**

@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @include('common.demo-icon')
-    <meta name="api-base-url" content="{{ url('api/v1') }}">
+    @php
+        $appBase = rtrim(request()->getSchemeAndHttpHost() . request()->getBaseUrl(), '/');
+    @endphp
+    <meta name="api-base-url" content="{{ $appBase }}/api/v1">
     <title>Business</title>
     @vite('resources/sass/app.scss')
 </head>

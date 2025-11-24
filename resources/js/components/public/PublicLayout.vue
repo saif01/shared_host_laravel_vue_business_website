@@ -1,13 +1,8 @@
 <template>
     <v-app>
         <!-- Topbar -->
-        <v-app-bar 
-            app 
-            class="main-app-bar px-md-12 transition-all" 
-            :class="{ 'scrolled-app-bar': isScrolled }"
-            height="80" 
-            elevation="0"
-        >
+        <v-app-bar app class="main-app-bar px-md-12 transition-all" :class="{ 'scrolled-app-bar': isScrolled }"
+            height="80" elevation="0">
             <div class="d-flex align-center w-100 position-relative z-index-2">
                 <!-- Logo Area -->
                 <router-link to="/" class="text-decoration-none d-flex align-center mr-8 logo-group">
@@ -15,8 +10,10 @@
                         <v-icon icon="mdi-flash" color="amber-accent-4" size="28" class="logo-icon"></v-icon>
                     </div>
                     <div class="d-flex flex-column">
-                        <span class="text-h6 font-weight-black text-grey-darken-4 lh-1 tracking-tight logo-text">MICRO CONTROL</span>
-                        <span class="text-caption font-weight-bold text-primary tracking-widest">TECHNOLOGY</span>
+                        <span class="text-h6 font-weight-black text-grey-darken-4 lh-1 tracking-tight logo-text">{{
+                            siteName.toUpperCase() }}</span>
+                        <span class="text-caption font-weight-bold text-primary tracking-widest">{{ siteTagline
+                        }}</span>
                     </div>
                 </router-link>
 
@@ -24,13 +21,8 @@
 
                 <!-- Desktop Navigation -->
                 <div class="d-none d-md-flex align-center gap-8">
-                    <router-link 
-                        v-for="item in menuItems" 
-                        :key="item.id" 
-                        :to="item.url" 
-                        class="nav-link text-body-2 font-weight-bold text-grey-darken-3"
-                        active-class="active-nav-link"
-                    >
+                    <router-link v-for="item in menuItems" :key="item.id" :to="item.url"
+                        class="nav-link text-body-2 font-weight-bold text-grey-darken-3" active-class="active-nav-link">
                         {{ item.label }}
                     </router-link>
                 </div>
@@ -39,13 +31,8 @@
 
                 <!-- CTA Button -->
                 <div class="d-none d-md-flex">
-                    <v-btn 
-                        color="primary" 
-                        variant="flat" 
-                        rounded="pill" 
-                        class="font-weight-bold px-6 text-capitalize elevation-3 hover-glow"
-                        :to="{ name: 'Contact' }"
-                    >
+                    <v-btn color="primary" variant="flat" rounded="pill"
+                        class="font-weight-bold px-6 text-capitalize elevation-3 hover-glow" :to="{ name: 'Contact' }">
                         Get a Quote
                     </v-btn>
                 </div>
@@ -53,7 +40,7 @@
                 <!-- Mobile Menu Button -->
                 <v-app-bar-nav-icon class="d-md-none ml-2" @click="drawer = !drawer"></v-app-bar-nav-icon>
             </div>
-            
+
             <!-- Gradient Border Bottom (Visible on Scroll) -->
             <div class="app-bar-border"></div>
         </v-app-bar>
@@ -65,25 +52,21 @@
                     <div class="logo-box mr-3">
                         <v-icon icon="mdi-flash" color="amber-accent-4" size="24"></v-icon>
                     </div>
-                    <span class="text-h6 font-weight-black text-grey-darken-4">MICRO CONTROL</span>
+                    <span class="text-h6 font-weight-black text-grey-darken-4">{{ siteName.toUpperCase() }}</span>
                     <v-spacer></v-spacer>
                     <v-btn icon="mdi-close" variant="text" @click="drawer = false"></v-btn>
                 </div>
 
                 <v-list nav class="bg-transparent">
-                    <v-list-item 
-                        v-for="item in menuItems" 
-                        :key="item.id" 
-                        :to="item.url" 
-                        class="mb-2 rounded-lg"
-                        active-class="bg-primary-lighten-5 text-primary"
-                    >
+                    <v-list-item v-for="item in menuItems" :key="item.id" :to="item.url" class="mb-2 rounded-lg"
+                        active-class="bg-primary-lighten-5 text-primary">
                         <v-list-item-title class="font-weight-bold">{{ item.label }}</v-list-item-title>
                     </v-list-item>
                 </v-list>
 
                 <div class="mt-8">
-                    <v-btn block color="primary" size="large" rounded="lg" :to="{ name: 'Contact' }" class="elevation-4">
+                    <v-btn block color="primary" size="large" rounded="lg" :to="{ name: 'Contact' }"
+                        class="elevation-4">
                         Get a Quote
                     </v-btn>
                 </div>
@@ -100,7 +83,7 @@
             <!-- Footer Background Effects -->
             <div class="footer-pattern"></div>
             <div class="footer-glow"></div>
-            
+
             <v-container class="position-relative z-index-2">
                 <v-row>
                     <!-- Column 1: About -->
@@ -109,16 +92,21 @@
                             <div class="logo-box-light mr-3 elevation-10">
                                 <v-icon icon="mdi-flash" color="amber-accent-4" size="24"></v-icon>
                             </div>
-                            <span class="text-h5 font-weight-black text-white tracking-tight">MICRO CONTROL</span>
+                            <span class="text-h5 font-weight-black text-white tracking-tight">{{ siteName.toUpperCase()
+                            }}</span>
                         </div>
                         <p class="text-body-2 text-grey-lighten-1 mb-8 lh-relaxed opacity-80">
-                            Leading provider of technical power support solutions. We ensure your business stays powered with reliable UPS systems, backup generators, and professional maintenance.
+                            {{ footerDescription }}
                         </p>
                         <div class="d-flex gap-4">
-                            <v-btn icon="mdi-facebook" variant="text" color="white" class="social-btn"></v-btn>
-                            <v-btn icon="mdi-twitter" variant="text" color="white" class="social-btn"></v-btn>
-                            <v-btn icon="mdi-linkedin" variant="text" color="white" class="social-btn"></v-btn>
-                            <v-btn icon="mdi-instagram" variant="text" color="white" class="social-btn"></v-btn>
+                            <v-btn v-if="hasSocialLink('facebook')" :href="settings.facebook_url" target="_blank"
+                                icon="mdi-facebook" variant="text" color="white" class="social-btn"></v-btn>
+                            <v-btn v-if="hasSocialLink('twitter')" :href="settings.twitter_url" target="_blank"
+                                icon="mdi-twitter" variant="text" color="white" class="social-btn"></v-btn>
+                            <v-btn v-if="hasSocialLink('linkedin')" :href="settings.linkedin_url" target="_blank"
+                                icon="mdi-linkedin" variant="text" color="white" class="social-btn"></v-btn>
+                            <v-btn v-if="hasSocialLink('instagram')" :href="settings.instagram_url" target="_blank"
+                                icon="mdi-instagram" variant="text" color="white" class="social-btn"></v-btn>
                         </div>
                     </v-col>
 
@@ -144,10 +132,17 @@
                             <div class="heading-underline"></div>
                         </h4>
                         <ul class="list-unstyled">
-                            <li class="mb-3"><router-link to="/services/ups-installation" class="footer-link text-body-2 text-grey-lighten-1">UPS Installation</router-link></li>
-                            <li class="mb-3"><router-link to="/services/battery-replacement" class="footer-link text-body-2 text-grey-lighten-1">Battery Replacement</router-link></li>
-                            <li class="mb-3"><router-link to="/services/industrial-backup" class="footer-link text-body-2 text-grey-lighten-1">Industrial Backup</router-link></li>
-                            <li class="mb-3"><router-link to="/services/support" class="footer-link text-body-2 text-grey-lighten-1">24/7 Support</router-link></li>
+                            <li class="mb-3"><router-link to="/services/ups-installation"
+                                    class="footer-link text-body-2 text-grey-lighten-1">UPS Installation</router-link>
+                            </li>
+                            <li class="mb-3"><router-link to="/services/battery-replacement"
+                                    class="footer-link text-body-2 text-grey-lighten-1">Battery
+                                    Replacement</router-link></li>
+                            <li class="mb-3"><router-link to="/services/industrial-backup"
+                                    class="footer-link text-body-2 text-grey-lighten-1">Industrial Backup</router-link>
+                            </li>
+                            <li class="mb-3"><router-link to="/services/support"
+                                    class="footer-link text-body-2 text-grey-lighten-1">24/7 Support</router-link></li>
                         </ul>
                     </v-col>
 
@@ -157,18 +152,14 @@
                             Newsletter
                             <div class="heading-underline"></div>
                         </h4>
-                        <p class="text-body-2 text-grey-lighten-1 mb-6 opacity-80">Subscribe to get the latest power tips and updates.</p>
-                        <v-text-field
-                            placeholder="Enter your email"
-                            variant="outlined"
-                            density="comfortable"
-                            bg-color="rgba(255,255,255,0.05)"
-                            color="amber-accent-4"
-                            hide-details
-                            class="mb-3 footer-input rounded-lg"
-                        >
+                        <p class="text-body-2 text-grey-lighten-1 mb-6 opacity-80">Subscribe to get the latest power
+                            tips and updates.</p>
+                        <v-text-field placeholder="Enter your email" variant="outlined" density="comfortable"
+                            bg-color="rgba(255,255,255,0.05)" color="amber-accent-4" hide-details
+                            class="mb-3 footer-input rounded-lg">
                             <template v-slot:append-inner>
-                                <v-btn icon="mdi-send" size="small" color="amber-accent-4" variant="text" class="mr-n2"></v-btn>
+                                <v-btn icon="mdi-send" size="small" color="amber-accent-4" variant="text"
+                                    class="mr-n2"></v-btn>
                             </template>
                         </v-text-field>
                     </v-col>
@@ -176,9 +167,10 @@
 
                 <v-divider class="my-10 border-opacity-10"></v-divider>
 
-                <div class="d-flex flex-column flex-md-row justify-space-between align-center text-caption text-grey-darken-1">
+                <div
+                    class="d-flex flex-column flex-md-row justify-space-between align-center text-caption text-grey-darken-1">
                     <div class="mb-4 mb-md-0">
-                        © {{ new Date().getFullYear() }} Micro Control Technology. All rights reserved.
+                        © {{ new Date().getFullYear() }} {{ siteName }}. All rights reserved.
                     </div>
                     <div class="d-flex gap-6">
                         <a href="#" class="footer-link-sm">Privacy Policy</a>
@@ -190,11 +182,8 @@
         </v-footer>
 
         <!-- Floating WhatsApp Button -->
-        <a 
-            href="https://wa.me/1234567890" 
-            target="_blank" 
-            class="whatsapp-float elevation-6 d-flex align-center justify-center text-decoration-none"
-        >
+        <a v-if="settings.whatsapp_number || settings.contact_phone" :href="getWhatsAppUrl()" target="_blank"
+            class="whatsapp-float elevation-6 d-flex align-center justify-center text-decoration-none">
             <v-icon icon="mdi-whatsapp" color="white" size="32"></v-icon>
         </a>
     </v-app>
@@ -210,6 +199,22 @@ export default {
             drawer: false,
             isScrolled: false,
             siteName: 'Micro Control Technology',
+            siteTagline: 'TECHNOLOGY',
+            footerDescription: 'Leading provider of technical power support solutions. We ensure your business stays powered with reliable UPS systems, backup generators, and professional maintenance.',
+            settings: {
+                // General settings
+                site_name: '',
+                site_tagline: '',
+                contact_email: '',
+                contact_phone: '',
+                address: '',
+                // Social media
+                facebook_url: '',
+                twitter_url: '',
+                linkedin_url: '',
+                instagram_url: '',
+                whatsapp_number: '',
+            },
             menuItems: [
                 { id: 1, label: 'Home', url: '/' },
                 { id: 2, label: 'Services', url: '/services' },
@@ -230,12 +235,45 @@ export default {
         async loadSettings() {
             try {
                 const response = await axios.get('/api/public/settings');
-                if (response.data.site_name) {
-                    this.siteName = response.data.site_name;
+                const data = response.data;
+
+                // Update settings object
+                Object.keys(this.settings).forEach(key => {
+                    if (data[key] !== undefined && data[key] !== null) {
+                        this.settings[key] = data[key];
+                    }
+                });
+
+                // Update site name
+                if (data.site_name) {
+                    this.siteName = data.site_name;
+                }
+
+                // Update site tagline
+                if (data.site_tagline) {
+                    this.siteTagline = data.site_tagline;
+                }
+
+                // Update footer description if available (could be from contact_page or general)
+                if (data.footer_description) {
+                    this.footerDescription = data.footer_description;
+                } else if (data.about_description) {
+                    this.footerDescription = data.about_description;
                 }
             } catch (error) {
                 console.error('Error loading settings:', error);
             }
+        },
+        getWhatsAppUrl() {
+            // Use whatsapp_number if available, otherwise use contact_phone
+            const phone = this.settings.whatsapp_number || this.settings.contact_phone || '';
+            if (!phone) return '#';
+            // Remove any non-digit characters except + for WhatsApp URL
+            const cleanPhone = phone.replace(/[^\d+]/g, '');
+            return `https://wa.me/${cleanPhone}`;
+        },
+        hasSocialLink(platform) {
+            return this.settings[`${platform}_url`] && this.settings[`${platform}_url`].trim() !== '';
         },
         handleScroll() {
             this.isScrolled = window.scrollY > 20;
@@ -264,7 +302,7 @@ export default {
     left: 0;
     width: 100%;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent);
+    background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.1), transparent);
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -296,10 +334,21 @@ export default {
     transform: scale(1.1);
 }
 
-.lh-1 { line-height: 1; }
-.tracking-tight { letter-spacing: -0.025em; }
-.tracking-widest { letter-spacing: 0.1em; }
-.gap-8 { gap: 32px; }
+.lh-1 {
+    line-height: 1;
+}
+
+.tracking-tight {
+    letter-spacing: -0.025em;
+}
+
+.tracking-widest {
+    letter-spacing: 0.1em;
+}
+
+.gap-8 {
+    gap: 32px;
+}
 
 .nav-link {
     text-decoration: none;
@@ -308,8 +357,10 @@ export default {
     transition: color 0.2s ease;
 }
 
-.nav-link:hover, .active-nav-link {
-    color: #2563eb !important; /* Primary Blue */
+.nav-link:hover,
+.active-nav-link {
+    color: #2563eb !important;
+    /* Primary Blue */
 }
 
 .nav-link::after {
@@ -325,7 +376,8 @@ export default {
     border-radius: 2px;
 }
 
-.nav-link:hover::after, .active-nav-link::after {
+.nav-link:hover::after,
+.active-nav-link::after {
     width: 100%;
 }
 
@@ -340,7 +392,8 @@ export default {
 
 /* Footer Styles */
 .bg-footer {
-    background: #0f172a; /* Slate 900 */
+    background: #0f172a;
+    /* Slate 900 */
 }
 
 .footer-pattern {
@@ -349,7 +402,7 @@ export default {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: 
+    background-image:
         linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
     background-size: 40px 40px;
@@ -379,8 +432,13 @@ export default {
     justify-content: center;
 }
 
-.lh-relaxed { line-height: 1.6; }
-.gap-4 { gap: 16px; }
+.lh-relaxed {
+    line-height: 1.6;
+}
+
+.gap-4 {
+    gap: 16px;
+}
 
 .social-btn {
     background: rgba(255, 255, 255, 0.05);
@@ -408,7 +466,8 @@ export default {
 }
 
 .footer-link:hover {
-    color: #f59e0b !important; /* Amber */
+    color: #f59e0b !important;
+    /* Amber */
     transform: translateX(4px);
 }
 
@@ -424,7 +483,7 @@ export default {
 
 .footer-input :deep(.v-field__outline__start),
 .footer-input :deep(.v-field__outline__end) {
-    border-color: rgba(255,255,255,0.1) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 .footer-input :deep(.v-field--focused .v-field__outline__start),
@@ -471,9 +530,11 @@ export default {
     0% {
         box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
     }
+
     70% {
         box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
     }
+
     100% {
         box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
     }

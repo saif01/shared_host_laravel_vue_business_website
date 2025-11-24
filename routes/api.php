@@ -13,6 +13,9 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\VisitorLogController;
 use Illuminate\Support\Facades\Route;
 
+// Public, unauthenticated API endpoints (no version prefix)
+Route::get('public/settings', [SettingController::class, 'publicIndex']);
+
 Route::prefix('v1')->group(function () {
     // Public routes
     Route::post('/auth/login', [AuthController::class, 'login']);
