@@ -1,19 +1,30 @@
 <template>
     <div class="services-page">
         <!-- Hero Section -->
-        <section class="page-hero position-relative d-flex align-center justify-center text-center">
+        <section
+            class="mb-10 page-hero position-relative d-flex align-center justify-center text-center overflow-hidden">
             <div class="hero-bg-gradient"></div>
             <div class="hero-pattern"></div>
+
+            <!-- Animated gradient orbs -->
+            <div class="gradient-orb orb-1"></div>
+            <div class="gradient-orb orb-2"></div>
+            <div class="gradient-orb orb-3"></div>
+
             <v-container class="position-relative z-index-2">
                 <v-fade-transition appear>
                     <div>
-                        <div class="glass-pill d-inline-flex align-center px-4 py-2 rounded-pill mb-6">
+                        <div class="glass-pill d-inline-flex align-center px-5 py-3 rounded-pill mb-8 animate-float">
+                            <div class="pulse-dot mr-2"></div>
                             <v-icon icon="mdi-cogs" color="amber-accent-4" size="small" class="mr-2"></v-icon>
                             <span class="text-subtitle-2 font-weight-bold tracking-wide text-white">OUR EXPERTISE</span>
                         </div>
-                        <h1 class="text-h4 text-lg-h3 font-weight-black text-white mb-6 lh-tight text-shadow-sm">
-                            Comprehensive Power Solutions</h1>
-                        <p class="text-h6 text-white opacity-80 mw-800 mx-auto font-weight-light">
+                        <h1
+                            class="text-h4 text-lg-h2 font-weight-black text-white mb-6 lh-tight text-shadow-sm animate-slide-up">
+                            Comprehensive Power Solutions
+                        </h1>
+                        <p
+                            class="text-h6 text-white opacity-90 mw-700 mx-auto font-weight-light animate-slide-up-delay">
                             From installation to maintenance, we provide end-to-end technical support to keep your
                             operations running smoothly.
                         </p>

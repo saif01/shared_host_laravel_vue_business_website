@@ -1,21 +1,30 @@
 <template>
     <div class="products-page-modern">
         <!-- Hero Section -->
-        <section class="page-hero position-relative d-flex align-center justify-center text-center overflow-hidden">
-            <div class="hero-background" />
-            <div class="hero-pattern" />
+        <section
+            class="mb-10 page-hero position-relative d-flex align-center justify-center text-center overflow-hidden">
+            <div class="hero-bg-gradient"></div>
+            <div class="hero-pattern"></div>
+
+            <!-- Animated gradient orbs -->
+            <div class="gradient-orb orb-1"></div>
+            <div class="gradient-orb orb-2"></div>
+            <div class="gradient-orb orb-3"></div>
 
             <v-container class="position-relative z-index-2">
                 <v-fade-transition appear>
-                    <div class="hero-content">
-                        <div class="hero-badge d-inline-flex align-center px-4 py-2 mb-6 rounded-pill">
-                            <v-icon icon="mdi-shield-check" color="white" size="small" class="mr-2" />
-                            <span class="text-caption font-weight-bold text-white text-uppercase">Premium Quality</span>
+                    <div>
+                        <div class="glass-pill d-inline-flex align-center px-5 py-3 rounded-pill mb-8 animate-float">
+                            <div class="pulse-dot mr-2"></div>
+                            <v-icon icon="mdi-shield-check" color="amber-accent-4" size="small" class="mr-2"></v-icon>
+                            <span class="text-subtitle-2 font-weight-bold tracking-wide text-white">PREMIUM QUALITY</span>
                         </div>
-                        <h1 class="text-h4 text-lg-h3 font-weight-black text-white mb-6 lh-tight text-shadow-sm">
+                        <h1
+                            class="text-h4 text-lg-h2 font-weight-black text-white mb-6 lh-tight text-shadow-sm animate-slide-up">
                             Explore Our <span class="text-amber-accent-3">Product Range</span>
                         </h1>
-                        <p class="text-h6 text-grey-lighten-1 opacity-95 mw-800 mx-auto font-weight-light mb-10">
+                        <p
+                            class="text-h6 text-white opacity-90 mw-700 mx-auto font-weight-light animate-slide-up-delay">
                             Discover high-performance solutions designed for your business needs. Browse, compare, and
                             find the perfect product.
                         </p>
@@ -154,51 +163,5 @@ onMounted(async () => {
     background: #f8fafc;
 }
 
-/* Hero Section - common styles moved to app.css */
-
-.hero-badge {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    white-space: nowrap;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.hero-content {
-    position: relative;
-    z-index: 10;
-}
-
-.hero-content h1,
-.hero-content p {
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-/* Utility classes moved to app.css */
-
-/* Responsive */
-@media (max-width: 960px) {
-    .hero-badge {
-        padding: 8px 16px !important;
-        font-size: 0.7rem !important;
-    }
-}
-
-@media (max-width: 600px) {
-    .hero-badge {
-        padding: 6px 12px !important;
-        font-size: 0.65rem !important;
-        margin-bottom: 16px !important;
-    }
-
-    .hero-content h1 {
-        font-size: 1.5rem !important;
-        margin-bottom: 16px !important;
-    }
-
-    .hero-content p {
-        font-size: 0.875rem !important;
-        margin-bottom: 24px !important;
-    }
-}
+/* Hero section styles moved to app.css */
 </style>

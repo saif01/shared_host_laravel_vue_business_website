@@ -1,20 +1,31 @@
 <template>
     <div class="about-page">
         <!-- Hero Section -->
-        <section class="page-hero position-relative d-flex align-center justify-center text-center">
-            <div class="hero-bg-image"></div>
-            <div class="hero-overlay"></div>
+        <section
+            class="mb-10 page-hero position-relative d-flex align-center justify-center text-center overflow-hidden">
+            <div class="hero-bg-gradient"></div>
+            <div class="hero-pattern"></div>
+
+            <!-- Animated gradient orbs -->
+            <div class="gradient-orb orb-1"></div>
+            <div class="gradient-orb orb-2"></div>
+            <div class="gradient-orb orb-3"></div>
+
             <v-container class="position-relative z-index-2">
                 <v-fade-transition appear>
                     <div>
-                        <div class="glass-pill d-inline-flex align-center px-4 py-2 rounded-pill mb-6">
+                        <div class="glass-pill d-inline-flex align-center px-5 py-3 rounded-pill mb-8 animate-float">
+                            <div class="pulse-dot mr-2"></div>
                             <v-icon icon="mdi-information-outline" color="amber-accent-4" size="small"
                                 class="mr-2"></v-icon>
                             <span class="text-subtitle-2 font-weight-bold tracking-wide text-white">WHO WE ARE</span>
                         </div>
-                        <h1 class="text-h4 text-lg-h3 font-weight-black text-white mb-6 lh-tight text-shadow-sm">
-                            Empowering Your World</h1>
-                        <p class="text-h6 text-white opacity-80 mw-800 mx-auto font-weight-light">
+                        <h1
+                            class="text-h4 text-lg-h2 font-weight-black text-white mb-6 lh-tight text-shadow-sm animate-slide-up">
+                            Empowering Your World
+                        </h1>
+                        <p
+                            class="text-h6 text-white opacity-90 mw-700 mx-auto font-weight-light animate-slide-up-delay">
                             We are dedicated to providing reliable, efficient, and sustainable power solutions for
                             businesses and homes across the globe.
                         </p>
@@ -178,29 +189,7 @@ export default {
 </script>
 
 <style scoped>
-.hero-bg-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('https://images.unsplash.com/photo-1487887235947-a955ef187fcc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
-    background-size: cover;
-    background-position: center;
-    filter: grayscale(100%);
-    opacity: 0.4;
-}
-
-.hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(180deg, rgba(15, 23, 42, 0.8) 0%, rgba(15, 23, 42, 0.95) 100%);
-}
-
-/* glass-pill moved to app.css */
+/* Hero section styles moved to app.css */
 
 .value-card {
     background: white;
