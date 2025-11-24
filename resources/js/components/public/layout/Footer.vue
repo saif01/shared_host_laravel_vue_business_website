@@ -174,13 +174,7 @@ export default {
     justify-content: center;
 }
 
-.lh-relaxed {
-    line-height: 1.6;
-}
-
-.gap-4 {
-    gap: 16px;
-}
+/* Utility classes moved to app.css */
 
 .social-btn {
     background: rgba(255, 255, 255, 0.05);

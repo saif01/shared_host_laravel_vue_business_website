@@ -766,29 +766,10 @@ export default {
     background: #f8fafc;
 }
 
-/* Hero Section */
+/* Hero Section - common styles moved to app.css */
 .product-hero {
     min-height: 400px;
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
     padding: 60px 0;
-}
-
-.hero-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
-}
-
-.hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, transparent 100%);
 }
 
 .hero-price-card {
@@ -865,34 +846,7 @@ export default {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* Utilities */
-.border-thin {
-    border: 1px solid rgba(0, 0, 0, 0.08) !important;
-}
-
-.lh-relaxed {
-    line-height: 1.7;
-}
-
-.mw-900 {
-    max-width: 900px;
-}
-
-.gap-3 {
-    gap: 12px;
-}
-
-.gap-4 {
-    gap: 16px;
-}
-
-.gap-6 {
-    gap: 24px;
-}
-
-.z-index-2 {
-    z-index: 2;
-}
+/* Utility classes moved to app.css */
 
 .hide-scrollbar::-webkit-scrollbar {
     display: none;

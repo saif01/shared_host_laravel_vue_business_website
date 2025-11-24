@@ -154,36 +154,7 @@ onMounted(async () => {
     background: #f8fafc;
 }
 
-/* Hero Section */
-.hero-section {
-    min-height: 350px;
-    height: 350px;
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-    padding: 60px 0;
-    z-index: 1;
-}
-
-.hero-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
-}
-
-.hero-pattern {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image:
-        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    opacity: 0.5;
-}
+/* Hero Section - common styles moved to app.css */
 
 .hero-badge {
     background: rgba(255, 255, 255, 0.15);
@@ -203,18 +174,7 @@ onMounted(async () => {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* Utilities */
-.mw-800 {
-    max-width: 800px;
-}
-
-.lh-tight {
-    line-height: 1.2;
-}
-
-.z-index-2 {
-    z-index: 2;
-}
+/* Utility classes moved to app.css */
 
 /* Responsive */
 @media (max-width: 960px) {

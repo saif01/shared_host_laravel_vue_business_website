@@ -190,37 +190,7 @@ export default {
 </script>
 
 <style scoped>
-.page-hero {
-    height: 400px;
-    background: #0f172a;
-}
-
-.hero-bg-gradient {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
-    opacity: 0.9;
-}
-
-.hero-pattern {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-    background-size: 30px 30px;
-    opacity: 0.3;
-}
-
-.glass-pill {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-}
+/* Hero styles moved to app.css */
 
 .contact-card {
     background: white;
@@ -256,54 +226,11 @@ export default {
     /* Amber */
 }
 
-.bg-pattern-dots {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
-    background-size: 24px 24px;
-    opacity: 0.4;
-}
+/* bg-pattern-dots moved to app.css */
 
 .map-card {
     border: 4px solid white;
 }
 
-.hover-lift {
-    transition: transform 0.2s ease;
-}
-
-.hover-lift:hover {
-    transform: translateY(-2px);
-}
-
-.mw-600 {
-    max-width: 600px;
-}
-
-.lh-tight {
-    line-height: 1.2;
-}
-
-.tracking-wide {
-    letter-spacing: 0.05em;
-}
-
-.tracking-widest {
-    letter-spacing: 0.15em;
-}
-
-.text-shadow-sm {
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.z-index-2 {
-    z-index: 2;
-}
-
-.z-index-3 {
-    z-index: 3;
-}
+/* Utility classes moved to app.css */
 </style>

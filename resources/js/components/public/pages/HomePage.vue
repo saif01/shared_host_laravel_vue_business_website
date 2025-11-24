@@ -533,50 +533,7 @@ export default {
 </script>
 
 <style scoped>
-/* General Utilities */
-.z-index-1 {
-    z-index: 1;
-}
-
-.z-index-2 {
-    z-index: 2;
-}
-
-.lh-tight {
-    line-height: 1.1;
-}
-
-.lh-relaxed {
-    line-height: 1.6;
-}
-
-.mw-600 {
-    max-width: 600px;
-}
-
-.mw-800 {
-    max-width: 800px;
-}
-
-.tracking-wide {
-    letter-spacing: 0.05em;
-}
-
-.tracking-widest {
-    letter-spacing: 0.15em;
-}
-
-.gap-4 {
-    gap: 1rem;
-}
-
-.text-shadow-sm {
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.border-thin {
-    border: 1px solid rgba(0, 0, 0, 0.08) !important;
-}
+/* General Utilities - common utilities moved to app.css */
 
 .border-2 {
     border-width: 2px !important;
@@ -665,17 +622,7 @@ export default {
     }
 }
 
-.glass-pill {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.glass-pill-sm {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-}
+/* glass-pill moved to app.css */
 
 .hero-visual-3d {
     position: relative;
@@ -811,17 +758,7 @@ export default {
     }
 }
 
-/* Services Section */
-.bg-pattern-dots {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
-    background-size: 24px 24px;
-    opacity: 0.5;
-}
+/* bg-pattern-dots moved to app.css */
 
 .divider-center {
     width: 60px;
@@ -1023,14 +960,7 @@ export default {
     opacity: 0.6;
 }
 
-.hover-lift {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.hover-lift:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-}
+/* hover-lift moved to app.css */
 
 /* Responsive */
 @media (max-width: 960px) {

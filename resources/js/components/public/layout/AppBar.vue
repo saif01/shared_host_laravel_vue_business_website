@@ -121,21 +121,7 @@ export default {
     transform: scale(1.1);
 }
 
-.lh-1 {
-    line-height: 1;
-}
-
-.tracking-tight {
-    letter-spacing: -0.025em;
-}
-
-.tracking-widest {
-    letter-spacing: 0.1em;
-}
-
-.gap-8 {
-    gap: 32px;
-}
+/* Utility classes moved to app.css */
 
 .nav-link {
     text-decoration: none;

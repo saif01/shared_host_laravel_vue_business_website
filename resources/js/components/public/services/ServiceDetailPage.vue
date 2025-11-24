@@ -118,39 +118,7 @@ export default {
 <style scoped>
 .page-hero {
     height: 300px;
-    background: #0f172a;
 }
 
-.hero-bg-gradient {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
-    opacity: 0.9;
-}
-
-.hero-pattern {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
-    background-size: 30px 30px;
-    opacity: 0.3;
-}
-
-.glass-pill {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.lh-relaxed { line-height: 1.8; }
-.lh-tight { line-height: 1.2; }
-.mw-800 { max-width: 800px; }
-.text-shadow-sm { text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); }
-.z-index-2 { z-index: 2; }
+/* Hero, glass-pill, and utility classes moved to app.css */
 </style>

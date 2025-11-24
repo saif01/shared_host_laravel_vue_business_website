@@ -266,25 +266,7 @@ const quickSpecs = computed(() => {
     overflow: hidden;
 }
 
-.lh-tight {
-    line-height: 1.2;
-}
-
-.tracking-wide {
-    letter-spacing: 0.05em;
-}
-
-.gap-2 {
-    gap: 8px;
-}
-
-.gap-3 {
-    gap: 12px;
-}
-
-.z-index-2 {
-    z-index: 2;
-}
+/* Utility classes moved to app.css */
 
 @media (max-width: 600px) {
     .product-image-container {

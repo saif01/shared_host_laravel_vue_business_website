@@ -149,7 +149,7 @@ vue-progress-bar,
     .page-header {
         gap: 12px !important;
     }
-    
+
     .page-title {
         font-size: 1.5rem !important;
     }
@@ -161,13 +161,13 @@ vue-progress-bar,
         align-items: stretch !important;
         gap: 12px !important;
     }
-    
+
     .page-title {
         text-align: center !important;
         margin-bottom: 8px !important;
         font-size: 1.25rem !important;
     }
-    
+
     .add-button {
         width: 100% !important;
         justify-content: center !important;
@@ -271,5 +271,221 @@ vue-progress-bar,
 
     50% {
         opacity: 1;
+    }
+}
+
+/* ============================================
+   COMMON PUBLIC PAGE STYLES
+   ============================================ */
+
+/* Hero Section Styles */
+.page-hero,
+.hero-section {
+    position: relative;
+    overflow: hidden;
+}
+
+.page-hero {
+    height: 400px;
+    background: #0f172a;
+}
+
+.hero-section {
+    min-height: 350px;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    padding: 60px 0;
+    z-index: 1;
+}
+
+.hero-bg-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+    opacity: 0.9;
+}
+
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
+}
+
+.hero-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 30px 30px;
+    opacity: 0.3;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, transparent 100%);
+}
+
+/* Glass Pill/Badge Component */
+.glass-pill {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.glass-pill-sm {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Background Pattern Dots */
+.bg-pattern-dots {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+    background-size: 24px 24px;
+    opacity: 0.4;
+    z-index: 1;
+}
+
+/* Hover Lift Effect */
+.hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+/* Max Width Utilities */
+.mw-600 {
+    max-width: 600px;
+}
+
+.mw-800 {
+    max-width: 800px;
+}
+
+.mw-900 {
+    max-width: 900px;
+}
+
+/* Line Height Utilities */
+.lh-1 {
+    line-height: 1;
+}
+
+.lh-tight {
+    line-height: 1.2;
+}
+
+.lh-relaxed {
+    line-height: 1.6;
+}
+
+/* Letter Spacing Utilities */
+.tracking-tight {
+    letter-spacing: -0.025em;
+}
+
+.tracking-wide {
+    letter-spacing: 0.05em;
+}
+
+.tracking-widest {
+    letter-spacing: 0.15em;
+}
+
+/* Z-Index Utilities */
+.z-index-1 {
+    z-index: 1;
+}
+
+.z-index-2 {
+    z-index: 2;
+}
+
+.z-index-3 {
+    z-index: 3;
+}
+
+/* Gap Utilities */
+.gap-1 {
+    gap: 4px;
+}
+
+.gap-2 {
+    gap: 8px;
+}
+
+.gap-3 {
+    gap: 12px;
+}
+
+.gap-4 {
+    gap: 16px;
+}
+
+.gap-6 {
+    gap: 24px;
+}
+
+.gap-8 {
+    gap: 32px;
+}
+
+/* Border Utilities */
+.border-thin {
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Text Shadow Utilities */
+.text-shadow-sm {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive Hero Adjustments */
+@media (max-width: 960px) {
+    .hero-section {
+        min-height: auto;
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
+
+    .page-hero {
+        height: 350px;
+    }
+}
+
+@media (max-width: 600px) {
+    .hero-section {
+        min-height: auto;
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+
+    .page-hero {
+        height: 300px;
     }
 }

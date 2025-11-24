@@ -169,7 +169,6 @@ export default {
 <style scoped>
 .page-hero {
     height: 500px;
-    background: #0f172a;
     overflow: hidden;
 }
 
@@ -195,11 +194,7 @@ export default {
     background: linear-gradient(180deg, rgba(15, 23, 42, 0.8) 0%, rgba(15, 23, 42, 0.95) 100%);
 }
 
-.glass-pill {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-}
+/* glass-pill moved to app.css */
 
 .image-border-effect {
     position: absolute;
@@ -212,16 +207,7 @@ export default {
     z-index: 1;
 }
 
-.bg-pattern-dots {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
-    background-size: 24px 24px;
-    opacity: 0.4;
-}
+/* bg-pattern-dots moved to app.css */
 
 .value-card {
     background: white;
@@ -265,15 +251,5 @@ export default {
     transform: translateY(0);
 }
 
-.mw-600 { max-width: 600px; }
-.mw-800 { max-width: 800px; }
-.lh-relaxed { line-height: 1.6; }
-.lh-tight { line-height: 1.2; }
-.tracking-wide { letter-spacing: 0.05em; }
-.tracking-widest { letter-spacing: 0.15em; }
-.text-shadow-sm { text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); }
-.gap-8 { gap: 32px; }
-.gap-2 { gap: 8px; }
-.z-index-1 { z-index: 1; }
-.z-index-2 { z-index: 2; }
+/* Utility classes moved to app.css */
 </style>

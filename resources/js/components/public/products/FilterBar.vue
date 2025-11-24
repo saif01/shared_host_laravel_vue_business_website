@@ -369,17 +369,7 @@ onUnmounted(() => {
     scrollbar-width: none;
 }
 
-.tracking-wide {
-    letter-spacing: 0.05em;
-}
-
-.gap-1 {
-    gap: 4px;
-}
-
-.gap-2 {
-    gap: 8px;
-}
+/* Utility classes moved to app.css */
 
 /* Responsive */
 @media (max-width: 960px) {
