@@ -40,8 +40,7 @@
                         :to="{ name: 'AdminProducts' }"></v-list-item>
                     <v-list-item prepend-icon="mdi-folder" title="Categories"
                         :to="{ name: 'AdminCategories' }"></v-list-item>
-                    <v-list-item prepend-icon="mdi-tag" title="Tags"
-                        :to="{ name: 'AdminTags' }"></v-list-item>
+                    <v-list-item prepend-icon="mdi-tag" title="Tags" :to="{ name: 'AdminTags' }"></v-list-item>
                 </v-list-group>
 
                 <!-- Leads Management - Requires 'view-leads' permission -->
@@ -101,6 +100,15 @@
             <v-chip prepend-icon="mdi-shield-account"
                 v-if="currentUser && (currentUser.role === 'admin' || (userRoles && userRoles.some(r => r.slug === 'administrator')))">Administrator</v-chip>
             <v-spacer></v-spacer>
+
+            <!-- Unread Messages Notification -->
+            <div class="d-flex align-center mr-4" v-if="hasPermission('view-leads')">
+                <v-badge :content="unreadCount" :model-value="unreadCount > 0" color="error" overlap>
+                    <v-btn icon="mdi-email" variant="text" :to="{ name: 'AdminLeads' }" class="mr-2">
+                        <v-icon>mdi-email</v-icon>
+                    </v-btn>
+                </v-badge>
+            </div>
 
             <div class="d-flex align-center mr-4" v-if="currentUser">
                 <v-menu open-on-hover>
@@ -164,6 +172,8 @@ export default {
             userPermissions: [], // Array of all permissions extracted from user's roles
             currentDate: moment().format("Do MMMM YYYY"), // Formatted current date
             currentYear: new Date().getFullYear(), // Current year for copyright
+            unreadCount: 0, // Count of unread leads/messages
+            unreadCountInterval: null, // Interval for polling unread count
         };
     },
     methods: {
@@ -265,6 +275,50 @@ export default {
             // Second check: Verify if user has the specific permission through their assigned roles
             // This checks the flattened permissions array we created in loadUser()
             return this.userPermissions.includes(permissionSlug);
+        },
+        /**
+         * Load unread leads count
+         */
+        async loadUnreadCount() {
+            if (!this.hasPermission('view-leads')) {
+                return;
+            }
+
+            try {
+                const token = localStorage.getItem('admin_token');
+                if (!token) return;
+
+                const response = await axios.get('/api/v1/leads/unread-count', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                this.unreadCount = response.data.count || 0;
+            } catch (error) {
+                console.error('Error loading unread count:', error);
+            }
+        },
+        /**
+         * Start polling for unread count updates
+         */
+        startUnreadCountPolling() {
+            // Load immediately
+            this.loadUnreadCount();
+
+            // Then poll every 30 seconds
+            this.unreadCountInterval = setInterval(() => {
+                this.loadUnreadCount();
+            }, 30000);
+        },
+        /**
+         * Stop polling for unread count updates
+         */
+        stopUnreadCountPolling() {
+            if (this.unreadCountInterval) {
+                clearInterval(this.unreadCountInterval);
+                this.unreadCountInterval = null;
+            }
         }
     },
     /**
@@ -280,8 +334,30 @@ export default {
             // Token exists, load user data including roles and permissions
             // This will populate userRoles and userPermissions arrays
             // which are used by hasPermission() method to show/hide menu items
-            this.loadUser();
+            this.loadUser().then(() => {
+                // Start polling for unread count after user is loaded
+                this.startUnreadCountPolling();
+            });
         }
+    },
+    provide() {
+        // Provide refresh method to child components
+        // Use arrow function to maintain 'this' context
+        return {
+            refreshUnreadCount: () => {
+                this.loadUnreadCount();
+            }
+        };
+    },
+    watch: {
+        // Watch for route changes to refresh unread count
+        '$route'() {
+            this.loadUnreadCount();
+        }
+    },
+    beforeUnmount() {
+        // Clean up polling interval when component is destroyed
+        this.stopUnreadCountPolling();
     }
 };
 </script>

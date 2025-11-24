@@ -19,9 +19,14 @@
                             prepend-inner-icon="mdi-filter" variant="outlined" density="compact" clearable
                             @update:model-value="loadLeads"></v-select>
                     </v-col>
-                    <v-col cols="12" md="3">
+                    <v-col cols="12" md="2">
                         <v-select v-model="typeFilter" :items="typeOptions" label="Filter by Type"
                             prepend-inner-icon="mdi-filter" variant="outlined" density="compact" clearable
+                            @update:model-value="loadLeads"></v-select>
+                    </v-col>
+                    <v-col cols="12" md="2">
+                        <v-select v-model="readFilter" :items="readOptions" label="Filter by Read Status"
+                            prepend-inner-icon="mdi-email" variant="outlined" density="compact" clearable
                             @update:model-value="loadLeads"></v-select>
                     </v-col>
                     <v-col cols="12" md="3">
@@ -84,12 +89,19 @@
                                     <v-icon :icon="getSortIcon('created_at')" size="small" class="ml-1"></v-icon>
                                 </div>
                             </th>
+                            <th>Read</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="lead in leads" :key="lead.id">
-                            <td>{{ lead.name }}</td>
+                        <tr v-for="lead in leads" :key="lead.id" :class="{ 'unread-row': !lead.is_read }">
+                            <td>
+                                <div class="d-flex align-center">
+                                    <v-icon v-if="!lead.is_read" icon="mdi-circle" size="small" color="primary" class="mr-2"></v-icon>
+                                    <span v-else class="mr-2" style="width: 16px;"></span>
+                                    {{ lead.name }}
+                                </div>
+                            </td>
                             <td>{{ lead.email }}</td>
                             <td>{{ lead.phone || '-' }}</td>
                             <td>
@@ -102,11 +114,23 @@
                             </td>
                             <td>{{ formatDate(lead.created_at) }}</td>
                             <td>
-                                <v-btn size="small" icon="mdi-eye" @click="viewLead(lead)" variant="text"></v-btn>
+                                <v-chip v-if="lead.is_read" size="small" color="success" variant="flat">
+                                    <v-icon icon="mdi-check" size="small" class="mr-1"></v-icon>
+                                    Read
+                                </v-chip>
+                                <v-chip v-else size="small" color="error" variant="flat">
+                                    <v-icon icon="mdi-email" size="small" class="mr-1"></v-icon>
+                                    Unread
+                                </v-chip>
+                            </td>
+                            <td>
+                                <v-btn size="small" icon="mdi-eye" @click="viewLead(lead)" variant="text" class="mr-1"></v-btn>
+                                <v-btn v-if="!lead.is_read" size="small" icon="mdi-email-mark-as-unread" 
+                                    @click="markAsRead(lead)" variant="text" color="primary" title="Mark as read"></v-btn>
                             </td>
                         </tr>
                         <tr v-if="leads.length === 0">
-                            <td colspan="7" class="text-center py-4">No leads found</td>
+                            <td colspan="8" class="text-center py-4">No leads found</td>
                         </tr>
                     </tbody>
                 </v-table>
@@ -135,11 +159,13 @@ import adminPaginationMixin from '../../../mixins/adminPaginationMixin';
 
 export default {
     mixins: [adminPaginationMixin],
+    inject: ['refreshUnreadCount'],
     data() {
         return {
             leads: [],
             statusFilter: null,
             typeFilter: null,
+            readFilter: null,
             statusOptions: [
                 { title: 'New', value: 'new' },
                 { title: 'Contacted', value: 'contacted' },
@@ -151,6 +177,10 @@ export default {
                 { title: 'Contact', value: 'contact' },
                 { title: 'Quote', value: 'quote' },
                 { title: 'Support', value: 'support' }
+            ],
+            readOptions: [
+                { title: 'Unread', value: 'unread' },
+                { title: 'Read', value: 'read' }
             ]
         };
     },
@@ -175,6 +205,12 @@ export default {
                     params.type = this.typeFilter;
                 }
 
+                if (this.readFilter === 'unread') {
+                    params.is_read = false;
+                } else if (this.readFilter === 'read') {
+                    params.is_read = true;
+                }
+
                 const response = await axios.get('/api/v1/leads', {
                     params,
                     headers: this.getAuthHeaders()
@@ -188,8 +224,45 @@ export default {
                 this.loading = false;
             }
         },
-        viewLead(lead) {
-            alert(`Lead Details:\nName: ${lead.name}\nEmail: ${lead.email}\nPhone: ${lead.phone || 'N/A'}\nType: ${lead.type}\nStatus: ${lead.status}\nMessage: ${lead.message || 'N/A'}`);
+        async viewLead(lead) {
+            try {
+                // Fetch full lead details and mark as read
+                const response = await axios.get(`/api/v1/leads/${lead.id}`, {
+                    headers: this.getAuthHeaders()
+                });
+                
+                const fullLead = response.data;
+                
+                // Show lead details in a dialog or alert
+                alert(`Lead Details:\nName: ${fullLead.name}\nEmail: ${fullLead.email}\nPhone: ${fullLead.phone || 'N/A'}\nSubject: ${fullLead.subject || 'N/A'}\nType: ${fullLead.type}\nStatus: ${fullLead.status}\nMessage: ${fullLead.message || 'N/A'}\n\nCreated: ${this.formatDate(fullLead.created_at)}`);
+                
+                // Reload leads to update read status
+                await this.loadLeads();
+                
+                // Refresh unread count using inject
+                if (this.refreshUnreadCount) {
+                    this.refreshUnreadCount();
+                }
+            } catch (error) {
+                this.handleApiError(error, 'Failed to load lead details');
+            }
+        },
+        async markAsRead(lead) {
+            try {
+                await axios.post(`/api/v1/leads/${lead.id}/mark-as-read`, {}, {
+                    headers: this.getAuthHeaders()
+                });
+                
+                this.showSuccess('Lead marked as read');
+                await this.loadLeads();
+                
+                // Refresh unread count using inject
+                if (this.refreshUnreadCount) {
+                    this.refreshUnreadCount();
+                }
+            } catch (error) {
+                this.handleApiError(error, 'Failed to mark lead as read');
+            }
         },
         async exportLeads() {
             try {
@@ -230,3 +303,10 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.unread-row {
+    background-color: rgba(25, 118, 210, 0.05);
+    font-weight: 500;
+}
+</style>

@@ -15,12 +15,16 @@ class Lead extends Model
         'message',
         'data',
         'status',
+        'is_read',
+        'read_at',
         'assigned_to',
         'notes',
     ];
 
     protected $casts = [
         'data' => 'array',
+        'is_read' => 'boolean',
+        'read_at' => 'datetime',
     ];
 
     public function assignedUser()

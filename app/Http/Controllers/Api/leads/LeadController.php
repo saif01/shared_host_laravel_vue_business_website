@@ -21,6 +21,11 @@ class LeadController extends Controller
             $query->where('status', $request->status);
         }
 
+        // Filter by read status
+        if ($request->has('is_read')) {
+            $query->where('is_read', $request->boolean('is_read'));
+        }
+
         // Search functionality
         if ($request->has('search')) {
             $search = $request->search;
@@ -57,6 +62,14 @@ class LeadController extends Controller
 
     public function show(Lead $lead)
     {
+        // Mark as read when viewing
+        if (!$lead->is_read) {
+            $lead->update([
+                'is_read' => true,
+                'read_at' => now(),
+            ]);
+        }
+        
         return response()->json($lead->load('assignedUser'));
     }
 
@@ -64,11 +77,41 @@ class LeadController extends Controller
     {
         $validated = $request->validate([
             'status' => 'sometimes|string',
+            'is_read' => 'sometimes|boolean',
             'assigned_to' => 'nullable|exists:users,id',
             'notes' => 'nullable|string',
         ]);
 
+        // If marking as read, set read_at timestamp
+        if (isset($validated['is_read']) && $validated['is_read'] && !$lead->is_read) {
+            $validated['read_at'] = now();
+        } elseif (isset($validated['is_read']) && !$validated['is_read']) {
+            $validated['read_at'] = null;
+        }
+
         $lead->update($validated);
+        return response()->json($lead);
+    }
+
+    /**
+     * Get count of unread leads
+     */
+    public function unreadCount()
+    {
+        $count = Lead::where('is_read', false)->count();
+        return response()->json(['count' => $count]);
+    }
+
+    /**
+     * Mark lead as read
+     */
+    public function markAsRead(Lead $lead)
+    {
+        $lead->update([
+            'is_read' => true,
+            'read_at' => now(),
+        ]);
+        
         return response()->json($lead);
     }
 
