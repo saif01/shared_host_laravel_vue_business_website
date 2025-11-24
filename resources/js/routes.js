@@ -13,43 +13,43 @@ const routes = [
         children: [
             {
                 path: '',
-                component: () => import('./components/public/HomePage.vue'),
+                component: () => import('./components/public/pages/HomePage.vue'),
                 name: 'Home',
                 meta: { title: 'Home' }
             },
             {
                 path: 'about',
-                component: () => import('./components/public/AboutPage.vue'),
+                component: () => import('./components/public/pages/AboutPage.vue'),
                 name: 'About',
                 meta: { title: 'About Us' }
             },
             {
                 path: 'services',
-                component: () => import('./components/public/ServicesPage.vue'),
+                component: () => import('./components/public/services/ServicesPage.vue'),
                 name: 'Services',
                 meta: { title: 'Services' }
             },
             {
                 path: 'services/:slug',
-                component: () => import('./components/public/ServiceDetailPage.vue'),
+                component: () => import('./components/public/services/ServiceDetailPage.vue'),
                 name: 'ServiceDetail',
                 meta: { title: 'Service Details' }
             },
             {
                 path: 'products',
-                component: () => import('./components/public/ProductsPage.vue'),
+                component: () => import('./components/public/products/ProductsPage.vue'),
                 name: 'Products',
                 meta: { title: 'Products' }
             },
             {
                 path: 'products/:slug',
-                component: () => import('./components/public/ProductDetailPage.vue'),
+                component: () => import('./components/public/products/ProductDetailPage.vue'),
                 name: 'ProductDetail',
                 meta: { title: 'Product Details' }
             },
             {
                 path: 'contact',
-                component: () => import('./components/public/ContactPage.vue'),
+                component: () => import('./components/public/pages/ContactPage.vue'),
                 name: 'Contact',
                 meta: { title: 'Contact' }
             },
@@ -170,7 +170,7 @@ const routes = [
 
     {
         path: '/:pathMatch(.*)*',
-        component: () => import('./components/public/HomePage.vue'),
+        component: () => import('./components/public/pages/HomePage.vue'),
         name: 'NotFound',
         meta: {
             title: 'Page Not Found',

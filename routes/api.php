@@ -14,11 +14,11 @@ use App\Http\Controllers\Api\products\TagController;
 use App\Http\Controllers\Api\upload\UploadController;
 use App\Http\Controllers\Api\users\UserController;
 use App\Http\Controllers\Api\logs\VisitorLogController;
-use App\Http\Controllers\Public\ContactController;
-use App\Http\Controllers\Public\HomeController;
-use App\Http\Controllers\Public\PageController as PublicPageController;
-use App\Http\Controllers\Public\ProductController as PublicProductController;
-use App\Http\Controllers\Public\ServiceController as PublicServiceController;
+use App\Http\Controllers\Public\pages\ContactController;
+use App\Http\Controllers\Public\pages\HomeController;
+use App\Http\Controllers\Public\pages\PageController as PublicPageController;
+use App\Http\Controllers\Public\products\ProductController as PublicProductController;
+use App\Http\Controllers\Public\services\ServiceController as PublicServiceController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('test', function () {
