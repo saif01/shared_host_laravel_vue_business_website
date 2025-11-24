@@ -45,7 +45,8 @@
                 <span class="text-caption text-grey">
                     Total Records: <strong>{{ pagination.total || 0 }}</strong>
                     <span v-if="leads.length > 0">
-                        | Showing {{ ((currentPage - 1) * perPage) + 1 }} to {{ Math.min(currentPage * perPage, pagination.total) }} of {{ pagination.total }}
+                        | Showing {{ ((currentPage - 1) * perPage) + 1 }} to {{ Math.min(currentPage * perPage,
+                            pagination.total) }} of {{ pagination.total }}
                     </span>
                 </span>
             </v-card-title>
@@ -53,37 +54,37 @@
                 <v-table>
                     <thead>
                         <tr>
-                            <th class="sortable" @click="onSort('name')" >
+                            <th class="sortable" @click="onSort('name')">
                                 <div class="d-flex align-center">
                                     Name
                                     <v-icon :icon="getSortIcon('name')" size="small" class="ml-1"></v-icon>
                                 </div>
                             </th>
-                            <th class="sortable" @click="onSort('email')" >
+                            <th class="sortable" @click="onSort('email')">
                                 <div class="d-flex align-center">
                                     Email
                                     <v-icon :icon="getSortIcon('email')" size="small" class="ml-1"></v-icon>
                                 </div>
                             </th>
-                            <th class="sortable" @click="onSort('phone')" >
+                            <th class="sortable" @click="onSort('phone')">
                                 <div class="d-flex align-center">
                                     Phone
                                     <v-icon :icon="getSortIcon('phone')" size="small" class="ml-1"></v-icon>
                                 </div>
                             </th>
-                            <th class="sortable" @click="onSort('type')" >
+                            <th class="sortable" @click="onSort('type')">
                                 <div class="d-flex align-center">
                                     Type
                                     <v-icon :icon="getSortIcon('type')" size="small" class="ml-1"></v-icon>
                                 </div>
                             </th>
-                            <th class="sortable" @click="onSort('status')" >
+                            <th class="sortable" @click="onSort('status')">
                                 <div class="d-flex align-center">
                                     Status
                                     <v-icon :icon="getSortIcon('status')" size="small" class="ml-1"></v-icon>
                                 </div>
                             </th>
-                            <th class="sortable" @click="onSort('created_at')" >
+                            <th class="sortable" @click="onSort('created_at')">
                                 <div class="d-flex align-center">
                                     Date
                                     <v-icon :icon="getSortIcon('created_at')" size="small" class="ml-1"></v-icon>
@@ -97,7 +98,8 @@
                         <tr v-for="lead in leads" :key="lead.id" :class="{ 'unread-row': !lead.is_read }">
                             <td>
                                 <div class="d-flex align-center">
-                                    <v-icon v-if="!lead.is_read" icon="mdi-circle" size="small" color="primary" class="mr-2"></v-icon>
+                                    <v-icon v-if="!lead.is_read" icon="mdi-circle" size="small" color="primary"
+                                        class="mr-2"></v-icon>
                                     <span v-else class="mr-2" style="width: 16px;"></span>
                                     {{ lead.name }}
                                 </div>
@@ -124,9 +126,11 @@
                                 </v-chip>
                             </td>
                             <td>
-                                <v-btn size="small" icon="mdi-eye" @click="viewLead(lead)" variant="text" class="mr-1"></v-btn>
-                                <v-btn v-if="!lead.is_read" size="small" icon="mdi-email-mark-as-unread" 
-                                    @click="markAsRead(lead)" variant="text" color="primary" title="Mark as read"></v-btn>
+                                <v-btn size="small" icon="mdi-eye" @click="viewLead(lead)" variant="text"
+                                    class="mr-1"></v-btn>
+                                <v-btn v-if="!lead.is_read" size="small" icon="mdi-email-mark-as-unread"
+                                    @click="markAsRead(lead)" variant="text" color="primary"
+                                    title="Mark as read"></v-btn>
                             </td>
                         </tr>
                         <tr v-if="leads.length === 0">
@@ -139,7 +143,8 @@
                 <div class="d-flex justify-space-between align-center mt-4">
                     <div class="text-caption text-grey">
                         <span v-if="leads.length > 0">
-                            Showing {{ ((currentPage - 1) * perPage) + 1 }} to {{ Math.min(currentPage * perPage, pagination.total) }} of {{ pagination.total }} records
+                            Showing {{ ((currentPage - 1) * perPage) + 1 }} to {{ Math.min(currentPage * perPage,
+                                pagination.total) }} of {{ pagination.total }} records
                         </span>
                         <span v-else>
                             No records found
@@ -150,6 +155,135 @@
                 </div>
             </v-card-text>
         </v-card>
+
+        <!-- View Lead Dialog -->
+        <v-dialog v-model="showDialog" max-width="800" scrollable>
+            <v-card v-if="selectedLead">
+                <v-card-title class="d-flex justify-space-between align-center bg-primary text-white">
+                    <div class="d-flex align-center">
+                        <v-icon icon="mdi-email" class="mr-2"></v-icon>
+                        <span>Lead Details</span>
+                    </div>
+                    <v-btn icon="mdi-close" variant="text" @click="closeDialog" color="white"></v-btn>
+                </v-card-title>
+
+                <v-card-text class="pa-6">
+                    <v-row>
+                        <v-col cols="12" md="6">
+                            <div class="mb-4">
+                                <div class="text-caption text-grey mb-1">Name</div>
+                                <div class="text-body-1 font-weight-medium">{{ selectedLead.name }}</div>
+                            </div>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <div class="mb-4">
+                                <div class="text-caption text-grey mb-1">Email</div>
+                                <div class="text-body-1">
+                                    <a :href="`mailto:${selectedLead.email}`" class="text-primary text-decoration-none">
+                                        {{ selectedLead.email }}
+                                    </a>
+                                </div>
+                            </div>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <div class="mb-4">
+                                <div class="text-caption text-grey mb-1">Phone</div>
+                                <div class="text-body-1">
+                                    <a v-if="selectedLead.phone" :href="`tel:${selectedLead.phone}`"
+                                        class="text-primary text-decoration-none">
+                                        {{ selectedLead.phone }}
+                                    </a>
+                                    <span v-else class="text-grey">N/A</span>
+                                </div>
+                            </div>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <div class="mb-4">
+                                <div class="text-caption text-grey mb-1">Type</div>
+                                <div class="text-body-1">
+                                    <v-chip size="small" variant="outlined">{{ selectedLead.type }}</v-chip>
+                                </div>
+                            </div>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <div class="mb-4">
+                                <div class="text-caption text-grey mb-1">Status</div>
+                                <div class="text-body-1">
+                                    <v-chip :color="getStatusColor(selectedLead.status)" size="small">
+                                        {{ selectedLead.status }}
+                                    </v-chip>
+                                </div>
+                            </div>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <div class="mb-4">
+                                <div class="text-caption text-grey mb-1">Read Status</div>
+                                <div class="text-body-1">
+                                    <v-chip v-if="selectedLead.is_read" size="small" color="success" variant="flat">
+                                        <v-icon icon="mdi-check" size="small" class="mr-1"></v-icon>
+                                        Read
+                                    </v-chip>
+                                    <v-chip v-else size="small" color="error" variant="flat">
+                                        <v-icon icon="mdi-email" size="small" class="mr-1"></v-icon>
+                                        Unread
+                                    </v-chip>
+                                </div>
+                            </div>
+                        </v-col>
+                        <v-col cols="12" v-if="selectedLead.subject">
+                            <div class="mb-4">
+                                <div class="text-caption text-grey mb-1">Subject</div>
+                                <div class="text-body-1 font-weight-medium">{{ selectedLead.subject }}</div>
+                            </div>
+                        </v-col>
+                        <v-col cols="12">
+                            <div class="mb-4">
+                                <div class="text-caption text-grey mb-1">Message</div>
+                                <div class="text-body-1 pa-4 bg-grey-lighten-4 rounded"
+                                    style="white-space: pre-wrap; min-height: 100px;">
+                                    {{ selectedLead.message || 'No message provided' }}
+                                </div>
+                            </div>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <div class="mb-4">
+                                <div class="text-caption text-grey mb-1">Created At</div>
+                                <div class="text-body-2">{{ formatDate(selectedLead.created_at) }}</div>
+                            </div>
+                        </v-col>
+                        <v-col cols="12" md="6" v-if="selectedLead.read_at">
+                            <div class="mb-4">
+                                <div class="text-caption text-grey mb-1">Read At</div>
+                                <div class="text-body-2">{{ formatDate(selectedLead.read_at) }}</div>
+                            </div>
+                        </v-col>
+                        <v-col cols="12" v-if="selectedLead.assigned_user">
+                            <div class="mb-4">
+                                <div class="text-caption text-grey mb-1">Assigned To</div>
+                                <div class="text-body-1">{{ selectedLead.assigned_user.name }}</div>
+                            </div>
+                        </v-col>
+                        <v-col cols="12" v-if="selectedLead.notes">
+                            <div class="mb-4">
+                                <div class="text-caption text-grey mb-1">Notes</div>
+                                <div class="text-body-1 pa-4 bg-grey-lighten-4 rounded" style="white-space: pre-wrap;">
+                                    {{ selectedLead.notes }}
+                                </div>
+                            </div>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+
+                <v-card-actions class="pa-4 bg-grey-lighten-5">
+                    <v-spacer></v-spacer>
+                    <v-btn v-if="!selectedLead.is_read" color="primary" prepend-icon="mdi-email-mark-as-unread"
+                        @click="markAsReadFromDialog">
+                        Mark as Read
+                    </v-btn>
+                    <v-btn color="grey" variant="text" @click="closeDialog">Close</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -166,6 +300,8 @@ export default {
             statusFilter: null,
             typeFilter: null,
             readFilter: null,
+            showDialog: false,
+            selectedLead: null,
             statusOptions: [
                 { title: 'New', value: 'new' },
                 { title: 'Contacted', value: 'contacted' },
@@ -230,15 +366,13 @@ export default {
                 const response = await axios.get(`/api/v1/leads/${lead.id}`, {
                     headers: this.getAuthHeaders()
                 });
-                
-                const fullLead = response.data;
-                
-                // Show lead details in a dialog or alert
-                alert(`Lead Details:\nName: ${fullLead.name}\nEmail: ${fullLead.email}\nPhone: ${fullLead.phone || 'N/A'}\nSubject: ${fullLead.subject || 'N/A'}\nType: ${fullLead.type}\nStatus: ${fullLead.status}\nMessage: ${fullLead.message || 'N/A'}\n\nCreated: ${this.formatDate(fullLead.created_at)}`);
-                
+
+                this.selectedLead = response.data;
+                this.showDialog = true;
+
                 // Reload leads to update read status
                 await this.loadLeads();
-                
+
                 // Refresh unread count using inject
                 if (this.refreshUnreadCount) {
                     this.refreshUnreadCount();
@@ -247,15 +381,42 @@ export default {
                 this.handleApiError(error, 'Failed to load lead details');
             }
         },
+        closeDialog() {
+            this.showDialog = false;
+            this.selectedLead = null;
+        },
+        async markAsReadFromDialog() {
+            if (!this.selectedLead) return;
+
+            try {
+                await axios.post(`/api/v1/leads/${this.selectedLead.id}/mark-as-read`, {}, {
+                    headers: this.getAuthHeaders()
+                });
+
+                // Update the selected lead
+                this.selectedLead.is_read = true;
+                this.selectedLead.read_at = new Date().toISOString();
+
+                this.showSuccess('Lead marked as read');
+                await this.loadLeads();
+
+                // Refresh unread count using inject
+                if (this.refreshUnreadCount) {
+                    this.refreshUnreadCount();
+                }
+            } catch (error) {
+                this.handleApiError(error, 'Failed to mark lead as read');
+            }
+        },
         async markAsRead(lead) {
             try {
                 await axios.post(`/api/v1/leads/${lead.id}/mark-as-read`, {}, {
                     headers: this.getAuthHeaders()
                 });
-                
+
                 this.showSuccess('Lead marked as read');
                 await this.loadLeads();
-                
+
                 // Refresh unread count using inject
                 if (this.refreshUnreadCount) {
                     this.refreshUnreadCount();
