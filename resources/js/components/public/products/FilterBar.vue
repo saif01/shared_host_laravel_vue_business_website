@@ -1,74 +1,64 @@
 <template>
-    <div class="filter-section mb-4 mb-md-5">
-        <v-card class="filter-card rounded-lg elevation-2" :class="{ 'sticky-filter': isSticky }">
-            <!-- Header Section -->
-            <div class="filter-header d-flex align-center justify-space-between pa-3 pa-md-3 pb-2">
-                <div class="d-flex align-center gap-1">
-                    <v-icon icon="mdi-filter-variant" color="primary" size="18" class="filter-icon d-none d-sm-flex" />
-                    <h2 class="text-body-2 text-sm-subtitle-2 font-weight-bold text-grey-darken-3 mb-0">
-                        <span class="d-none d-sm-inline">Filter & Search</span>
-                        <span class="d-sm-none">Filters</span>
-                    </h2>
-                    <v-chip v-if="hasActiveFilters" size="x-small" color="primary" variant="flat" class="ml-1">
-                        {{ activeFiltersCount }}
+    <div class="filter-shell mb-4 mb-md-5">
+        <v-card class="filter-card rounded-xl elevation-2" :class="{ 'sticky-filter': isSticky }">
+            <div class="filter-top">
+                <div class="filter-meta">
+                    <span class="eyebrow">Product filters</span>
+                    <div class="title-row">
+                        <div class="icon-pill">
+                            <v-icon icon="mdi-filter-variant" color="primary" size="18" />
+                        </div>
+                        <div>
+                            <div class="title-text">Filter & Search</div>
+                            <div class="subtitle">Shape the catalog in a couple taps</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="top-actions">
+                    <v-chip v-if="resultsCount" size="small" color="primary" variant="tonal" class="metric-chip">
+                        {{ resultsCount }} results
                     </v-chip>
-                </div>
-                <v-btn v-if="hasActiveFilters" variant="text" color="grey-darken-1" size="x-small"
-                    prepend-icon="mdi-close-circle" class="text-capitalize d-none d-sm-flex"
-                    @click="$emit('clear-filters')">
-                    Clear All
-                </v-btn>
-                <v-btn v-if="hasActiveFilters" icon="mdi-close-circle" variant="text" color="grey-darken-1"
-                    size="x-small" class="d-sm-none" @click="$emit('clear-filters')" />
-            </div>
-
-            <!-- Category Filter Section -->
-            <div class="category-section pa-3 pa-md-3 pt-0 pb-2">
-                <div
-                    class="text-caption font-weight-bold text-grey-darken-1 mb-1 mb-md-2 text-uppercase tracking-wide d-none d-md-block">
-                    Categories
-                </div>
-                <div class="category-filter-wrapper">
-                    <div class="category-filter d-flex align-center overflow-x-auto w-100 pb-1 gap-1">
-                        <v-btn v-for="category in categories" :key="category.id" variant="flat"
-                            :color="activeCategory === category.id ? 'primary' : 'grey-lighten-3'"
-                            class="category-btn font-weight-bold text-capitalize rounded-lg flex-shrink-0" :class="{
-                                'category-btn-active': activeCategory === category.id,
-                                'category-btn-inactive': activeCategory !== category.id
-                            }" size="x-small" density="compact" @click="$emit('update:activeCategory', category.id)">
-                            <v-icon v-if="category.icon" :icon="category.icon" size="x-small" class="mr-1" />
-                            <span class="category-text">{{ category.name }}</span>
-                        </v-btn>
-                    </div>
+                    <v-chip v-if="hasActiveFilters" size="small" color="primary" variant="flat" class="metric-chip">
+                        {{ activeFiltersCount }} active
+                    </v-chip>
+                    <v-btn variant="text" color="grey-darken-1" size="small" prepend-icon="mdi-close-circle"
+                        class="text-capitalize clear-btn" :disabled="!hasActiveFilters"
+                        @click="$emit('clear-filters')">
+                        Clear filters
+                    </v-btn>
                 </div>
             </div>
 
-            <!-- Search & Sort Section -->
-            <div class="search-sort-section pa-3 pa-md-3 pt-0">
-                <div class="search-sort-row d-flex align-center gap-1">
-                    <!-- Search Field -->
-                    <div class="search-wrapper flex-grow-1">
-                        <v-text-field :model-value="searchQuery" density="compact" variant="outlined"
-                            placeholder="Search products..." prepend-inner-icon="mdi-magnify" hide-details="auto"
-                            bg-color="white" class="search-field rounded-lg" clearable
-                            @update:model-value="handleSearchInput" @click:clear="$emit('update:searchQuery', '')">
-                            <template v-if="searchQuery" #append-inner>
-                                <v-chip size="x-small" color="primary" variant="flat" class="results-chip mr-1">
-                                    {{ resultsCount }}
-                                </v-chip>
-                            </template>
-                        </v-text-field>
+            <div class="filter-grid">
+                <div class="panel search-panel">
+                    <div class="panel-header">
+                        <span class="panel-title">Search</span>
+                        <span class="panel-hint">Names, tags or SKU</span>
                     </div>
+                    <v-text-field :model-value="searchQuery" density="compact" variant="solo-filled"
+                        placeholder="Search products..." prepend-inner-icon="mdi-magnify" hide-details="auto"
+                        bg-color="white" class="search-field rounded-lg" clearable
+                        @update:model-value="handleSearchInput" @click:clear="$emit('update:searchQuery', '')">
+                        <template v-if="searchQuery" #append-inner>
+                            <v-chip size="x-small" color="primary" variant="flat" class="results-chip mr-1">
+                                {{ resultsCount }}
+                            </v-chip>
+                        </template>
+                    </v-text-field>
+                </div>
 
-                    <!-- Sort & Actions -->
-                    <div class="sort-actions-wrapper d-flex align-center gap-1 flex-shrink-0">
-                        <!-- Sort Menu -->
-                        <v-menu location="bottom end" :close-on-content-click="true" class="sort-menu-mobile">
+                <div class="panel sort-panel">
+                    <div class="panel-header">
+                        <span class="panel-title">Sort & compare</span>
+                        <span class="panel-hint">Tune order & shortlist</span>
+                    </div>
+                    <div class="sort-actions">
+                        <v-menu location="bottom end" :close-on-content-click="true">
                             <template #activator="{ props: menuProps }">
                                 <v-btn v-bind="menuProps" variant="outlined" color="grey-darken-2"
                                     class="sort-btn bg-white text-grey-darken-2 font-weight-medium"
-                                    append-icon="mdi-chevron-down" size="x-small" density="compact">
-                                    <v-icon icon="mdi-sort" size="x-small" class="mr-1 d-none d-sm-inline" />
+                                    append-icon="mdi-chevron-down" size="small" density="comfortable">
+                                    <v-icon icon="mdi-sort" size="16" class="mr-1 d-none d-sm-inline" />
                                     <span class="d-none d-sm-inline">{{ sortByLabel }}</span>
                                     <span class="d-sm-none">Sort</span>
                                 </v-btn>
@@ -89,14 +79,41 @@
                             </v-list>
                         </v-menu>
 
-                        <!-- Comparison Button -->
                         <v-btn v-if="comparisonCount > 0" color="primary" variant="flat"
                             prepend-icon="mdi-scale-balance" class="comparison-btn text-white font-weight-bold"
-                            size="x-small" density="compact" @click="$emit('open-comparison')">
+                            size="small" density="comfortable" @click="$emit('open-comparison')">
                             <span class="d-none d-sm-inline mr-1">Compare</span>
                             <v-chip size="x-small" color="white" variant="flat" class="comparison-badge ml-1">
                                 {{ comparisonCount }}
                             </v-chip>
+                        </v-btn>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category-block">
+                <div class="category-heading">
+                    <div>
+                        <span class="eyebrow">Categories</span>
+                        <div class="subcopy">Swipe through the full catalog</div>
+                    </div>
+                    <v-chip v-if="hasActiveFilters" size="x-small" color="primary" variant="tonal"
+                        class="d-none d-sm-inline-flex">
+                        Active filter set
+                    </v-chip>
+                </div>
+                <div class="category-filter-wrapper">
+                    <div class="category-filter d-flex align-center overflow-x-auto w-100 pb-1 gap-2">
+                        <v-btn v-for="category in categories" :key="category.id" variant="flat"
+                            :color="activeCategory === category.id ? 'primary' : 'grey-lighten-3'"
+                            class="category-btn font-weight-bold text-capitalize rounded-pill flex-shrink-0"
+                            :class="{
+                                'category-btn-active': activeCategory === category.id,
+                                'category-btn-inactive': activeCategory !== category.id
+                            }" size="small" density="comfortable"
+                            @click="$emit('update:activeCategory', category.id)" :aria-pressed="activeCategory === category.id">
+                            <v-icon v-if="category.icon" :icon="category.icon" size="14" class="mr-1" />
+                            <span class="category-text">{{ category.name }}</span>
                         </v-btn>
                     </div>
                 </div>
@@ -182,49 +199,258 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.filter-section {
+.filter-shell {
     position: relative;
-    margin-bottom: 1rem;
 }
 
 .filter-card {
-    background: linear-gradient(to bottom, #ffffff 0%, #fafbfc 100%) !important;
+    background: radial-gradient(120% 120% at 10% 10%, rgba(var(--v-theme-primary), 0.06), transparent),
+        linear-gradient(180deg, #ffffff 0%, #f7f9fb 100%) !important;
     backdrop-filter: blur(12px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s ease;
     border: 1px solid rgba(0, 0, 0, 0.06);
-    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.04) !important;
+    box-shadow: 0 12px 40px -24px rgba(15, 23, 42, 0.55) !important;
+    padding: 14px 14px 16px;
 }
 
 .filter-card.sticky-filter {
     position: sticky;
-    top: 60px;
-    z-index: 100;
-    box-shadow: 0 6px 15px -3px rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.08) !important;
-    border-color: rgba(var(--v-theme-primary), 0.2);
+    top: 64px;
+    z-index: 90;
+    box-shadow: 0 18px 45px -20px rgba(0, 0, 0, 0.25) !important;
+    border-color: rgba(var(--v-theme-primary), 0.18);
 }
 
-.filter-header {
+.filter-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 12px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-.category-section {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+.filter-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
-.filter-icon {
-    animation: pulse 2s ease-in-out infinite;
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6b7280;
+    font-weight: 700;
 }
 
-@keyframes pulse {
+.title-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.icon-pill {
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(var(--v-theme-primary), 0.12);
+    box-shadow: 0 8px 18px -10px rgba(var(--v-theme-primary), 0.45);
+}
+
+.title-text {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.subtitle {
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+.top-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.metric-chip {
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+.clear-btn {
+    font-weight: 700;
+}
+
+.filter-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr);
+    gap: 12px;
+    padding: 12px 0 4px;
+}
+
+.panel {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    border-radius: 14px;
+    padding: 10px;
+    box-shadow: 0 6px 18px -14px rgba(15, 23, 42, 0.7);
+}
+
+.panel-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    gap: 6px;
+}
+
+.panel-title {
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.panel-hint {
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+.search-field {
+    width: 100%;
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.search-field :deep(.v-field) {
+    border-radius: 10px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 8px 20px -14px rgba(15, 23, 42, 0.5);
+}
+
+.search-field :deep(.v-field--focused) {
+    box-shadow: 0 10px 30px -16px rgba(var(--v-theme-primary), 0.6) !important;
+    transform: translateY(-1px);
+}
+
+.search-field :deep(.v-field__input) {
+    font-size: 0.9rem;
+    padding: 10px 12px;
+}
+
+.search-field :deep(.v-field__prepend-inner .v-icon) {
+    font-size: 18px;
+}
+
+.results-chip {
+    font-weight: 700;
+    font-size: 0.75rem;
+}
+
+.sort-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: flex-end;
+}
+
+.sort-btn {
+    transition: all 0.25s ease;
+    border-radius: 12px;
+    min-width: 0;
+    font-weight: 700;
+    min-height: 42px;
+}
+
+.sort-btn:hover {
+    box-shadow: 0 10px 30px -16px rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px);
+}
+
+.sort-menu-list {
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2) !important;
+    min-width: 220px;
+    max-width: 92vw;
+}
+
+.sort-option {
+    transition: all 0.2s ease;
+    border-radius: 8px;
+    margin: 2px 6px;
+    min-height: 38px;
+}
+
+.sort-option:hover {
+    background-color: rgba(var(--v-theme-primary), 0.08);
+}
+
+.sort-option-active {
+    background-color: rgba(var(--v-theme-primary), 0.1);
+    color: rgb(var(--v-theme-primary));
+}
+
+.comparison-btn {
+    border-radius: 12px;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(var(--v-theme-primary), 0.2) !important;
+    min-width: 0;
+    font-weight: 800;
+    min-height: 42px;
+}
+
+.comparison-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 25px rgba(var(--v-theme-primary), 0.3) !important;
+}
+
+.comparison-badge {
+    color: rgb(var(--v-theme-primary)) !important;
+    font-weight: 800;
+    min-width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    animation: bounce 0.5s ease;
+    font-size: 0.68rem;
+}
+
+@keyframes bounce {
 
     0%,
     100% {
-        opacity: 1;
+        transform: scale(1);
     }
 
     50% {
-        opacity: 0.7;
+        transform: scale(1.15);
     }
+}
+
+.category-block {
+    border-top: 1px dashed rgba(0, 0, 0, 0.06);
+    margin-top: 2px;
+    padding-top: 12px;
+}
+
+.category-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    gap: 10px;
+}
+
+.subcopy {
+    font-size: 0.82rem;
+    color: #6b7280;
 }
 
 .category-filter-wrapper {
@@ -238,10 +464,9 @@ onUnmounted(() => {
     overflow-x: auto;
     overflow-y: hidden;
     width: 100%;
-    /* Show scrollbar on mobile for better UX */
+    padding: 2px 0 2px;
 }
 
-/* Hide scrollbar on desktop, show on mobile */
 @media (min-width: 960px) {
     .category-filter {
         scrollbar-width: none;
@@ -256,32 +481,28 @@ onUnmounted(() => {
 @media (max-width: 959px) {
     .category-filter {
         scrollbar-width: thin;
-        scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+        scrollbar-color: rgba(0, 0, 0, 0.16) transparent;
     }
 
     .category-filter::-webkit-scrollbar {
-        height: 4px;
+        height: 5px;
         display: block;
-    }
-
-    .category-filter::-webkit-scrollbar-track {
-        background: transparent;
     }
 
     .category-filter::-webkit-scrollbar-thumb {
         background-color: rgba(0, 0, 0, 0.2);
-        border-radius: 2px;
+        border-radius: 8px;
     }
 }
 
 .category-btn {
     white-space: nowrap;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.25s ease;
     text-transform: none !important;
     letter-spacing: 0.1px;
-    font-size: 0.75rem;
-    min-height: 28px;
-    padding: 4px 10px !important;
+    font-size: 0.8rem;
+    min-height: 32px;
+    padding: 7px 12px !important;
     flex-shrink: 0;
     min-width: auto;
 }
@@ -291,425 +512,79 @@ onUnmounted(() => {
 }
 
 .category-btn-active {
-    box-shadow: 0 3px 8px rgba(var(--v-theme-primary), 0.25) !important;
+    box-shadow: 0 10px 20px -12px rgba(var(--v-theme-primary), 0.6) !important;
     transform: translateY(-1px);
 }
 
 .category-btn-inactive {
-    color: #64748b !important;
+    color: #475569 !important;
 }
 
 .category-btn-inactive:hover {
     background-color: #e2e8f0 !important;
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 8px 18px -12px rgba(0, 0, 0, 0.15) !important;
 }
 
-.search-sort-row {
-    width: 100%;
-    align-items: stretch;
-}
-
-.search-wrapper {
-    position: relative;
-    min-width: 0;
-    flex: 1 1 auto;
-}
-
-.search-field {
-    transition: all 0.3s ease;
-    width: 100%;
-}
-
-.search-field :deep(.v-field) {
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    min-height: 28px;
-    /* Match sort button height */
-    height: 28px;
-}
-
-.search-field :deep(.v-field--focused) {
-    box-shadow: 0 3px 10px rgba(var(--v-theme-primary), 0.12) !important;
-}
-
-.search-field :deep(.v-field__input) {
-    font-size: 0.8125rem;
-    padding: 6px 10px;
-    line-height: 20px;
-}
-
-.search-field :deep(.v-field__prepend-inner) {
-    padding-inline-start: 10px;
-}
-
-.search-field :deep(.v-field__prepend-inner .v-icon) {
-    font-size: 18px;
-}
-
-.results-chip {
-    font-weight: 600;
-    font-size: 0.7rem;
-}
-
-.sort-actions-wrapper {
-    flex-shrink: 0;
-    min-width: 0;
-    gap: 4px;
-}
-
-.sort-btn {
-    transition: all 0.3s ease;
-    border-radius: 8px;
-    white-space: nowrap;
-    min-width: auto;
-    min-height: 28px;
-    font-size: 0.75rem;
-    padding: 4px 8px !important;
-}
-
-.sort-btn:hover {
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-    transform: translateY(-1px);
-}
-
-.sort-btn .v-icon {
-    font-size: 16px;
-}
-
-.sort-menu-list {
-    border-radius: 10px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
-    min-width: 200px;
-    max-width: 90vw;
-}
-
-.sort-option {
-    transition: all 0.2s ease;
-    border-radius: 6px;
-    margin: 1px 4px;
-    min-height: 32px;
-}
-
-.sort-option:hover {
-    background-color: rgba(var(--v-theme-primary), 0.08);
-}
-
-.sort-option-active {
-    background-color: rgba(var(--v-theme-primary), 0.1);
-    color: rgb(var(--v-theme-primary));
-}
-
-.comparison-btn {
-    border-radius: 8px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 6px rgba(var(--v-theme-primary), 0.2) !important;
-    position: relative;
-    overflow: visible;
-    white-space: nowrap;
-    min-height: 28px;
-    height: 28px;
-    font-size: 0.75rem;
-    min-width: auto;
-    padding: 4px 8px !important;
-}
-
-.comparison-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 5px 15px rgba(var(--v-theme-primary), 0.35) !important;
-}
-
-.comparison-btn .v-icon {
-    font-size: 16px;
-}
-
-.comparison-badge {
-    color: rgb(var(--v-theme-primary)) !important;
-    font-weight: 700;
-    min-width: 18px;
-    height: 18px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    animation: bounce 0.5s ease;
-    font-size: 0.65rem;
-}
-
-@keyframes bounce {
-
-    0%,
-    100% {
-        transform: scale(1);
+@media (max-width: 1024px) {
+    .filter-grid {
+        grid-template-columns: 1fr;
     }
 
-    50% {
-        transform: scale(1.2);
-    }
-}
-
-/* hide-scrollbar moved to app.css */
-
-/* Utility classes moved to app.css */
-
-/* Responsive */
-@media (max-width: 960px) {
-    .filter-card.sticky-filter {
-        top: 50px;
-    }
-
-    .filter-header,
-    .category-section,
-    .search-sort-section {
-        padding: 12px !important;
-    }
-
-    .category-section,
-    .filter-header {
-        padding-bottom: 8px !important;
-    }
-
-    .category-section,
-    .search-sort-section {
-        padding-top: 0 !important;
-    }
-}
-
-@media (max-width: 600px) {
-    .filter-card.sticky-filter {
-        top: 45px;
+    .panel {
+        padding: 9px;
     }
 
     .filter-card {
-        border-radius: 10px !important;
-    }
-
-    .filter-header,
-    .category-section,
-    .search-sort-section {
-        padding: 10px !important;
-    }
-
-    .filter-header,
-    .category-section {
-        padding-bottom: 8px !important;
-    }
-
-    .category-section,
-    .search-sort-section {
-        padding-top: 0 !important;
-    }
-
-    .filter-header h2 {
-        font-size: 0.8125rem !important;
-    }
-
-    .category-filter-wrapper {
-        margin: 0 -10px;
-        padding: 0 10px;
-    }
-
-    .category-filter {
-        padding-bottom: 4px;
-    }
-
-    .category-btn {
-        font-size: 0.7rem !important;
-        padding: 4px 8px !important;
-        min-height: 28px;
-        display: inline-flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-
-    .category-btn .v-icon {
-        font-size: 12px !important;
-    }
-
-    .category-text {
-        display: inline-block !important;
-        visibility: visible !important;
-    }
-
-    /* Search & Sort Row - Keep side by side with compact height */
-    .search-sort-row {
-        gap: 6px !important;
-        align-items: stretch;
-    }
-
-    /* Search Field Mobile Styles - Compact like category buttons */
-    .search-wrapper {
-        flex: 1 1 auto;
-        min-width: 0;
-    }
-
-    .search-field {
-        width: 100%;
-    }
-
-    .search-field :deep(.v-field) {
-        min-height: 28px !important;
-        height: 28px !important;
-        /* Match sort button height exactly */
-        border-radius: 8px;
-    }
-
-    .search-field :deep(.v-field__input) {
-        font-size: 0.75rem !important;
-        /* Compact text */
-        padding: 4px 8px !important;
-        min-height: 28px !important;
-        line-height: 20px !important;
-    }
-
-    .search-field :deep(.v-field__prepend-inner) {
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
-        align-items: center;
-    }
-
-    .search-field :deep(.v-field__prepend-inner) {
-        padding-inline-start: 8px;
-    }
-
-    .search-field :deep(.v-field__prepend-inner .v-icon) {
-        font-size: 16px !important;
-    }
-
-    .results-chip {
-        font-size: 0.65rem !important;
-        padding: 2px 4px !important;
-        height: 16px !important;
-        min-width: 16px !important;
-    }
-
-    /* Sort & Actions Mobile Styles - Compact */
-    .sort-actions-wrapper {
-        gap: 4px !important;
-        flex-shrink: 0;
-    }
-
-    .sort-btn,
-    .comparison-btn {
-        font-size: 0.7rem !important;
-        padding: 4px 8px !important;
-        min-height: 28px !important;
-        height: 28px !important;
-        /* Match search field height exactly */
-        min-width: auto;
-    }
-
-    .sort-btn .v-icon,
-    .comparison-btn .v-icon {
-        font-size: 14px !important;
-    }
-
-    .sort-btn .v-btn__append .v-icon {
-        font-size: 14px !important;
-    }
-
-    .comparison-badge {
-        min-width: 16px !important;
-        height: 16px !important;
-        font-size: 0.6rem !important;
-        font-weight: 700 !important;
-        margin-left: 2px !important;
-    }
-
-    .sort-menu-list {
-        min-width: 200px;
-        max-width: calc(100vw - 40px);
-    }
-
-    .sort-option {
-        min-height: 40px;
-        /* Touch target */
-        padding: 8px 12px !important;
+        padding: 12px;
     }
 }
 
-@media (max-width: 400px) {
-    .filter-header {
+@media (max-width: 720px) {
+    .filter-card.sticky-filter {
+        top: 56px;
+    }
+
+    .filter-top {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .top-actions {
+        justify-content: flex-start;
+    }
+
+    .category-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .filter-card {
+        border-radius: 14px !important;
+    }
+
+    .title-text {
+        font-size: 0.98rem;
+    }
+
+    .panel-hint,
+    .subtitle {
+        font-size: 0.78rem;
+    }
+
+    .sort-actions {
         flex-wrap: wrap;
-        gap: 6px !important;
-    }
-
-    .category-filter-wrapper {
-        margin: 0 -10px;
-        padding: 0 10px;
-    }
-
-    .category-btn {
-        font-size: 0.65rem !important;
-        padding: 3px 8px !important;
-        min-height: 26px;
-        display: inline-flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-
-    /* Keep search and sort side by side even on extra small screens */
-    .search-sort-row {
-        gap: 4px !important;
-    }
-
-    .search-wrapper {
-        flex: 1 1 auto;
-        min-width: 0;
-    }
-
-    .sort-actions-wrapper {
-        gap: 4px !important;
-        flex-shrink: 0;
-    }
-
-    .search-field :deep(.v-field) {
-        min-height: 26px !important;
-        /* Match sort button height */
-        height: 26px !important;
-    }
-
-    .search-field :deep(.v-field__input) {
-        font-size: 0.7rem !important;
-        padding: 3px 6px !important;
-        min-height: 26px !important;
-    }
-
-    .search-field :deep(.v-field__prepend-inner) {
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
-    }
-
-    .search-field :deep(.v-field__prepend-inner .v-icon) {
-        font-size: 14px !important;
+        justify-content: flex-start;
+        gap: 8px;
     }
 
     .sort-btn,
     .comparison-btn {
-        font-size: 0.65rem !important;
-        padding: 3px 6px !important;
-        min-height: 26px !important;
-        height: 26px !important;
-        /* Match search field height exactly */
-    }
-
-    .sort-btn .v-icon,
-    .comparison-btn .v-icon {
-        font-size: 12px !important;
-    }
-
-    .sort-btn .v-btn__append .v-icon {
-        font-size: 12px !important;
-    }
-
-    .comparison-badge {
-        min-width: 14px !important;
-        height: 14px !important;
-        font-size: 0.55rem !important;
-    }
-
-    .sort-menu-list {
-        min-width: 200px;
-        max-width: calc(100vw - 20px);
+        width: 100%;
+        justify-content: center;
+        min-height: 40px;
     }
 }
 </style>
