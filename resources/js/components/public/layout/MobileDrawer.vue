@@ -68,14 +68,26 @@ export default {
     /* Add any specific mobile drawer styles here if needed */
 }
 
-.logo-box {
-    width: 42px;
-    height: 42px;
-    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* logo-box styles moved to app.css */
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+    .mobile-drawer {
+        width: 280px !important;
+    }
+
+    .logo-box {
+        width: 36px;
+        height: 36px;
+    }
+
+    .logo-box .v-icon {
+        font-size: 20px !important;
+    }
+
+    .text-h6 {
+        font-size: 0.875rem !important;
+    }
 }
 </style>
 

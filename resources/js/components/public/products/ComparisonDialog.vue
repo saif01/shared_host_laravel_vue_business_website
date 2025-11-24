@@ -265,5 +265,62 @@ tbody td:first-child {
 tbody tr:nth-child(even) td:first-child {
     background: #f8fafc;
 }
+
+/* Responsive Styles */
+@media (max-width: 960px) {
+    .comparison-table-content {
+        min-width: 600px;
+    }
+
+    .comparison-header {
+        width: 150px;
+        padding: 12px !important;
+        font-size: 0.875rem;
+    }
+
+    .comparison-product-header {
+        padding: 12px !important;
+        min-width: 200px;
+    }
+
+    .product-comparison-card {
+        min-width: 200px;
+        padding: 12px;
+    }
+}
+
+@media (max-width: 600px) {
+    .comparison-table-content {
+        min-width: 500px;
+    }
+
+    .comparison-header {
+        width: 120px;
+        padding: 8px !important;
+        font-size: 0.8125rem;
+    }
+
+    .comparison-product-header {
+        padding: 8px !important;
+        min-width: 150px;
+    }
+
+    .product-comparison-card {
+        min-width: 150px;
+        padding: 8px;
+    }
+
+    .product-comparison-card .v-img {
+        height: 100px !important;
+    }
+
+    .product-comparison-card h4 {
+        font-size: 0.875rem !important;
+    }
+
+    .product-comparison-card .text-body-2 {
+        font-size: 0.75rem !important;
+    }
+}
 </style>
 

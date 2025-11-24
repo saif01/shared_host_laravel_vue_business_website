@@ -767,94 +767,10 @@ export default {
 }
 
 /* Hero Section - common styles moved to app.css */
-.product-hero {
-    min-height: 400px;
-    padding: 60px 0;
-}
+/* Common styles (product-hero, hero-price-card, gallery-container, main-image-card, thumbnail-card, specs-table, feature-card, trust-badge, group-hover-card, hide-scrollbar) moved to app.css */
 
-.hero-price-card {
-    border: 2px solid rgba(var(--v-theme-primary), 0.2);
-}
-
-/* Gallery */
-.gallery-container {
-    position: sticky;
-    top: 100px;
-}
-
-.main-image-card {
-    height: 500px;
-    background: radial-gradient(circle at center, #ffffff 0%, #f8fafc 100%);
-}
-
-.thumbnail-card {
-    border: 2px solid transparent;
-    opacity: 0.7;
-    cursor: pointer;
-}
-
-.thumbnail-card:hover {
-    opacity: 1;
-}
-
-.thumbnail-card.active-thumb {
-    border-color: rgb(var(--v-theme-primary));
-    opacity: 1;
-}
-
-/* Specs Table */
-.specs-table tr:not(:last-child) td {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.specs-table td {
-    padding: 16px !important;
-}
-
-/* Features */
-.feature-card {
-    transition: all 0.2s ease;
-}
-
-.feature-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
-}
-
-/* FAQs */
 .faq-panels {
     background: transparent;
-}
-
-/* Trust Badges */
-.trust-badge {
-    transition: all 0.2s ease;
-}
-
-.trust-badge:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
-}
-
-/* Related Products */
-.group-hover-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.group-hover-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
-}
-
-/* Utility classes moved to app.css */
-
-.hide-scrollbar::-webkit-scrollbar {
-    display: none;
-}
-
-.hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
 }
 
 /* Responsive */
@@ -871,6 +787,26 @@ export default {
     .main-image-card {
         height: 400px;
     }
+
+    .hero-price-card {
+        margin-top: 24px;
+    }
+
+    .specs-table {
+        font-size: 0.875rem;
+    }
+
+    .specs-table td {
+        padding: 12px !important;
+    }
+
+    .trust-badges {
+        flex-direction: column;
+    }
+
+    .trust-badge {
+        width: 100%;
+    }
 }
 
 @media (max-width: 600px) {
@@ -881,6 +817,54 @@ export default {
 
     .main-image-card {
         height: 300px;
+    }
+
+    .hero-price-card {
+        padding: 20px !important;
+    }
+
+    .price-block {
+        padding: 20px !important;
+    }
+
+    .specs-table {
+        font-size: 0.8125rem;
+    }
+
+    .specs-table td {
+        padding: 8px !important;
+        display: block;
+        width: 100% !important;
+    }
+
+    .specs-table td:first-child {
+        font-weight: bold;
+        background: #f5f5f5;
+        border-bottom: none;
+        padding-bottom: 4px !important;
+    }
+
+    .specs-table td:last-child {
+        padding-top: 4px !important;
+        margin-bottom: 12px;
+    }
+
+    .feature-card {
+        margin-bottom: 12px !important;
+    }
+
+    .pl-md-6 {
+        padding-left: 0 !important;
+    }
+
+    .v-tabs {
+        overflow-x: auto;
+    }
+
+    .v-tab {
+        min-width: auto;
+        padding: 12px 16px !important;
+        font-size: 0.8125rem !important;
     }
 }
 </style>

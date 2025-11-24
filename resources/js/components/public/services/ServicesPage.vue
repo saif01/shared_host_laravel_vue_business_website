@@ -156,58 +156,54 @@ export default {
 <style scoped>
 /* Hero and common component styles moved to app.css */
 
-.service-card-detailed {
-    border: 1px solid rgba(0, 0, 0, 0.05);
-}
+/* Common styles (service-card-detailed, service-icon-side, link-hover-effect, process-step, process-line, cta-pattern) moved to app.css */
 
-.service-icon-side {
-    width: 100%;
-    min-height: 120px;
-}
+/* Responsive Styles */
+@media (max-width: 960px) {
+    .page-hero {
+        height: 350px;
+    }
 
-@media (min-width: 960px) {
     .service-icon-side {
-        width: 140px;
-        min-height: auto;
+        width: 100%;
+        min-height: 120px;
+    }
+
+    .process-line {
+        display: none;
+    }
+
+    .process-step {
+        margin-bottom: 16px !important;
     }
 }
 
-.link-hover-effect {
-    display: inline-flex;
-    align-items: center;
-    transition: transform 0.2s ease;
-}
+@media (max-width: 600px) {
+    .page-hero {
+        height: 280px;
+        padding: 40px 0;
+    }
 
-.service-card-detailed:hover .link-hover-effect {
-    transform: translateX(4px);
-}
+    .service-card-detailed {
+        margin-bottom: 16px;
+    }
 
-.process-step {
-    width: 80px;
-    height: 80px;
-    border: 4px solid white;
-}
+    .service-icon-side {
+        min-height: 100px;
+    }
 
-.process-line {
-    position: absolute;
-    top: 40px;
-    left: 16%;
-    right: 16%;
-    height: 2px;
-    background: #e2e8f0;
-    z-index: 1;
-}
+    .service-icon-side .v-icon {
+        font-size: 36px !important;
+    }
 
-.cta-pattern {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.05) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.05) 75%, transparent 75%, transparent);
-    background-size: 40px 40px;
-    opacity: 0.3;
-}
+    .process-step {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem !important;
+    }
 
-/* Utility classes moved to app.css */
+    .cta-pattern {
+        opacity: 0.2;
+    }
+}
 </style>

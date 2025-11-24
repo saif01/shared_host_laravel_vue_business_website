@@ -793,15 +793,7 @@ export default {
     transform: translateY(-8px);
 }
 
-.link-hover-effect {
-    display: inline-flex;
-    align-items: center;
-    transition: transform 0.2s ease;
-}
-
-.service-card-modern:hover .link-hover-effect {
-    transform: translateX(4px);
-}
+/* link-hover-effect moved to app.css */
 
 /* Why Choose Us */
 .blob {
@@ -987,6 +979,65 @@ export default {
     .huge-quote-mark {
         font-size: 200px;
         top: 0;
+    }
+
+    .hero-visual-3d {
+        width: 300px;
+        height: 300px;
+    }
+
+    .card-main {
+        width: 220px;
+    }
+
+    .card-float-1,
+    .card-float-2 {
+        width: 120px;
+    }
+}
+
+@media (max-width: 600px) {
+    .hero-section {
+        min-height: auto;
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+
+    .hero-visual-3d {
+        width: 250px;
+        height: 250px;
+    }
+
+    .card-main {
+        width: 180px;
+    }
+
+    .card-float-1,
+    .card-float-2 {
+        width: 100px;
+    }
+
+    .huge-quote-mark {
+        font-size: 120px;
+    }
+
+    .glass-card-dark {
+        left: 10px;
+        bottom: 10px;
+        min-width: 160px;
+        padding: 16px !important;
+    }
+
+    .testimonial-glass-card {
+        padding: 20px !important;
+    }
+
+    .service-card-modern {
+        margin-bottom: 16px;
+    }
+
+    .product-card-modern {
+        margin-bottom: 16px;
     }
 }
 </style>

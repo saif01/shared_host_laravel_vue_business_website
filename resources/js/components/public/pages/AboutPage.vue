@@ -196,60 +196,78 @@ export default {
 
 /* glass-pill moved to app.css */
 
-.image-border-effect {
-    position: absolute;
-    top: 20px;
-    right: -20px;
-    width: 100%;
-    height: 100%;
-    border: 2px solid #f59e0b; /* Amber */
-    border-radius: 24px;
-    z-index: 1;
-}
-
-/* bg-pattern-dots moved to app.css */
-
 .value-card {
     background: white;
-    transition: transform 0.3s ease;
 }
 
-.value-card:hover {
-    transform: translateY(-8px);
+/* Common styles (image-border-effect, value-card, value-icon, team-img-wrapper, team-socials) moved to app.css */
+
+/* Responsive Styles */
+@media (max-width: 960px) {
+    .page-hero {
+        height: 400px;
+    }
+
+    .image-border-effect {
+        display: none;
+    }
+
+    .pl-md-8 {
+        padding-left: 0 !important;
+    }
+
+    .pr-md-12 {
+        padding-right: 0 !important;
+        margin-bottom: 32px;
+    }
+
+    .gap-8 {
+        gap: 24px;
+    }
+
+    .team-img-wrapper {
+        width: 160px;
+        height: 160px;
+    }
 }
 
-.value-icon {
-    width: 80px;
-    height: 80px;
-}
+@media (max-width: 600px) {
+    .page-hero {
+        height: 300px;
+        padding: 40px 0;
+    }
 
-.team-img-wrapper {
-    width: 200px;
-    height: 200px;
-    border: 4px solid white;
-    transition: transform 0.3s ease;
-}
+    .value-card {
+        padding: 24px !important;
+        margin-bottom: 16px;
+    }
 
-.team-card:hover .team-img-wrapper {
-    transform: scale(1.05);
-    border-color: #2563eb; /* Primary Blue */
-}
+    .value-icon {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 16px !important;
+    }
 
-.team-socials {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 10px;
-    background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(4px);
-    transform: translateY(100%);
-    transition: transform 0.3s ease;
-}
+    .value-icon .v-icon {
+        font-size: 28px !important;
+    }
 
-.team-img-wrapper:hover .team-socials {
-    transform: translateY(0);
-}
+    .team-img-wrapper {
+        width: 140px;
+        height: 140px;
+    }
 
-/* Utility classes moved to app.css */
+    .gap-8 {
+        gap: 16px;
+        flex-direction: column;
+    }
+
+    .gap-8 > div {
+        text-align: center;
+    }
+
+    .mb-16 {
+        margin-bottom: 32px !important;
+    }
+}
 </style>

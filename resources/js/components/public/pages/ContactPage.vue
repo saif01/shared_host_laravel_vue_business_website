@@ -194,43 +194,64 @@ export default {
 
 .contact-card {
     background: white;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.contact-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1) !important;
+/* Common card, icon-box, hover-link, and map-card styles moved to app.css */
 
+/* Responsive Styles */
+@media (max-width: 960px) {
+    .contact-card {
+        margin-bottom: 24px;
+    }
+
+    .icon-box {
+        width: 70px;
+        height: 70px;
+    }
+
+    .icon-box .v-icon {
+        font-size: 28px !important;
+    }
+
+    .map-card {
+        margin-top: 24px;
+        min-height: 350px;
+    }
+
+    .map-card iframe {
+        min-height: 350px !important;
+    }
 }
 
-.icon-box {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.3s ease;
+@media (max-width: 600px) {
+    .page-hero {
+        padding: 40px 0;
+    }
+
+    .contact-card {
+        padding: 24px !important;
+    }
+
+    .icon-box {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 16px !important;
+    }
+
+    .icon-box .v-icon {
+        font-size: 24px !important;
+    }
+
+    .map-card {
+        min-height: 300px;
+    }
+
+    .map-card iframe {
+        min-height: 300px !important;
+    }
+
+    .pr-md-8 {
+        padding-right: 0 !important;
+    }
 }
-
-.contact-card:hover .icon-box {
-    transform: scale(1.1) rotate(5deg);
-}
-
-.hover-link {
-    transition: color 0.2s ease;
-}
-
-.hover-link:hover {
-    color: #f59e0b !important;
-    /* Amber */
-}
-
-/* bg-pattern-dots moved to app.css */
-
-.map-card {
-    border: 4px solid white;
-}
-
-/* Utility classes moved to app.css */
 </style>

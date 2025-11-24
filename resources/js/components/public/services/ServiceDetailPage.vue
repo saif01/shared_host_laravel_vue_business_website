@@ -121,4 +121,19 @@ export default {
 }
 
 /* Hero, glass-pill, and utility classes moved to app.css */
+
+/* Responsive Styles */
+@media (max-width: 960px) {
+    .page-hero {
+        height: 250px;
+        padding: 40px 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .page-hero {
+        height: 200px;
+        padding: 30px 0;
+    }
+}
 </style>

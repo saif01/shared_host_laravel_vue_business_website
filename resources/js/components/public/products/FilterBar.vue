@@ -360,14 +360,7 @@ onUnmounted(() => {
     }
 }
 
-.hide-scrollbar::-webkit-scrollbar {
-    display: none;
-}
-
-.hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
+/* hide-scrollbar moved to app.css */
 
 /* Utility classes moved to app.css */
 

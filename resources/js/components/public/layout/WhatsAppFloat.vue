@@ -50,5 +50,19 @@ export default {
         box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
     }
 }
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+    .whatsapp-float {
+        width: 56px;
+        height: 56px;
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .whatsapp-float .v-icon {
+        font-size: 28px !important;
+    }
+}
 </style>
 

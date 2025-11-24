@@ -98,20 +98,7 @@ export default {
     opacity: 1;
 }
 
-.logo-box {
-    width: 42px;
-    height: 42px;
-    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.logo-group:hover .logo-box {
-    transform: rotate(10deg) scale(1.05);
-}
+/* logo-box styles moved to app.css */
 
 .logo-icon {
     transition: transform 0.3s ease;
@@ -166,6 +153,53 @@ export default {
 /* Transitions */
 .transition-all {
     transition: all 0.3s ease;
+}
+
+/* Responsive Styles */
+@media (max-width: 960px) {
+    .main-app-bar {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+    }
+
+    .logo-text {
+        font-size: 0.875rem !important;
+    }
+
+    .logo-box {
+        width: 36px;
+        height: 36px;
+    }
+
+    .logo-icon {
+        font-size: 20px !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .main-app-bar {
+        height: 64px !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+
+    .logo-text {
+        font-size: 0.75rem !important;
+    }
+
+    .logo-box {
+        width: 32px;
+        height: 32px;
+        margin-right: 8px !important;
+    }
+
+    .logo-icon {
+        font-size: 18px !important;
+    }
+
+    .mr-8 {
+        margin-right: 12px !important;
+    }
 }
 </style>
 

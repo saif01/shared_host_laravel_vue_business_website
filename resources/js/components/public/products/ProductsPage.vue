@@ -180,12 +180,35 @@ onMounted(async () => {
 @media (max-width: 960px) {
     .hero-section {
         height: 280px;
+        padding: 40px 0;
+    }
+
+    .hero-badge {
+        padding: 8px 16px !important;
+        font-size: 0.7rem !important;
     }
 }
 
 @media (max-width: 600px) {
     .hero-section {
         height: 240px;
+        padding: 30px 0;
+    }
+
+    .hero-badge {
+        padding: 6px 12px !important;
+        font-size: 0.65rem !important;
+        margin-bottom: 16px !important;
+    }
+
+    .hero-content h1 {
+        font-size: 1.5rem !important;
+        margin-bottom: 16px !important;
+    }
+
+    .hero-content p {
+        font-size: 0.875rem !important;
+        margin-bottom: 24px !important;
     }
 }
 </style>
