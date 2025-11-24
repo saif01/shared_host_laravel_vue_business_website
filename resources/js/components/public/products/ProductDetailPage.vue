@@ -76,12 +76,12 @@
                 <v-col cols="12" md="6">
                     <div class="gallery-container position-sticky top-20">
                         <v-card
-                            class="main-image-card rounded-xl overflow-hidden elevation-2 mb-4 bg-white d-flex align-center justify-center position-relative">
+                            class="main-image-card rounded-xl overflow-hidden elevation-2 mb-4 bg-white position-relative">
                             <v-chip v-if="product.featured" color="amber-accent-4" variant="flat"
                                 class="position-absolute top-0 left-0 ma-4 z-index-2 font-weight-bold">
                                 NEW
                             </v-chip>
-                            <v-img :src="activeImage" max-height="500" contain class="product-main-img"></v-img>
+                            <v-img :src="activeImage" height="100%" cover class="product-main-img"></v-img>
                             <v-btn icon="mdi-magnify-plus-outline" variant="text" color="grey-darken-2"
                                 class="position-absolute bottom-0 right-0 ma-4 bg-white elevation-2"
                                 @click="showImageZoom = true"></v-btn>
@@ -425,9 +425,8 @@
                     <v-col v-for="item in relatedProducts" :key="item.id" cols="12" sm="6" md="3">
                         <v-card class="h-100 rounded-lg border-thin elevation-0 bg-white group-hover-card"
                             :to="`/products/${item.slug}`">
-                            <div class="position-relative pa-4 bg-grey-lighten-5 d-flex align-center justify-center"
-                                style="height: 180px;">
-                                <v-img :src="getProductImage(item)" max-height="140" contain></v-img>
+                            <div class="position-relative bg-grey-lighten-5" style="height: 180px; overflow: hidden;">
+                                <v-img :src="getProductImage(item)" height="100%" cover></v-img>
                             </div>
                             <div class="pa-4">
                                 <div class="text-caption text-primary font-weight-bold mb-1">{{ getCategoryName(item) }}
