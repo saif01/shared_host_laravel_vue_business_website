@@ -125,10 +125,10 @@
         </section>
 
         <!-- CTA Section -->
-        <section class="py-16 bg-primary-darken-2 position-relative overflow-hidden">
+        <section class="py-16 cta-section position-relative overflow-hidden">
             <div class="cta-pattern"></div>
             <v-container class="position-relative z-index-2 text-center">
-                <h2 class="text-h3 font-weight-bold text-white mb-6">Need a Custom Solution?</h2>
+                <h2 class="text-h3 font-weight-bold cta-heading mb-6">Need a Custom Solution?</h2>
                 <p class="text-h6 text-white opacity-80 mb-8 font-weight-light">
                     We understand that every business is unique. Contact us for a tailored power strategy.
                 </p>
@@ -281,6 +281,8 @@ export default {
 .service-icon-side:hover .service-image {
     opacity: 1;
 }
+
+/* CTA Section Styles - Moved to app.css */
 
 /* Responsive Styles */
 @media (max-width: 960px) {

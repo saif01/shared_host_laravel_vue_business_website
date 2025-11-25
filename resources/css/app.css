@@ -848,6 +848,16 @@ vue-progress-bar,
     opacity: 0.3;
 }
 
+/* CTA Section Styles */
+.cta-section {
+    background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 50%, #0b1324 100%) !important;
+}
+
+.cta-section .cta-heading,
+.cta-section h2.cta-heading {
+    color: #e0f2fe !important;
+}
+
 /* Image Border Effect */
 .image-border-effect {
     position: absolute;
