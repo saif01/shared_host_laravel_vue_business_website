@@ -3,31 +3,29 @@
         <v-container>
             <div class="d-flex flex-column flex-sm-row justify-space-between align-end mb-12">
                 <div>
-                    <div class="text-overline text-primary font-weight-bold mb-2 tracking-widest">{{ overline || 'OUR PRODUCTS' }}</div>
-                    <h2 class="text-h3 font-weight-bold text-grey-darken-3">{{ title || 'Featured Power Systems' }}</h2>
+                    <div class="text-overline text-primary font-weight-bold mb-2 tracking-widest">{{ overline ||
+                        defaultOverline }}</div>
+                    <h2 class="text-h3 font-weight-bold text-grey-darken-3">{{ title || defaultTitle }}</h2>
                 </div>
-                <v-btn variant="outlined" color="primary" :to="buttonLink || '/products'"
+                <v-btn variant="outlined" color="primary" :to="buttonLink || defaultButtonLink"
                     class="mt-4 mt-sm-0 rounded-pill px-6 font-weight-bold">
-                    {{ buttonText || 'View All Products' }}
+                    {{ buttonText || defaultButtonText }}
                 </v-btn>
             </div>
 
-            <v-row v-if="products.length > 0">
-                <v-col v-for="product in products" :key="product.id" cols="12" md="4">
+            <v-row v-if="limitedProducts.length > 0">
+                <v-col v-for="product in limitedProducts" :key="product.id" cols="12" md="4">
                     <v-hover v-slot="{ isHovering, props }">
                         <v-card v-bind="props" :elevation="isHovering ? 12 : 0"
                             class="h-100 product-card-modern bg-white rounded-xl overflow-hidden border-thin"
                             :to="`/products/${product.slug}`">
                             <div class="img-wrapper overflow-hidden position-relative" style="height: 260px;">
-                                <v-img
-                                    :src="product.thumbnail || 'https://via.placeholder.com/400x300?text=Product'"
+                                <v-img :src="product.thumbnail || 'https://via.placeholder.com/400x300?text=Product'"
                                     height="100%" cover class="product-img transition-transform"
                                     :class="{ 'scale-110': isHovering }">
                                     <template v-slot:placeholder>
-                                        <div
-                                            class="d-flex align-center justify-center fill-height bg-grey-lighten-3">
-                                            <v-progress-circular indeterminate
-                                                color="primary"></v-progress-circular>
+                                        <div class="d-flex align-center justify-center fill-height bg-grey-lighten-3">
+                                            <v-progress-circular indeterminate color="primary"></v-progress-circular>
                                         </div>
                                     </template>
                                 </v-img>
@@ -83,6 +81,19 @@ export default {
             type: Array,
             default: () => []
         }
+    },
+    data() {
+        return {
+            defaultOverline: 'OUR PRODUCTS',
+            defaultTitle: 'Featured Power Systems',
+            defaultButtonText: 'View All Products',
+            defaultButtonLink: '/products'
+        };
+    },
+    computed: {
+        limitedProducts() {
+            return this.products.slice(0, 3);
+        }
     }
 };
 </script>
@@ -113,4 +124,3 @@ export default {
     }
 }
 </style>
-
