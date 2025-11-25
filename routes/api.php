@@ -8,7 +8,7 @@ use App\Http\Controllers\Api\content\PageController;
 use App\Http\Controllers\Api\users\PermissionController;
 use App\Http\Controllers\Api\products\ProductController;
 use App\Http\Controllers\Api\users\RoleController;
-use App\Http\Controllers\Api\content\ServiceController;
+use App\Http\Controllers\Api\service\ServiceController;
 use App\Http\Controllers\Api\settings\SettingController;
 use App\Http\Controllers\Api\products\TagController;
 use App\Http\Controllers\Api\upload\UploadController;

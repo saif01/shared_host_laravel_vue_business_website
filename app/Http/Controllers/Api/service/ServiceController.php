@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\content;
+namespace App\Http\Controllers\Api\service;
 
 use App\Http\Controllers\Controller;
 use App\Models\Service;
@@ -119,3 +119,4 @@ class ServiceController extends Controller
         return response()->json(['message' => 'Service deleted successfully']);
     }
 }
+

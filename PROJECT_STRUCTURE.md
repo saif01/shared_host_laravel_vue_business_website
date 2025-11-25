@@ -30,7 +30,7 @@ This is a comprehensive business website platform built according to the SRS doc
 **API Controllers** (`app/Http/Controllers/Api/`): Admin panel API endpoints
 - `auth/AuthController.php` - Authentication (login/logout/user)
 - `content/PageController.php` - Pages management
-- `content/ServiceController.php` - Services management
+- `service/ServiceController.php` - Services management
 - `products/ProductController.php` - Products management
 - `products/CategoryController.php` - Categories management
 - `products/TagController.php` - Tags management
@@ -446,7 +446,8 @@ app/Http/Controllers/
 │   ├── auth/
 │   │   └── AuthController.php
 │   ├── content/
-│   │   ├── PageController.php
+│   │   └── PageController.php
+│   ├── service/
 │   │   └── ServiceController.php
 │   ├── leads/
 │   │   └── LeadController.php
