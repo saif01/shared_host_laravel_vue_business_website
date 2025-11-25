@@ -8,7 +8,8 @@
         <v-container class="position-relative z-index-1">
             <div class="text-center mb-16">
                 <div class="glass-pill-sm d-inline-flex align-center px-4 py-1 rounded-pill mb-4">
-                    <span class="text-caption font-weight-bold text-white tracking-widest">{{ overline || 'TESTIMONIALS' }}</span>
+                    <span class="text-caption font-weight-bold text-white tracking-widest">{{ overline || 'TESTIMONIALS'
+                    }}</span>
                 </div>
                 <h2 class="text-h3 font-weight-bold mb-6 text-white">{{ title || 'Client Success Stories' }}</h2>
                 <p class="text-h6 text-white opacity-70 mx-auto mw-600 font-weight-light" v-if="subtitle">
@@ -48,11 +49,13 @@
                                     </p>
 
                                     <div class="text-center">
-                                        <div class="text-h6 font-weight-bold text-white mb-1">{{ testimonial.name }}
+                                        <div class="text-h6 font-weight-bold text-white mb-2">{{ testimonial.name }}
                                         </div>
-                                        <div
-                                            class="text-subtitle-2 text-primary-lighten-2 font-weight-bold text-uppercase tracking-wide">
-                                            {{ testimonial.role }}</div>
+                                        <v-chip
+                                            class="testimonial-role-chip text-subtitle-2 font-weight-bold text-uppercase tracking-wide"
+                                            variant="outlined" color="white" size="small">
+                                            {{ testimonial.role }}
+                                        </v-chip>
                                     </div>
                                 </div>
                             </v-card>
@@ -188,6 +191,14 @@ export default {
     border: 2px solid white !important;
 }
 
+.testimonial-role-chip {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    color: white !important;
+    opacity: 0.9;
+}
+
 @media (max-width: 960px) {
     .huge-quote-mark {
         font-size: 200px;
@@ -205,4 +216,3 @@ export default {
     }
 }
 </style>
-
