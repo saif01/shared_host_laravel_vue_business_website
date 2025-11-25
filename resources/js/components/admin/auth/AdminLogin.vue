@@ -16,8 +16,9 @@
                             <v-col cols="12" md="6"
                                 class="d-none d-md-flex flex-column align-center justify-center branding-section pa-8">
                                 <div class="brand-logo mb-6">
-                                    <v-img src="https://it.cpbangladesh.com/all-assets/common/logo/cpb/cpbit.png"
-                                        alt="CPB-IT Logo" width="120" class="drop-shadow"></v-img>
+                                    <v-img
+                                        :src="brandingLogo || 'https://it.cpbangladesh.com/all-assets/common/logo/cpb/cpbit.png'"
+                                        alt="Logo" width="120" class="drop-shadow rounded-logo" cover></v-img>
                                 </div>
                                 <h2 class="text-white text-h4 font-weight-bold mb-2 text-center">Welcome Back!</h2>
                                 <p class="text-white text-body-1 text-center opacity-80">
@@ -28,8 +29,9 @@
                             <!-- Right Side: Login Form -->
                             <v-col cols="12" md="6" class="form-section pa-8 bg-white">
                                 <div class="d-flex d-md-none justify-center mb-6">
-                                    <v-img src="https://it.cpbangladesh.com/all-assets/common/logo/cpb/cpbit.png"
-                                        alt="CPB-IT Logo" width="80"></v-img>
+                                    <v-img
+                                        :src="brandingLogo || 'https://it.cpbangladesh.com/all-assets/common/logo/cpb/cpbit.png'"
+                                        alt="Logo" width="80" class="rounded-logo" cover></v-img>
                                 </div>
 
                                 <h3 class="text-h5 font-weight-bold text-primary mb-1 text-center text-md-left">Admin
@@ -72,6 +74,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { useAuthStore } from '../../../stores/auth';
 import { mapActions } from 'pinia';
 
@@ -84,11 +87,15 @@ export default {
             },
             loading: false,
             showPassword: false,
+            brandingLogo: null,
             rules: {
                 required: v => !!v || 'This field is required',
                 email: v => /.+@.+\..+/.test(v) || 'E-mail must be valid'
             }
         };
+    },
+    async mounted() {
+        await this.loadBrandingSettings();
     },
     methods: {
         ...mapActions(useAuthStore, ['login']),
@@ -126,6 +133,18 @@ export default {
                 }
             } finally {
                 this.loading = false;
+            }
+        },
+        async loadBrandingSettings() {
+            try {
+                // Use public endpoint since user is not authenticated yet
+                const response = await axios.get('/api/openapi/settings?group=branding');
+                if (response.data && response.data.logo) {
+                    this.brandingLogo = response.data.logo;
+                }
+            } catch (error) {
+                console.error('Error loading branding settings:', error);
+                // Don't show error to user, just use default logo
             }
         }
     }
@@ -226,6 +245,12 @@ export default {
 
 .drop-shadow {
     filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+}
+
+.rounded-logo {
+    border-radius: 12px !important;
+    overflow: hidden;
+    object-fit: cover;
 }
 
 .form-section {

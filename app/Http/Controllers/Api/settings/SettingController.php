@@ -75,7 +75,7 @@ class SettingController extends Controller
         } else {
             // By default, only show safe groups if no specific group requested, or maybe just return empty
             // For safety, let's require a group or return specific public groups
-            $query->whereIn('group', ['general', 'contact_page', 'social', 'seo']);
+            $query->whereIn('group', ['general', 'contact_page', 'social', 'seo', 'branding']);
         }
 
         $settings = $query->get();

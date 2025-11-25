@@ -2,10 +2,10 @@
     <v-app>
         <!-- Topbar -->
         <AppBar :is-scrolled="isScrolled" :site-name="siteName" :site-tagline="siteTagline" :menu-items="menuItems"
-            @toggle-drawer="drawer = !drawer" />
+            :logo="brandingLogo" @toggle-drawer="drawer = !drawer" />
 
         <!-- Mobile Navigation Drawer -->
-        <MobileDrawer v-model="drawer" :site-name="siteName" :menu-items="menuItems" />
+        <MobileDrawer v-model="drawer" :site-name="siteName" :menu-items="menuItems" :logo="brandingLogo" />
 
         <!-- Main Content -->
         <v-main class="bg-grey-lighten-5">
@@ -14,7 +14,7 @@
 
         <!-- Footer -->
         <Footer :site-name="siteName" :footer-description="footerDescription" :menu-items="menuItems"
-            :settings="settings" />
+            :settings="settings" :logo="brandingLogo" />
 
         <!-- Floating WhatsApp Button -->
         <WhatsAppFloat />
@@ -43,6 +43,7 @@ export default {
             siteName: 'Micro Control Technology',
             siteTagline: 'TECHNOLOGY',
             footerDescription: 'Leading provider of technical power support solutions. We ensure your business stays powered with reliable UPS systems, backup generators, and professional maintenance.',
+            brandingLogo: null,
             settings: {
                 // General settings
                 site_name: '',
@@ -104,6 +105,20 @@ export default {
                 }
             } catch (error) {
                 console.error('Error loading settings:', error);
+            }
+
+            // Load branding settings separately
+            await this.loadBrandingSettings();
+        },
+        async loadBrandingSettings() {
+            try {
+                const response = await axios.get('/api/openapi/settings?group=branding');
+                if (response.data && response.data.logo) {
+                    this.brandingLogo = response.data.logo;
+                }
+            } catch (error) {
+                console.error('Error loading branding settings:', error);
+                // Don't show error to user, just use default
             }
         },
         handleScroll() {

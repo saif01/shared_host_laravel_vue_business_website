@@ -9,7 +9,10 @@
                 <!-- Column 1: About -->
                 <v-col cols="12" md="4" class="mb-10 mb-md-0 pr-md-12">
                     <div class="d-flex align-center mb-6">
-                        <div class="logo-box-light mr-3 elevation-10">
+                        <div class="logo-box-light mr-3 elevation-10" v-if="logo">
+                            <v-img :src="logo" alt="Logo" cover class="footer-logo-image rounded-logo"></v-img>
+                        </div>
+                        <div class="logo-box-light mr-3 elevation-10" v-else>
                             <v-icon icon="mdi-flash" color="amber-accent-4" size="24"></v-icon>
                         </div>
                         <span class="text-h5 font-weight-black text-white tracking-tight">{{ siteName.toUpperCase()
@@ -121,6 +124,10 @@ export default {
         settings: {
             type: Object,
             required: true
+        },
+        logo: {
+            type: String,
+            default: null
         }
     },
     methods: {
@@ -164,6 +171,17 @@ export default {
 }
 
 /* Common styles (logo-box-light, social-btn, list-unstyled, footer-link, heading-underline, footer-input, footer-link-sm) moved to app.css */
+
+.footer-logo-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.rounded-logo {
+    border-radius: 8px !important;
+    overflow: hidden;
+}
 
 /* Responsive Styles */
 @media (max-width: 960px) {

@@ -660,6 +660,13 @@ export default {
     border: 2px solid var(--admin-overlay-strong);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
+    border-radius: 12px !important;
+    overflow: hidden;
+}
+
+:deep(.v-avatar .v-img) {
+    border-radius: 12px !important;
+    object-fit: cover;
 }
 
 :deep(.v-avatar:hover) {

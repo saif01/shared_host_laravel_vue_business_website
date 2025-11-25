@@ -4,7 +4,10 @@
         <div class="d-flex align-center w-100 position-relative z-index-2">
             <!-- Logo Area -->
             <router-link to="/" class="text-decoration-none d-flex align-center mr-8 logo-group">
-                <div class="logo-box mr-3 elevation-4">
+                <div class="logo-box mr-3 elevation-4" v-if="logo">
+                    <v-img :src="logo" alt="Logo" cover class="logo-image rounded-logo"></v-img>
+                </div>
+                <div class="logo-box mr-3 elevation-4" v-else>
                     <v-icon icon="mdi-flash" color="amber-accent-4" size="28" class="logo-icon"></v-icon>
                 </div>
                 <div class="d-flex flex-column">
@@ -63,6 +66,10 @@ export default {
         menuItems: {
             type: Array,
             required: true
+        },
+        logo: {
+            type: String,
+            default: null
         }
     },
     emits: ['toggle-drawer']
@@ -106,6 +113,22 @@ export default {
 
 .logo-group:hover .logo-icon {
     transform: scale(1.1);
+}
+
+.logo-image {
+    transition: transform 0.3s ease;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.rounded-logo {
+    border-radius: 8px !important;
+    overflow: hidden;
+}
+
+.logo-group:hover .logo-image {
+    transform: scale(1.05);
 }
 
 /* Utility classes moved to app.css */

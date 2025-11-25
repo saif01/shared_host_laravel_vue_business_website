@@ -2,7 +2,10 @@
     <v-navigation-drawer v-model="localDrawer" location="right" temporary class="mobile-drawer">
         <div class="pa-6">
             <div class="d-flex align-center mb-8">
-                <div class="logo-box mr-3">
+                <div class="logo-box mr-3" v-if="logo">
+                    <v-img :src="logo" alt="Logo" cover class="logo-image rounded-logo"></v-img>
+                </div>
+                <div class="logo-box mr-3" v-else>
                     <v-icon icon="mdi-flash" color="amber-accent-4" size="24"></v-icon>
                 </div>
                 <span class="text-h6 font-weight-black text-grey-darken-4">{{ siteName.toUpperCase() }}</span>
@@ -42,6 +45,10 @@ export default {
         menuItems: {
             type: Array,
             required: true
+        },
+        logo: {
+            type: String,
+            default: null
         }
     },
     emits: ['update:modelValue'],
@@ -69,6 +76,17 @@ export default {
 }
 
 /* logo-box styles moved to app.css */
+
+.logo-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.rounded-logo {
+    border-radius: 8px !important;
+    overflow: hidden;
+}
 
 /* Responsive Styles */
 @media (max-width: 600px) {
