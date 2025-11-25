@@ -17,7 +17,7 @@
             :settings="settings" />
 
         <!-- Floating WhatsApp Button -->
-        <WhatsAppFloat :whatsapp-url="getWhatsAppUrl()" />
+        <WhatsAppFloat />
     </v-app>
 </template>
 
@@ -105,14 +105,6 @@ export default {
             } catch (error) {
                 console.error('Error loading settings:', error);
             }
-        },
-        getWhatsAppUrl() {
-            // Use whatsapp_number if available, otherwise use contact_phone
-            const phone = this.settings.whatsapp_number || this.settings.contact_phone || '';
-            if (!phone) return '';
-            // Remove any non-digit characters except + for WhatsApp URL
-            const cleanPhone = phone.replace(/[^\d+]/g, '');
-            return `https://wa.me/${cleanPhone}`;
         },
         handleScroll() {
             this.isScrolled = window.scrollY > 20;

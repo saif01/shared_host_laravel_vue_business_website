@@ -6,12 +6,58 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     name: 'WhatsAppFloat',
-    props: {
-        whatsappUrl: {
-            type: String,
-            default: ''
+    data() {
+        return {
+            whatsappUrl: '',
+            settings: {
+                whatsapp_number: '',
+                contact_phone: ''
+            }
+        };
+    },
+    async mounted() {
+        await this.loadSettings();
+        this.updateWhatsAppUrl();
+    },
+    methods: {
+        async loadSettings() {
+            try {
+                const response = await axios.get('/api/openapi/settings');
+                const data = response.data;
+
+                // Update settings
+                if (data.whatsapp_number !== undefined) {
+                    this.settings.whatsapp_number = data.whatsapp_number;
+                }
+                if (data.contact_phone !== undefined) {
+                    this.settings.contact_phone = data.contact_phone;
+                }
+            } catch (error) {
+                console.error('Error loading WhatsApp settings:', error);
+            }
+        },
+        updateWhatsAppUrl() {
+            // Use whatsapp_number if available, otherwise use contact_phone
+            const phone = this.settings.whatsapp_number || this.settings.contact_phone || '';
+            if (!phone) {
+                this.whatsappUrl = '';
+                return;
+            }
+            // Remove any non-digit characters except + for WhatsApp URL
+            const cleanPhone = phone.replace(/[^\d+]/g, '');
+            this.whatsappUrl = `https://wa.me/${cleanPhone}`;
+        }
+    },
+    watch: {
+        'settings.whatsapp_number'() {
+            this.updateWhatsAppUrl();
+        },
+        'settings.contact_phone'() {
+            this.updateWhatsAppUrl();
         }
     }
 };
@@ -65,4 +111,3 @@ export default {
     }
 }
 </style>
-
