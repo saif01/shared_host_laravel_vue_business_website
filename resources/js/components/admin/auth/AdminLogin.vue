@@ -16,9 +16,8 @@
                             <v-col cols="12" md="6"
                                 class="d-none d-md-flex flex-column align-center justify-center branding-section pa-8">
                                 <div class="brand-logo mb-6">
-                                    <v-img
-                                        :src="brandingLogo || 'https://it.cpbangladesh.com/all-assets/common/logo/cpb/cpbit.png'"
-                                        alt="Logo" width="120" class="drop-shadow rounded-logo" cover></v-img>
+                                    <v-img :src="logoUrl" alt="Logo" width="120" class="drop-shadow rounded-logo"
+                                        cover></v-img>
                                 </div>
                                 <h2 class="text-white text-h4 font-weight-bold mb-2 text-center">Welcome Back!</h2>
                                 <p class="text-white text-body-1 text-center opacity-80">
@@ -29,9 +28,7 @@
                             <!-- Right Side: Login Form -->
                             <v-col cols="12" md="6" class="form-section pa-8 bg-white">
                                 <div class="d-flex d-md-none justify-center mb-6">
-                                    <v-img
-                                        :src="brandingLogo || 'https://it.cpbangladesh.com/all-assets/common/logo/cpb/cpbit.png'"
-                                        alt="Logo" width="80" class="rounded-logo" cover></v-img>
+                                    <v-img :src="logoUrl" alt="Logo" width="80" class="rounded-logo" cover></v-img>
                                 </div>
 
                                 <h3 class="text-h5 font-weight-bold text-primary mb-1 text-center text-md-left">Admin
@@ -77,6 +74,7 @@
 import axios from 'axios';
 import { useAuthStore } from '../../../stores/auth';
 import { mapActions } from 'pinia';
+import { resolveUploadUrl } from '../../../utils/uploads';
 
 export default {
     data() {
@@ -93,6 +91,14 @@ export default {
                 email: v => /.+@.+\..+/.test(v) || 'E-mail must be valid'
             }
         };
+    },
+    computed: {
+        logoUrl() {
+            if (this.brandingLogo) {
+                return resolveUploadUrl(this.brandingLogo);
+            }
+            return null; // Return null to let v-img handle the missing image gracefully
+        }
     },
     async mounted() {
         await this.loadBrandingSettings();
@@ -134,6 +140,9 @@ export default {
             } finally {
                 this.loading = false;
             }
+        },
+        resolveImageUrl(imageValue) {
+            return resolveUploadUrl(imageValue);
         },
         async loadBrandingSettings() {
             try {

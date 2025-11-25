@@ -20,19 +20,15 @@
                             class="h-100 product-card-modern bg-white rounded-xl overflow-hidden border-thin"
                             :to="`/products/${product.slug}`">
                             <div class="img-wrapper overflow-hidden position-relative" style="height: 260px;">
-                                <v-img :src="getProductImage(product)"
-                                    height="100%" cover class="product-img transition-transform"
-                                    :class="{ 'scale-110': isHovering }">
+                                <v-img :src="getProductImage(product)" height="100%" cover
+                                    class="product-img transition-transform" :class="{ 'scale-110': isHovering }">
                                     <template v-slot:placeholder>
                                         <div class="d-flex align-center justify-center fill-height bg-grey-lighten-3">
                                             <v-progress-circular indeterminate color="primary"></v-progress-circular>
                                         </div>
                                     </template>
                                 </v-img>
-                                <div class="overlay-actions d-flex align-center justify-center">
-                                    <v-btn icon="mdi-eye" color="white" variant="flat" class="mr-2"></v-btn>
-                                    <v-btn icon="mdi-cart" color="primary" variant="flat"></v-btn>
-                                </div>
+
                             </div>
                             <v-card-item class="pt-6 px-6">
                                 <div class="text-caption text-primary font-weight-bold mb-1 text-uppercase">Category
