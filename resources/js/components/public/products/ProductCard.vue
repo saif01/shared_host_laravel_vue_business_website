@@ -29,6 +29,13 @@
                                 @click.prevent="$emit('toggle-comparison', product)" aria-label="Add to comparison" />
                         </template>
                     </v-tooltip>
+                    <v-tooltip text="Share product" location="top">
+                        <template v-slot:activator="{ props: tooltipProps }">
+                            <v-btn icon="mdi-share-variant" variant="flat" color="success" size="small"
+                                class="hover-scale" v-bind="tooltipProps" @click.prevent="openShareMenu"
+                                aria-label="Share product" />
+                        </template>
+                    </v-tooltip>
                 </div>
             </div>
 
@@ -81,11 +88,15 @@
                 </div>
             </div>
         </v-card>
+
+        <!-- Share Dialog Component -->
+        <ShareDialog v-model="showShareMenu" :title="product.title" :url="productUrl" :share-text="shareText" />
     </v-hover>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
+import ShareDialog from './ShareDialog.vue';
 
 const props = defineProps({
     product: {
@@ -99,6 +110,9 @@ const props = defineProps({
 });
 
 defineEmits(['toggle-comparison']);
+
+// Share menu state
+const showShareMenu = ref(false);
 
 // Helper function to normalize image URLs
 const normalizeImageUrl = (url) => {
@@ -194,6 +208,37 @@ const quickSpecs = computed(() => {
     }
     return specs.slice(0, 3);
 });
+
+// Share functionality
+const productUrl = computed(() => {
+    const baseUrl = window.location.origin;
+    return `${baseUrl}/products/${props.product.slug}`;
+});
+
+const shareText = computed(() => {
+    const title = props.product.title || 'Product';
+    const description = props.product.short_description || '';
+    const price = formattedPrice.value;
+    return `Check out ${title}${description ? ` - ${description}` : ''}${price ? ` - ${price}` : ''}`;
+});
+
+const openShareMenu = () => {
+    // Check if Web Share API is available (mobile devices)
+    if (navigator.share) {
+        navigator.share({
+            title: props.product.title,
+            text: shareText.value,
+            url: productUrl.value
+        }).catch((error) => {
+            // User cancelled or error occurred, show share menu instead
+            if (error.name !== 'AbortError') {
+                showShareMenu.value = true;
+            }
+        });
+    } else {
+        showShareMenu.value = true;
+    }
+};
 </script>
 
 <style scoped>
