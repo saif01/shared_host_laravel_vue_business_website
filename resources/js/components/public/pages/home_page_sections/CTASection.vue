@@ -6,21 +6,21 @@
             <v-row justify="center" class="text-center">
                 <v-col cols="12" md="10" lg="8">
                     <h2 class="text-h3 text-md-h2 font-weight-black text-white mb-6 lh-tight">
-                        Secure Your Power Today
+                        {{ title || 'Secure Your Power Today' }}
                     </h2>
-                    <p class="text-h6 text-white opacity-90 mb-10 font-weight-light mw-800 mx-auto">
-                        Don't let power outages disrupt your life or business. Contact us for reliable backup
-                        solutions.
+                    <p class="text-h6 text-white opacity-90 mb-10 font-weight-light mw-800 mx-auto" v-if="subtitle">
+                        {{ subtitle }}
                     </p>
                     <div class="d-flex flex-column flex-sm-row justify-center gap-4">
                         <v-btn size="x-large" color="amber-accent-4" variant="flat"
                             class="text-black font-weight-bold px-10 rounded-pill elevation-6 hover-lift"
-                            :to="{ name: 'Contact' }">
-                            Get Started
+                            :to="primaryButtonLink || { name: 'Contact' }">
+                            {{ primaryButtonText || 'Get Started' }}
                         </v-btn>
                         <v-btn size="x-large" variant="outlined" color="white"
-                            class="font-weight-bold px-10 rounded-pill border-2" :to="{ name: 'Contact' }">
-                            Contact Support
+                            class="font-weight-bold px-10 rounded-pill border-2" 
+                            :to="secondaryButtonLink || { name: 'Contact' }">
+                            {{ secondaryButtonText || 'Contact Support' }}
                         </v-btn>
                     </div>
                 </v-col>
@@ -31,7 +31,33 @@
 
 <script>
 export default {
-    name: 'CTASection'
+    name: 'CTASection',
+    props: {
+        title: {
+            type: String,
+            default: 'Secure Your Power Today'
+        },
+        subtitle: {
+            type: String,
+            default: "Don't let power outages disrupt your life or business. Contact us for reliable backup solutions."
+        },
+        primaryButtonText: {
+            type: String,
+            default: 'Get Started'
+        },
+        primaryButtonLink: {
+            type: [String, Object],
+            default: () => ({ name: 'Contact' })
+        },
+        secondaryButtonText: {
+            type: String,
+            default: 'Contact Support'
+        },
+        secondaryButtonLink: {
+            type: [String, Object],
+            default: () => ({ name: 'Contact' })
+        }
+    }
 };
 </script>
 

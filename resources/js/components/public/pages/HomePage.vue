@@ -7,22 +7,29 @@
         <StatsSection v-if="isSectionEnabled('stats_section')" :stats="stats" />
 
         <!-- Trusted By Section -->
-        <TrustedBySection v-if="isSectionEnabled('trusted_by_section')" :clients="clients" />
+        <TrustedBySection v-if="isSectionEnabled('trusted_by_section')" :title="trustedByTitle" :clients="clients" />
 
         <!-- Services Section -->
-        <ServicesSection v-if="isSectionEnabled('services_section')" :services="services" />
+        <ServicesSection v-if="isSectionEnabled('services_section')" :overline="servicesOverline" :title="servicesTitle"
+            :subtitle="servicesSubtitle" :services="services" />
 
         <!-- Why Choose Us Section -->
-        <WhyChooseUsSection v-if="isSectionEnabled('why_choose_us_section')" :features="features" />
+        <WhyChooseUsSection v-if="isSectionEnabled('why_choose_us_section')" :overline="whyChooseUsOverline"
+            :title="whyChooseUsTitle" :image-url="whyChooseUsImage" :features="features" />
 
         <!-- Testimonials Section -->
-        <TestimonialsSection v-if="isSectionEnabled('testimonials_section')" :testimonials="testimonials" />
+        <TestimonialsSection v-if="isSectionEnabled('testimonials_section')" :overline="testimonialsOverline"
+            :title="testimonialsTitle" :subtitle="testimonialsSubtitle" :testimonials="testimonials" />
 
         <!-- Featured Products Section -->
-        <FeaturedProductsSection v-if="isSectionEnabled('featured_products_section')" :products="products" />
+        <FeaturedProductsSection v-if="isSectionEnabled('featured_products_section')" :overline="productsOverline"
+            :title="productsTitle" :button-text="productsButtonText" :button-link="productsButtonLink"
+            :products="products" />
 
         <!-- CTA Section -->
-        <CTASection v-if="isSectionEnabled('cta_section')" />
+        <CTASection v-if="isSectionEnabled('cta_section')" :title="ctaTitle" :subtitle="ctaSubtitle"
+            :primary-button-text="ctaPrimaryButtonText" :primary-button-link="ctaPrimaryButtonLink"
+            :secondary-button-text="ctaSecondaryButtonText" :secondary-button-link="ctaSecondaryButtonLink" />
     </div>
 </template>
 
@@ -74,6 +81,27 @@ export default {
                 featured_products_section: true,
                 cta_section: true
             },
+            // Dynamic section content
+            trustedByTitle: 'TRUSTED BY INDUSTRY LEADERS',
+            servicesOverline: 'WHAT WE DO',
+            servicesTitle: 'Power Support Solutions',
+            servicesSubtitle: 'We ensure uninterrupted operations for businesses and households with high-quality power products and services.',
+            whyChooseUsOverline: 'WHY CHOOSE US',
+            whyChooseUsTitle: 'Reliable Power, Guaranteed',
+            whyChooseUsImage: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+            testimonialsOverline: 'TESTIMONIALS',
+            testimonialsTitle: 'Client Success Stories',
+            testimonialsSubtitle: "See how we've helped businesses and households stay powered up and protected.",
+            productsOverline: 'OUR PRODUCTS',
+            productsTitle: 'Featured Power Systems',
+            productsButtonText: 'View All Products',
+            productsButtonLink: '/products',
+            ctaTitle: 'Secure Your Power Today',
+            ctaSubtitle: "Don't let power outages disrupt your life or business. Contact us for reliable backup solutions.",
+            ctaPrimaryButtonText: 'Get Started',
+            ctaPrimaryButtonLink: { name: 'Contact' },
+            ctaSecondaryButtonText: 'Contact Support',
+            ctaSecondaryButtonLink: { name: 'Contact' },
             features: [
                 {
                     title: 'Uninterrupted Operations',
@@ -146,6 +174,9 @@ export default {
                         featured_products_section: this.getSettingValue('featured_products_section_enabled', true),
                         cta_section: this.getSettingValue('cta_section_enabled', true)
                     };
+
+                    // Load dynamic section content from settings
+                    this.loadDynamicSectionContent();
                 }
 
                 // Handle homePage data
@@ -245,6 +276,129 @@ export default {
                 return value === '1' || value === 'true' || value === 'yes';
             }
             return value;
+        },
+        loadDynamicSectionContent() {
+            // Trusted By Section
+            if (this.homePageSettings.trusted_by_title) {
+                this.trustedByTitle = this.homePageSettings.trusted_by_title;
+            }
+            if (this.homePageSettings.trusted_by_clients) {
+                try {
+                    const clients = typeof this.homePageSettings.trusted_by_clients === 'string'
+                        ? JSON.parse(this.homePageSettings.trusted_by_clients)
+                        : this.homePageSettings.trusted_by_clients;
+                    if (Array.isArray(clients) && clients.length > 0) {
+                        this.clients = clients;
+                    }
+                } catch (e) {
+                    console.warn('Error parsing trusted_by_clients:', e);
+                }
+            }
+
+            // Services Section
+            if (this.homePageSettings.services_overline) {
+                this.servicesOverline = this.homePageSettings.services_overline;
+            }
+            if (this.homePageSettings.services_title) {
+                this.servicesTitle = this.homePageSettings.services_title;
+            }
+            if (this.homePageSettings.services_subtitle) {
+                this.servicesSubtitle = this.homePageSettings.services_subtitle;
+            }
+
+            // Why Choose Us Section
+            if (this.homePageSettings.why_choose_us_overline) {
+                this.whyChooseUsOverline = this.homePageSettings.why_choose_us_overline;
+            }
+            if (this.homePageSettings.why_choose_us_title) {
+                this.whyChooseUsTitle = this.homePageSettings.why_choose_us_title;
+            }
+            if (this.homePageSettings.why_choose_us_image) {
+                this.whyChooseUsImage = this.homePageSettings.why_choose_us_image;
+            }
+            if (this.homePageSettings.why_choose_us_features) {
+                try {
+                    const features = typeof this.homePageSettings.why_choose_us_features === 'string'
+                        ? JSON.parse(this.homePageSettings.why_choose_us_features)
+                        : this.homePageSettings.why_choose_us_features;
+                    if (Array.isArray(features) && features.length > 0) {
+                        this.features = features;
+                    }
+                } catch (e) {
+                    console.warn('Error parsing why_choose_us_features:', e);
+                }
+            }
+
+            // Testimonials Section
+            if (this.homePageSettings.testimonials_overline) {
+                this.testimonialsOverline = this.homePageSettings.testimonials_overline;
+            }
+            if (this.homePageSettings.testimonials_title) {
+                this.testimonialsTitle = this.homePageSettings.testimonials_title;
+            }
+            if (this.homePageSettings.testimonials_subtitle) {
+                this.testimonialsSubtitle = this.homePageSettings.testimonials_subtitle;
+            }
+            if (this.homePageSettings.testimonials_data) {
+                try {
+                    const testimonials = typeof this.homePageSettings.testimonials_data === 'string'
+                        ? JSON.parse(this.homePageSettings.testimonials_data)
+                        : this.homePageSettings.testimonials_data;
+                    if (Array.isArray(testimonials) && testimonials.length > 0) {
+                        this.testimonials = testimonials;
+                    }
+                } catch (e) {
+                    console.warn('Error parsing testimonials_data:', e);
+                }
+            }
+
+            // Featured Products Section
+            if (this.homePageSettings.products_overline) {
+                this.productsOverline = this.homePageSettings.products_overline;
+            }
+            if (this.homePageSettings.products_title) {
+                this.productsTitle = this.homePageSettings.products_title;
+            }
+            if (this.homePageSettings.products_button_text) {
+                this.productsButtonText = this.homePageSettings.products_button_text;
+            }
+            if (this.homePageSettings.products_button_link) {
+                this.productsButtonLink = this.homePageSettings.products_button_link;
+            }
+
+            // CTA Section
+            if (this.homePageSettings.cta_title) {
+                this.ctaTitle = this.homePageSettings.cta_title;
+            }
+            if (this.homePageSettings.cta_subtitle) {
+                this.ctaSubtitle = this.homePageSettings.cta_subtitle;
+            }
+            if (this.homePageSettings.cta_primary_button_text) {
+                this.ctaPrimaryButtonText = this.homePageSettings.cta_primary_button_text;
+            }
+            if (this.homePageSettings.cta_primary_button_link) {
+                try {
+                    const link = typeof this.homePageSettings.cta_primary_button_link === 'string'
+                        ? JSON.parse(this.homePageSettings.cta_primary_button_link)
+                        : this.homePageSettings.cta_primary_button_link;
+                    this.ctaPrimaryButtonLink = link;
+                } catch (e) {
+                    this.ctaPrimaryButtonLink = this.homePageSettings.cta_primary_button_link;
+                }
+            }
+            if (this.homePageSettings.cta_secondary_button_text) {
+                this.ctaSecondaryButtonText = this.homePageSettings.cta_secondary_button_text;
+            }
+            if (this.homePageSettings.cta_secondary_button_link) {
+                try {
+                    const link = typeof this.homePageSettings.cta_secondary_button_link === 'string'
+                        ? JSON.parse(this.homePageSettings.cta_secondary_button_link)
+                        : this.homePageSettings.cta_secondary_button_link;
+                    this.ctaSecondaryButtonLink = link;
+                } catch (e) {
+                    this.ctaSecondaryButtonLink = this.homePageSettings.cta_secondary_button_link;
+                }
+            }
         }
     }
 };

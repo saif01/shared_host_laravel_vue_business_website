@@ -8,11 +8,11 @@
         <v-container class="position-relative z-index-1">
             <div class="text-center mb-16">
                 <div class="glass-pill-sm d-inline-flex align-center px-4 py-1 rounded-pill mb-4">
-                    <span class="text-caption font-weight-bold text-white tracking-widest">TESTIMONIALS</span>
+                    <span class="text-caption font-weight-bold text-white tracking-widest">{{ overline || 'TESTIMONIALS' }}</span>
                 </div>
-                <h2 class="text-h3 font-weight-bold mb-6 text-white">Client Success Stories</h2>
-                <p class="text-h6 text-white opacity-70 mx-auto mw-600 font-weight-light">
-                    See how we've helped businesses and households stay powered up and protected.
+                <h2 class="text-h3 font-weight-bold mb-6 text-white">{{ title || 'Client Success Stories' }}</h2>
+                <p class="text-h6 text-white opacity-70 mx-auto mw-600 font-weight-light" v-if="subtitle">
+                    {{ subtitle }}
                 </p>
             </div>
 
@@ -68,6 +68,18 @@
 export default {
     name: 'TestimonialsSection',
     props: {
+        overline: {
+            type: String,
+            default: 'TESTIMONIALS'
+        },
+        title: {
+            type: String,
+            default: 'Client Success Stories'
+        },
+        subtitle: {
+            type: String,
+            default: "See how we've helped businesses and households stay powered up and protected."
+        },
         testimonials: {
             type: Array,
             default: () => [

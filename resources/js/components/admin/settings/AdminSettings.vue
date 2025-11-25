@@ -232,6 +232,178 @@
                                                 </template>
                                             </v-switch>
                                         </v-col>
+                                        <v-col cols="12">
+                                            <v-divider class="my-6"></v-divider>
+                                            <div class="text-subtitle-1 font-weight-bold mb-4">Section Content</div>
+                                            <p class="text-body-2 text-medium-emphasis mb-4">Customize the content of
+                                                each section
+                                            </p>
+                                        </v-col>
+                                        <!-- Trusted By Section Content -->
+                                        <v-col cols="12">
+                                            <v-divider class="my-2"></v-divider>
+                                            <div class="text-subtitle-2 font-weight-bold mb-3 mt-4">Trusted By Section
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-text-field v-model="settings.home_page.trusted_by_title.value"
+                                                label="Title" variant="outlined" density="comfortable" color="primary"
+                                                hint="e.g., TRUSTED BY INDUSTRY LEADERS" persistent-hint></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-textarea v-model="settings.home_page.trusted_by_clients.value"
+                                                label="Client Logos (JSON)" variant="outlined" density="comfortable"
+                                                color="primary" hint='Format: [{"logo": "url1"}, {"logo": "url2"}]'
+                                                persistent-hint rows="4" auto-grow></v-textarea>
+                                        </v-col>
+                                        <!-- Services Section Content -->
+                                        <v-col cols="12">
+                                            <v-divider class="my-2"></v-divider>
+                                            <div class="text-subtitle-2 font-weight-bold mb-3 mt-4">Services Section
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="12" md="4">
+                                            <v-text-field v-model="settings.home_page.services_overline.value"
+                                                label="Overline" variant="outlined" density="comfortable"
+                                                color="primary" hint="e.g., WHAT WE DO" persistent-hint></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="8">
+                                            <v-text-field v-model="settings.home_page.services_title.value"
+                                                label="Title" variant="outlined" density="comfortable" color="primary"
+                                                hint="e.g., Power Support Solutions" persistent-hint></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-textarea v-model="settings.home_page.services_subtitle.value"
+                                                label="Subtitle" variant="outlined" density="comfortable"
+                                                color="primary" persistent-hint rows="2" auto-grow></v-textarea>
+                                        </v-col>
+                                        <!-- Why Choose Us Section Content -->
+                                        <v-col cols="12">
+                                            <v-divider class="my-2"></v-divider>
+                                            <div class="text-subtitle-2 font-weight-bold mb-3 mt-4">Why Choose Us
+                                                Section</div>
+                                        </v-col>
+                                        <v-col cols="12" md="4">
+                                            <v-text-field v-model="settings.home_page.why_choose_us_overline.value"
+                                                label="Overline" variant="outlined" density="comfortable"
+                                                color="primary" hint="e.g., WHY CHOOSE US"
+                                                persistent-hint></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="8">
+                                            <v-text-field v-model="settings.home_page.why_choose_us_title.value"
+                                                label="Title" variant="outlined" density="comfortable" color="primary"
+                                                hint="e.g., Reliable Power, Guaranteed" persistent-hint></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-text-field v-model="settings.home_page.why_choose_us_image.value"
+                                                label="Image URL" variant="outlined" density="comfortable"
+                                                color="primary" hint="URL for the section image"
+                                                persistent-hint></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-textarea v-model="settings.home_page.why_choose_us_features.value"
+                                                label="Features (JSON)" variant="outlined" density="comfortable"
+                                                color="primary"
+                                                hint='Format: [{"title": "...", "desc": "...", "icon": "..."}]'
+                                                persistent-hint rows="6" auto-grow></v-textarea>
+                                        </v-col>
+                                        <!-- Testimonials Section Content -->
+                                        <v-col cols="12">
+                                            <v-divider class="my-2"></v-divider>
+                                            <div class="text-subtitle-2 font-weight-bold mb-3 mt-4">Testimonials Section
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="12" md="4">
+                                            <v-text-field v-model="settings.home_page.testimonials_overline.value"
+                                                label="Overline" variant="outlined" density="comfortable"
+                                                color="primary" hint="e.g., TESTIMONIALS"
+                                                persistent-hint></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="8">
+                                            <v-text-field v-model="settings.home_page.testimonials_title.value"
+                                                label="Title" variant="outlined" density="comfortable" color="primary"
+                                                hint="e.g., Client Success Stories" persistent-hint></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-textarea v-model="settings.home_page.testimonials_subtitle.value"
+                                                label="Subtitle" variant="outlined" density="comfortable"
+                                                color="primary" persistent-hint rows="2" auto-grow></v-textarea>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-textarea v-model="settings.home_page.testimonials_data.value"
+                                                label="Testimonials (JSON)" variant="outlined" density="comfortable"
+                                                color="primary"
+                                                hint='Format: [{"text": "...", "name": "...", "role": "...", "avatar": "..."}]'
+                                                persistent-hint rows="8" auto-grow></v-textarea>
+                                        </v-col>
+                                        <!-- Featured Products Section Content -->
+                                        <v-col cols="12">
+                                            <v-divider class="my-2"></v-divider>
+                                            <div class="text-subtitle-2 font-weight-bold mb-3 mt-4">Featured Products
+                                                Section</div>
+                                        </v-col>
+                                        <v-col cols="12" md="4">
+                                            <v-text-field v-model="settings.home_page.products_overline.value"
+                                                label="Overline" variant="outlined" density="comfortable"
+                                                color="primary" hint="e.g., OUR PRODUCTS"
+                                                persistent-hint></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="8">
+                                            <v-text-field v-model="settings.home_page.products_title.value"
+                                                label="Title" variant="outlined" density="comfortable" color="primary"
+                                                hint="e.g., Featured Power Systems" persistent-hint></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="6">
+                                            <v-text-field v-model="settings.home_page.products_button_text.value"
+                                                label="Button Text" variant="outlined" density="comfortable"
+                                                color="primary" hint="e.g., View All Products"
+                                                persistent-hint></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="6">
+                                            <v-text-field v-model="settings.home_page.products_button_link.value"
+                                                label="Button Link" variant="outlined" density="comfortable"
+                                                color="primary" hint="e.g., /products" persistent-hint></v-text-field>
+                                        </v-col>
+                                        <!-- CTA Section Content -->
+                                        <v-col cols="12">
+                                            <v-divider class="my-2"></v-divider>
+                                            <div class="text-subtitle-2 font-weight-bold mb-3 mt-4">CTA Section</div>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-text-field v-model="settings.home_page.cta_title.value" label="Title"
+                                                variant="outlined" density="comfortable" color="primary"
+                                                hint="e.g., Secure Your Power Today" persistent-hint></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-textarea v-model="settings.home_page.cta_subtitle.value" label="Subtitle"
+                                                variant="outlined" density="comfortable" color="primary" persistent-hint
+                                                rows="2" auto-grow></v-textarea>
+                                        </v-col>
+                                        <v-col cols="12" md="6">
+                                            <v-text-field v-model="settings.home_page.cta_primary_button_text.value"
+                                                label="Primary Button Text" variant="outlined" density="comfortable"
+                                                color="primary" hint="e.g., Get Started" persistent-hint></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="6">
+                                            <v-text-field v-model="settings.home_page.cta_primary_button_link.value"
+                                                label="Primary Button Link (JSON or URL)" variant="outlined"
+                                                density="comfortable" color="primary"
+                                                hint='e.g., {"name": "Contact"} or /contact'
+                                                persistent-hint></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="6">
+                                            <v-text-field v-model="settings.home_page.cta_secondary_button_text.value"
+                                                label="Secondary Button Text" variant="outlined" density="comfortable"
+                                                color="primary" hint="e.g., Contact Support"
+                                                persistent-hint></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="6">
+                                            <v-text-field v-model="settings.home_page.cta_secondary_button_link.value"
+                                                label="Secondary Button Link (JSON or URL)" variant="outlined"
+                                                density="comfortable" color="primary"
+                                                hint='e.g., {"name": "Contact"} or /contact'
+                                                persistent-hint></v-text-field>
+                                        </v-col>
                                     </v-row>
                                 </v-window-item>
 
@@ -515,6 +687,30 @@ export default {
                     testimonials_section_enabled: { value: '1', type: 'boolean', group: 'home_page' },
                     featured_products_section_enabled: { value: '1', type: 'boolean', group: 'home_page' },
                     cta_section_enabled: { value: '1', type: 'boolean', group: 'home_page' },
+                    // Dynamic section content
+                    trusted_by_title: { value: 'TRUSTED BY INDUSTRY LEADERS', type: 'text', group: 'home_page' },
+                    trusted_by_clients: { value: '', type: 'textarea', group: 'home_page' },
+                    services_overline: { value: 'WHAT WE DO', type: 'text', group: 'home_page' },
+                    services_title: { value: 'Power Support Solutions', type: 'text', group: 'home_page' },
+                    services_subtitle: { value: 'We ensure uninterrupted operations for businesses and households with high-quality power products and services.', type: 'textarea', group: 'home_page' },
+                    why_choose_us_overline: { value: 'WHY CHOOSE US', type: 'text', group: 'home_page' },
+                    why_choose_us_title: { value: 'Reliable Power, Guaranteed', type: 'text', group: 'home_page' },
+                    why_choose_us_image: { value: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', type: 'text', group: 'home_page' },
+                    why_choose_us_features: { value: '', type: 'textarea', group: 'home_page' },
+                    testimonials_overline: { value: 'TESTIMONIALS', type: 'text', group: 'home_page' },
+                    testimonials_title: { value: 'Client Success Stories', type: 'text', group: 'home_page' },
+                    testimonials_subtitle: { value: "See how we've helped businesses and households stay powered up and protected.", type: 'textarea', group: 'home_page' },
+                    testimonials_data: { value: '', type: 'textarea', group: 'home_page' },
+                    products_overline: { value: 'OUR PRODUCTS', type: 'text', group: 'home_page' },
+                    products_title: { value: 'Featured Power Systems', type: 'text', group: 'home_page' },
+                    products_button_text: { value: 'View All Products', type: 'text', group: 'home_page' },
+                    products_button_link: { value: '/products', type: 'text', group: 'home_page' },
+                    cta_title: { value: 'Secure Your Power Today', type: 'text', group: 'home_page' },
+                    cta_subtitle: { value: "Don't let power outages disrupt your life or business. Contact us for reliable backup solutions.", type: 'textarea', group: 'home_page' },
+                    cta_primary_button_text: { value: 'Get Started', type: 'text', group: 'home_page' },
+                    cta_primary_button_link: { value: '{"name": "Contact"}', type: 'text', group: 'home_page' },
+                    cta_secondary_button_text: { value: 'Contact Support', type: 'text', group: 'home_page' },
+                    cta_secondary_button_link: { value: '{"name": "Contact"}', type: 'text', group: 'home_page' },
                 },
                 general: {
                     site_name: { value: '', type: 'text', group: 'general' },

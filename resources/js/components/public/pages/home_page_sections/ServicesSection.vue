@@ -3,12 +3,11 @@
         <div class="bg-pattern-dots"></div>
         <v-container class="position-relative z-index-1">
             <div class="text-center mb-16">
-                <div class="text-overline text-primary font-weight-bold mb-2 tracking-widest">WHAT WE DO</div>
-                <h2 class="text-h3 font-weight-bold mb-6 text-grey-darken-3">Power Support Solutions</h2>
+                <div class="text-overline text-primary font-weight-bold mb-2 tracking-widest">{{ overline || 'WHAT WE DO' }}</div>
+                <h2 class="text-h3 font-weight-bold mb-6 text-grey-darken-3">{{ title || 'Power Support Solutions' }}</h2>
                 <div class="divider-center mx-auto mb-6"></div>
-                <p class="text-h6 text-medium-emphasis mx-auto mw-800 font-weight-regular">
-                    We ensure uninterrupted operations for businesses and households with high-quality power
-                    products and services.
+                <p class="text-h6 text-medium-emphasis mx-auto mw-800 font-weight-regular" v-if="subtitle">
+                    {{ subtitle }}
                 </p>
             </div>
 
@@ -48,6 +47,18 @@
 export default {
     name: 'ServicesSection',
     props: {
+        overline: {
+            type: String,
+            default: 'WHAT WE DO'
+        },
+        title: {
+            type: String,
+            default: 'Power Support Solutions'
+        },
+        subtitle: {
+            type: String,
+            default: 'We ensure uninterrupted operations for businesses and households with high-quality power products and services.'
+        },
         services: {
             type: Array,
             default: () => []

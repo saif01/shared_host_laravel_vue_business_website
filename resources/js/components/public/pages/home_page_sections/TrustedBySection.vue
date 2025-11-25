@@ -2,7 +2,7 @@
     <section class="py-12 overflow-hidden bg-grey-lighten-5">
         <v-container fluid class="px-0">
             <div class="text-center mb-8">
-                <div class="text-overline text-medium-emphasis tracking-widest">TRUSTED BY INDUSTRY LEADERS</div>
+                <div class="text-overline text-medium-emphasis tracking-widest">{{ title || 'TRUSTED BY INDUSTRY LEADERS' }}</div>
             </div>
             <div class="marquee-container">
                 <div class="marquee-track">
@@ -20,6 +20,10 @@
 export default {
     name: 'TrustedBySection',
     props: {
+        title: {
+            type: String,
+            default: 'TRUSTED BY INDUSTRY LEADERS'
+        },
         clients: {
             type: Array,
             default: () => [

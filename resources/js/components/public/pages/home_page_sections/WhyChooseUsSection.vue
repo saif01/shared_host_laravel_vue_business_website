@@ -7,9 +7,8 @@
         <v-container class="position-relative z-index-1">
             <v-row align="center">
                 <v-col cols="12" md="6" class="pr-md-12">
-                    <div class="text-overline text-primary font-weight-bold mb-2 tracking-widest">WHY CHOOSE US
-                    </div>
-                    <h2 class="text-h3 font-weight-bold mb-8 text-grey-darken-3">Reliable Power, Guaranteed</h2>
+                    <div class="text-overline text-primary font-weight-bold mb-2 tracking-widest">{{ overline || 'WHY CHOOSE US' }}</div>
+                    <h2 class="text-h3 font-weight-bold mb-8 text-grey-darken-3">{{ title || 'Reliable Power, Guaranteed' }}</h2>
 
                     <div class="feature-list">
                         <div v-for="(feature, i) in features" :key="i" class="feature-item d-flex align-start mb-8">
@@ -27,7 +26,7 @@
                     <div class="image-composition position-relative">
                         <div class="composition-bg rounded-xl bg-grey-lighten-3"></div>
                         <v-img
-                            src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                            :src="imageUrl || 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'"
                             class="rounded-xl elevation-10 position-relative z-index-2 composition-img"
                             :cover="true" height="100%" width="100%">
                             <template v-slot:placeholder>
@@ -54,6 +53,18 @@
 export default {
     name: 'WhyChooseUsSection',
     props: {
+        overline: {
+            type: String,
+            default: 'WHY CHOOSE US'
+        },
+        title: {
+            type: String,
+            default: 'Reliable Power, Guaranteed'
+        },
+        imageUrl: {
+            type: String,
+            default: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+        },
         features: {
             type: Array,
             default: () => [

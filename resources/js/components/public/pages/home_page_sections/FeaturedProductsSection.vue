@@ -3,12 +3,12 @@
         <v-container>
             <div class="d-flex flex-column flex-sm-row justify-space-between align-end mb-12">
                 <div>
-                    <div class="text-overline text-primary font-weight-bold mb-2 tracking-widest">OUR PRODUCTS</div>
-                    <h2 class="text-h3 font-weight-bold text-grey-darken-3">Featured Power Systems</h2>
+                    <div class="text-overline text-primary font-weight-bold mb-2 tracking-widest">{{ overline || 'OUR PRODUCTS' }}</div>
+                    <h2 class="text-h3 font-weight-bold text-grey-darken-3">{{ title || 'Featured Power Systems' }}</h2>
                 </div>
-                <v-btn variant="outlined" color="primary" to="/products"
+                <v-btn variant="outlined" color="primary" :to="buttonLink || '/products'"
                     class="mt-4 mt-sm-0 rounded-pill px-6 font-weight-bold">
-                    View All Products
+                    {{ buttonText || 'View All Products' }}
                 </v-btn>
             </div>
 
@@ -63,6 +63,22 @@
 export default {
     name: 'FeaturedProductsSection',
     props: {
+        overline: {
+            type: String,
+            default: 'OUR PRODUCTS'
+        },
+        title: {
+            type: String,
+            default: 'Featured Power Systems'
+        },
+        buttonText: {
+            type: String,
+            default: 'View All Products'
+        },
+        buttonLink: {
+            type: String,
+            default: '/products'
+        },
         products: {
             type: Array,
             default: () => []
