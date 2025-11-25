@@ -152,6 +152,86 @@
                                                 color="primary" hint="e.g., Years Experience"
                                                 persistent-hint></v-text-field>
                                         </v-col>
+                                        <v-col cols="12">
+                                            <v-divider class="my-4"></v-divider>
+                                            <div class="text-subtitle-1 font-weight-bold mb-4">Section Visibility</div>
+                                            <p class="text-body-2 text-medium-emphasis mb-4">Enable or disable sections
+                                                on the home
+                                                page</p>
+                                        </v-col>
+                                        <v-col cols="12" md="6">
+                                            <v-switch v-model="settings.home_page.hero_section_enabled.value"
+                                                label="Hero Section" color="primary" hide-details :true-value="'1'"
+                                                :false-value="'0'">
+                                                <template v-slot:label>
+                                                    <span class="text-body-1">Hero Section</span>
+                                                </template>
+                                            </v-switch>
+                                        </v-col>
+                                        <v-col cols="12" md="6">
+                                            <v-switch v-model="settings.home_page.stats_section_enabled.value"
+                                                label="Stats Section" color="primary" hide-details :true-value="'1'"
+                                                :false-value="'0'">
+                                                <template v-slot:label>
+                                                    <span class="text-body-1">Stats Section</span>
+                                                </template>
+                                            </v-switch>
+                                        </v-col>
+                                        <v-col cols="12" md="6">
+                                            <v-switch v-model="settings.home_page.trusted_by_section_enabled.value"
+                                                label="Trusted By Section" color="primary" hide-details
+                                                :true-value="'1'" :false-value="'0'">
+                                                <template v-slot:label>
+                                                    <span class="text-body-1">Trusted By Section</span>
+                                                </template>
+                                            </v-switch>
+                                        </v-col>
+                                        <v-col cols="12" md="6">
+                                            <v-switch v-model="settings.home_page.services_section_enabled.value"
+                                                label="Services Section" color="primary" hide-details :true-value="'1'"
+                                                :false-value="'0'">
+                                                <template v-slot:label>
+                                                    <span class="text-body-1">Services Section</span>
+                                                </template>
+                                            </v-switch>
+                                        </v-col>
+                                        <v-col cols="12" md="6">
+                                            <v-switch v-model="settings.home_page.why_choose_us_section_enabled.value"
+                                                label="Why Choose Us Section" color="primary" hide-details
+                                                :true-value="'1'" :false-value="'0'">
+                                                <template v-slot:label>
+                                                    <span class="text-body-1">Why Choose Us Section</span>
+                                                </template>
+                                            </v-switch>
+                                        </v-col>
+                                        <v-col cols="12" md="6">
+                                            <v-switch v-model="settings.home_page.testimonials_section_enabled.value"
+                                                label="Testimonials Section" color="primary" hide-details
+                                                :true-value="'1'" :false-value="'0'">
+                                                <template v-slot:label>
+                                                    <span class="text-body-1">Testimonials Section</span>
+                                                </template>
+                                            </v-switch>
+                                        </v-col>
+                                        <v-col cols="12" md="6">
+                                            <v-switch
+                                                v-model="settings.home_page.featured_products_section_enabled.value"
+                                                label="Featured Products Section" color="primary" hide-details
+                                                :true-value="'1'" :false-value="'0'">
+                                                <template v-slot:label>
+                                                    <span class="text-body-1">Featured Products Section</span>
+                                                </template>
+                                            </v-switch>
+                                        </v-col>
+                                        <v-col cols="12" md="6">
+                                            <v-switch v-model="settings.home_page.cta_section_enabled.value"
+                                                label="CTA Section" color="primary" hide-details :true-value="'1'"
+                                                :false-value="'0'">
+                                                <template v-slot:label>
+                                                    <span class="text-body-1">CTA Section</span>
+                                                </template>
+                                            </v-switch>
+                                        </v-col>
                                     </v-row>
                                 </v-window-item>
 
@@ -426,6 +506,15 @@ export default {
                     stat_3_label: { value: 'Support', type: 'text', group: 'home_page' },
                     stat_4_value: { value: '15+', type: 'text', group: 'home_page' },
                     stat_4_label: { value: 'Years Experience', type: 'text', group: 'home_page' },
+                    // Section visibility settings
+                    hero_section_enabled: { value: '1', type: 'boolean', group: 'home_page' },
+                    stats_section_enabled: { value: '1', type: 'boolean', group: 'home_page' },
+                    trusted_by_section_enabled: { value: '1', type: 'boolean', group: 'home_page' },
+                    services_section_enabled: { value: '1', type: 'boolean', group: 'home_page' },
+                    why_choose_us_section_enabled: { value: '1', type: 'boolean', group: 'home_page' },
+                    testimonials_section_enabled: { value: '1', type: 'boolean', group: 'home_page' },
+                    featured_products_section_enabled: { value: '1', type: 'boolean', group: 'home_page' },
+                    cta_section_enabled: { value: '1', type: 'boolean', group: 'home_page' },
                 },
                 general: {
                     site_name: { value: '', type: 'text', group: 'general' },

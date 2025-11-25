@@ -1,13 +1,28 @@
 <template>
     <div class="home-page">
-        <HeroSection :hero-title="heroTitle" :hero-subtitle="heroSubtitle" />
-        <StatsSection :stats="stats" />
-        <TrustedBySection :clients="clients" />
-        <ServicesSection :services="services" />
-        <WhyChooseUsSection :features="features" />
-        <TestimonialsSection :testimonials="testimonials" />
-        <FeaturedProductsSection :products="products" />
-        <CTASection />
+        <!-- Hero Section -->
+        <HeroSection v-if="isSectionEnabled('hero_section')" :hero-title="heroTitle" :hero-subtitle="heroSubtitle" />
+
+        <!-- Stats Section -->
+        <StatsSection v-if="isSectionEnabled('stats_section')" :stats="stats" />
+
+        <!-- Trusted By Section -->
+        <TrustedBySection v-if="isSectionEnabled('trusted_by_section')" :clients="clients" />
+
+        <!-- Services Section -->
+        <ServicesSection v-if="isSectionEnabled('services_section')" :services="services" />
+
+        <!-- Why Choose Us Section -->
+        <WhyChooseUsSection v-if="isSectionEnabled('why_choose_us_section')" :features="features" />
+
+        <!-- Testimonials Section -->
+        <TestimonialsSection v-if="isSectionEnabled('testimonials_section')" :testimonials="testimonials" />
+
+        <!-- Featured Products Section -->
+        <FeaturedProductsSection v-if="isSectionEnabled('featured_products_section')" :products="products" />
+
+        <!-- CTA Section -->
+        <CTASection v-if="isSectionEnabled('cta_section')" />
     </div>
 </template>
 
@@ -48,6 +63,17 @@ export default {
                 { value: '15+', label: 'Years Experience' }
             ],
             homePageSettings: {},
+            // Section visibility flags - defaults to true if not set
+            sectionVisibility: {
+                hero_section: true,
+                stats_section: true,
+                trusted_by_section: true,
+                services_section: true,
+                why_choose_us_section: true,
+                testimonials_section: true,
+                featured_products_section: true,
+                cta_section: true
+            },
             features: [
                 {
                     title: 'Uninterrupted Operations',
@@ -107,6 +133,19 @@ export default {
                 // Store home page settings if available
                 if (data.homePageSettings) {
                     this.homePageSettings = data.homePageSettings;
+
+                    // Update section visibility from settings
+                    // Default to true if setting is not set (backward compatibility)
+                    this.sectionVisibility = {
+                        hero_section: this.getSettingValue('hero_section_enabled', true),
+                        stats_section: this.getSettingValue('stats_section_enabled', true),
+                        trusted_by_section: this.getSettingValue('trusted_by_section_enabled', true),
+                        services_section: this.getSettingValue('services_section_enabled', true),
+                        why_choose_us_section: this.getSettingValue('why_choose_us_section_enabled', true),
+                        testimonials_section: this.getSettingValue('testimonials_section_enabled', true),
+                        featured_products_section: this.getSettingValue('featured_products_section_enabled', true),
+                        cta_section: this.getSettingValue('cta_section_enabled', true)
+                    };
                 }
 
                 // Handle homePage data
@@ -193,6 +232,20 @@ export default {
                 ];
             }
         },
+        isSectionEnabled(sectionKey) {
+            return this.sectionVisibility[sectionKey] !== false;
+        },
+        getSettingValue(key, defaultValue = null) {
+            const value = this.homePageSettings[key];
+            if (value === null || value === undefined || value === '') {
+                return defaultValue;
+            }
+            // Handle boolean strings
+            if (typeof value === 'string') {
+                return value === '1' || value === 'true' || value === 'yes';
+            }
+            return value;
+        }
     }
 };
 </script>

@@ -22,6 +22,25 @@ class HomeController extends Controller
             return [$item->key => $item->value];
         });
         
+        // Ensure section visibility settings exist with defaults (all enabled by default)
+        $defaultSectionSettings = [
+            'hero_section_enabled' => '1',
+            'stats_section_enabled' => '1',
+            'trusted_by_section_enabled' => '1',
+            'services_section_enabled' => '1',
+            'why_choose_us_section_enabled' => '1',
+            'testimonials_section_enabled' => '1',
+            'featured_products_section_enabled' => '1',
+            'cta_section_enabled' => '1',
+        ];
+        
+        // Merge defaults with existing settings (existing settings take precedence)
+        foreach ($defaultSectionSettings as $key => $defaultValue) {
+            if (!$homePageSettings->has($key)) {
+                $homePageSettings[$key] = $defaultValue;
+            }
+        }
+        
         // Merge settings with page data (settings take precedence)
         if ($homePage) {
             if ($homePageSettings->has('home_hero_title') && $homePageSettings->get('home_hero_title')) {
