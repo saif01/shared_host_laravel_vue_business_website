@@ -73,14 +73,8 @@ const routes = [
                 meta: { title: 'Admin Dashboard' }
             },
             {
-                path: 'pages',
-                component: () => import('./components/admin/content/AdminPages.vue'),
-                name: 'AdminPages',
-                meta: { title: 'Pages Management' }
-            },
-            {
                 path: 'services',
-                component: () => import('./components/admin/content/AdminServices.vue'),
+                component: () => import('./components/admin/service/AdminServices.vue'),
                 name: 'AdminServices',
                 meta: { title: 'Services Management' }
             },

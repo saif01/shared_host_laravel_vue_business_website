@@ -22,9 +22,6 @@
                     :to="{ name: 'AdminDashboard' }" value="Dashboard" exact
                     v-if="hasPermission('access-dashboard')"></v-list-item>
 
-                <!-- Pages Management - Requires 'manage-pages' permission -->
-                <v-list-item link router prepend-icon="mdi-file-document" title="Pages" :to="{ name: 'AdminPages' }"
-                    value="Pages" exact v-if="hasPermission('manage-pages')"></v-list-item>
 
                 <!-- Services Management - Requires 'manage-services' permission -->
                 <v-list-item link router prepend-icon="mdi-wrench" title="Services" :to="{ name: 'AdminServices' }"
