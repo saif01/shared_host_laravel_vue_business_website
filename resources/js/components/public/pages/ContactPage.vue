@@ -51,7 +51,15 @@
                                 </div>
                                 <h3 class="text-h5 font-weight-bold mb-3 text-grey-darken-4">{{ card.title }}</h3>
                                 <p class="text-body-2 text-medium-emphasis mb-5">{{ card.subtitle }}</p>
-                                <a :href="card.href"
+                                <div v-if="card.phones && card.phones.length > 0"
+                                    class="d-flex flex-column align-center">
+                                    <a v-for="(phone, phoneIndex) in card.phones" :key="phoneIndex" :href="phone.href"
+                                        class="contact-link text-h6 font-weight-bold text-decoration-none d-inline-flex align-center mb-2">
+                                        <span>{{ phone.value }}</span>
+                                        <v-icon icon="mdi-arrow-right" size="20" class="ml-2 arrow-icon"></v-icon>
+                                    </a>
+                                </div>
+                                <a v-else :href="card.href"
                                     class="contact-link text-h6 font-weight-bold text-decoration-none d-inline-flex align-center">
                                     <span>{{ card.value }}</span>
                                     <v-icon icon="mdi-arrow-right" size="20" class="ml-2 arrow-icon"></v-icon>
@@ -205,6 +213,7 @@ export default {
             contactInfo: {
                 contact_email: '',
                 contact_phone: '',
+                contact_phone_secondary: '',
                 contact_address: '',
                 contact_hero_title: '',
                 contact_hero_subtitle: '',
@@ -221,23 +230,49 @@ export default {
     },
     computed: {
         formattedPhone() {
-            return this.formatPhoneNumber(this.contactInfo.contact_phone || '+8801707080401');
+            const normalized = this.normalizePhoneNumber(this.contactInfo.contact_phone || '+8801707080401');
+            return this.formatPhoneNumber(normalized);
         },
         phoneHref() {
-            const phone = this.contactInfo.contact_phone || '+8801707080401';
+            const phone = this.normalizePhoneNumber(this.contactInfo.contact_phone || '+8801707080401');
             // Clean phone for tel: link (keep only digits and +)
             const cleaned = phone.replace(/[^\d+]/g, '');
             return `tel:${cleaned}`;
         },
         contactCards() {
-            return [
+            // Normalize and format primary phone
+            const primaryPhone = this.normalizePhoneNumber(this.contactInfo.contact_phone || '+8801707080401');
+            const primaryFormatted = this.formatPhoneNumber(primaryPhone);
+            const primaryCleaned = primaryPhone.replace(/[^\d+]/g, '');
+
+            // Build phone numbers array for Call Us card
+            const phones = [
+                {
+                    value: primaryFormatted,
+                    href: `tel:${primaryCleaned}`
+                }
+            ];
+
+            // Add secondary phone if available
+            if (this.contactInfo.contact_phone_secondary && this.contactInfo.contact_phone_secondary.trim() !== '') {
+                const secondaryPhone = this.normalizePhoneNumber(this.contactInfo.contact_phone_secondary);
+                const secondaryFormatted = this.formatPhoneNumber(secondaryPhone);
+                const secondaryCleaned = secondaryPhone.replace(/[^\d+]/g, '');
+                phones.push({
+                    value: secondaryFormatted,
+                    href: `tel:${secondaryCleaned}`
+                });
+            }
+
+            const cards = [
                 {
                     icon: 'mdi-phone-in-talk',
                     iconClass: 'icon-blue',
                     title: 'Call Us',
                     subtitle: 'Available 24/7 for support',
                     value: this.formattedPhone,
-                    href: this.phoneHref
+                    href: this.phoneHref,
+                    phones: phones
                 },
                 {
                     icon: 'mdi-email-outline',
@@ -256,12 +291,39 @@ export default {
                     href: '#map'
                 }
             ];
+
+            return cards;
         }
     },
     mounted() {
         this.loadContactInfo();
     },
     methods: {
+        normalizePhoneNumber(phone) {
+            if (!phone) return '+8801707080401';
+
+            // Remove all non-digit characters except +
+            let cleaned = phone.replace(/[^\d+]/g, '');
+
+            // If it's a Bangladeshi local format (01XXXXXXXXX - 11 digits starting with 01)
+            if (cleaned.length === 11 && cleaned.startsWith('01')) {
+                // Convert to international format: +8801XXXXXXXXX
+                return '+880' + cleaned.substring(1);
+            }
+
+            // If it's Bangladeshi without + but has 880 (8801XXXXXXXXX - 13 digits)
+            if (cleaned.length === 13 && cleaned.startsWith('8801')) {
+                return '+' + cleaned;
+            }
+
+            // If it already has +, return as is
+            if (cleaned.startsWith('+')) {
+                return cleaned;
+            }
+
+            // Default: assume it's a valid format and return with +
+            return cleaned.startsWith('880') ? '+' + cleaned : cleaned;
+        },
         validateBangladeshPhone(phone) {
             if (!phone) return false;
 
