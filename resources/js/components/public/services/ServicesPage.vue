@@ -63,9 +63,19 @@
                                 class="h-100 service-card-detailed rounded-xl transition-all overflow-hidden"
                                 :to="`/services/${service.slug}`">
                                 <div class="d-flex flex-column flex-md-row h-100">
+                                    <!-- Service Image or Icon -->
                                     <div
-                                        class="service-icon-side bg-primary-darken-1 d-flex align-center justify-center pa-6">
-                                        <v-icon :icon="service.icon || getServiceIcon(i)" size="48"
+                                        class="service-icon-side bg-primary-darken-1 d-flex align-center justify-center pa-6 position-relative overflow-hidden">
+                                        <v-img v-if="service.image" :src="service.image" cover
+                                            class="service-image position-absolute w-100 h-100">
+                                            <template v-slot:placeholder>
+                                                <div class="d-flex align-center justify-center fill-height">
+                                                    <v-icon :icon="service.icon || getServiceIcon(i)" size="48"
+                                                        color="amber-accent-4"></v-icon>
+                                                </div>
+                                            </template>
+                                        </v-img>
+                                        <v-icon v-else :icon="service.icon || getServiceIcon(i)" size="48"
                                             color="amber-accent-4"></v-icon>
                                     </div>
                                     <div class="pa-8 flex-grow-1 bg-white">
@@ -195,11 +205,21 @@ export default {
 
 /* Common styles (service-card-detailed, service-icon-side, link-hover-effect, process-step, process-line, cta-pattern) moved to app.css */
 
+/* Service Image Styles */
+.service-icon-side .service-image {
+    opacity: 0.9;
+    transition: opacity 0.3s ease;
+}
+
+.service-icon-side:hover .service-image {
+    opacity: 1;
+}
+
 /* Responsive Styles */
 @media (max-width: 960px) {
     .service-icon-side {
         width: 100%;
-        min-height: 120px;
+        min-height: 200px;
     }
 
     .process-line {

@@ -49,6 +49,12 @@
                 <v-row>
                     <v-col cols="12" md="8">
                         <div class="text-body-1 text-grey-darken-3 lh-relaxed mb-8">
+                            <!-- Service Image -->
+                            <div v-if="service.image" class="mb-8">
+                                <v-img :src="service.image" max-width="100%" height="400" cover
+                                    class="rounded-xl elevation-4"></v-img>
+                            </div>
+                            
                             <!-- Service Description -->
                             <div v-if="service.description" class="mb-6" v-html="service.description"></div>
                             <p v-else class="mb-6">
