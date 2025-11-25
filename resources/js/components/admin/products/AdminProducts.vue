@@ -83,7 +83,7 @@
                         <tr v-for="product in products" :key="product.id">
                             <td>
                                 <v-avatar size="40" v-if="product.thumbnail">
-                                    <v-img :src="product.thumbnail" cover></v-img>
+                                    <v-img :src="resolveImageUrl(product.thumbnail)" cover></v-img>
                                 </v-avatar>
                                 <v-avatar size="40" v-else color="grey-lighten-2">
                                     <v-icon icon="mdi-package-variant"></v-icon>
@@ -250,8 +250,8 @@
                                     <v-col cols="12">
                                         <div class="text-subtitle-1 text-medium-emphasis mb-2">Thumbnail</div>
                                         <div v-if="productDetails.thumbnail" class="mb-4">
-                                            <v-img :src="productDetails.thumbnail" max-height="300" contain
-                                                class="rounded elevation-2"></v-img>
+                                            <v-img :src="resolveImageUrl(productDetails.thumbnail)" max-height="300"
+                                                contain class="rounded elevation-2"></v-img>
                                             <div class="text-caption text-medium-emphasis mt-2">{{
                                                 productDetails.thumbnail }}</div>
                                         </div>
@@ -264,7 +264,7 @@
                                             class="d-flex flex-wrap gap-3">
                                             <v-card v-for="(img, index) in productDetails.images" :key="index"
                                                 class="elevation-2" style="max-width: 200px;">
-                                                <v-img :src="img" height="150" cover></v-img>
+                                                <v-img :src="resolveImageUrl(img)" height="150" cover></v-img>
                                                 <v-card-text class="pa-2">
                                                     <div class="text-caption text-truncate">{{ img }}</div>
                                                 </v-card-text>
@@ -458,8 +458,8 @@
                                     <v-col cols="12">
                                         <div class="text-subtitle-1 text-medium-emphasis mb-2">Open Graph Image</div>
                                         <div v-if="productDetails.og_image" class="mb-2">
-                                            <v-img :src="productDetails.og_image" max-height="200" contain
-                                                class="rounded"></v-img>
+                                            <v-img :src="resolveImageUrl(productDetails.og_image)" max-height="200"
+                                                contain class="rounded"></v-img>
                                         </div>
                                         <div class="text-body-1">{{ productDetails.og_image || '-' }}</div>
                                     </v-col>
@@ -637,8 +637,8 @@
                                         <v-file-input v-model="thumbnailFile" label="Select Thumbnail Image"
                                             accept="image/*" prepend-icon="mdi-camera" variant="outlined"
                                             @update:model-value="previewThumbnail" clearable show-size
-                                            hint="Select an image file (will upload on save). Recommended size: 800x600px or 1200x900px (4:3 ratio)" persistent-hint
-                                            class="mb-3"></v-file-input>
+                                            hint="Select an image file (will upload on save). Recommended size: 800x600px or 1200x900px (4:3 ratio)"
+                                            persistent-hint class="mb-3"></v-file-input>
 
                                         <!-- Preview for selected file -->
                                         <div v-if="thumbnailFile && thumbnailPreview" class="mt-3 mb-3">
@@ -659,7 +659,7 @@
                                         <!-- Preview for existing/uploaded thumbnail -->
                                         <div v-else-if="form.thumbnail" class="mt-2 mb-3">
                                             <v-card class="elevation-2" style="max-width: 300px;">
-                                                <v-img :src="form.thumbnail" max-height="200" contain
+                                                <v-img :src="resolveImageUrl(form.thumbnail)" max-height="200" contain
                                                     class="rounded"></v-img>
                                                 <v-card-text class="pa-2">
                                                     <div class="text-caption text-medium-emphasis">Current thumbnail
@@ -675,19 +675,45 @@
                                     <v-col cols="12">
                                         <div class="text-subtitle-1 font-weight-bold mb-2">Product Images (Gallery)
                                         </div>
+
+                                        <!-- Existing Gallery Images -->
+                                        <div v-if="form.images && form.images.length > 0" class="mb-4">
+                                            <div class="text-subtitle-2 text-medium-emphasis mb-2">Existing Images ({{
+                                                form.images.length }})</div>
+                                            <div class="d-flex flex-wrap gap-3">
+                                                <v-card v-for="(img, index) in form.images" :key="`existing-${index}`"
+                                                    class="elevation-2" style="max-width: 200px; position: relative;">
+                                                    <v-img :src="resolveImageUrl(img)" height="150" cover></v-img>
+                                                    <v-card-text class="pa-2">
+                                                        <div class="text-caption text-truncate">{{ img }}</div>
+                                                    </v-card-text>
+                                                    <v-btn icon="mdi-close" size="x-small" color="error" variant="flat"
+                                                        class="position-absolute" style="top: 4px; right: 4px;"
+                                                        @click="removeImage(index)"></v-btn>
+                                                </v-card>
+                                            </div>
+                                        </div>
+
+                                        <v-divider v-if="form.images && form.images.length > 0"
+                                            class="my-4"></v-divider>
+
+                                        <!-- Upload New Images -->
+                                        <div class="text-subtitle-2 text-medium-emphasis mb-2">Upload New Images</div>
                                         <v-file-input v-model="galleryFiles" label="Select Gallery Images"
                                             accept="image/*" prepend-icon="mdi-image-multiple" variant="outlined"
                                             multiple @update:model-value="previewGalleryImages" clearable show-size
-                                            hint="Select multiple image files (will upload on save). Recommended size: 1200x800px or 1600x1200px (3:2 or 4:3 ratio)" persistent-hint
-                                            class="mb-3"></v-file-input>
+                                            hint="Select multiple image files (will upload on save). Recommended size: 1200x800px or 1600x1200px (3:2 or 4:3 ratio)"
+                                            persistent-hint class="mb-3"></v-file-input>
 
                                         <!-- Preview for selected files -->
                                         <div v-if="galleryPreviews.length > 0" class="mt-3 mb-4">
-                                            <div class="text-subtitle-2 text-medium-emphasis mb-2">Selected Images ({{
-                                                galleryPreviews.length }})</div>
+                                            <div class="text-subtitle-2 text-medium-emphasis mb-2">New Images to Upload
+                                                ({{
+                                                    galleryPreviews.length }})</div>
                                             <div class="d-flex flex-wrap gap-3">
-                                                <v-card v-for="(preview, index) in galleryPreviews" :key="index"
-                                                    class="elevation-2" style="max-width: 200px; position: relative;">
+                                                <v-card v-for="(preview, index) in galleryPreviews"
+                                                    :key="`preview-${index}`" class="elevation-2"
+                                                    style="max-width: 200px; position: relative;">
                                                     <v-img :src="preview.url" height="150" cover></v-img>
                                                     <v-card-text class="pa-2">
                                                         <div class="text-caption text-truncate">{{ preview.name }}</div>
@@ -704,23 +730,26 @@
                                         </div>
 
                                         <v-divider class="my-4"></v-divider>
+
+                                        <!-- Add Image URLs -->
                                         <div class="text-subtitle-2 text-medium-emphasis mb-2">Or Add Image URLs</div>
-                                        <div v-for="(img, index) in form.images" :key="index" class="mb-3">
-                                            <v-text-field v-model="form.images[index]" :label="`Image ${index + 1} URL`"
-                                                variant="outlined" prepend-inner-icon="mdi-link">
+                                        <div v-for="(img, index) in imageUrlInputs" :key="`url-${index}`" class="mb-3">
+                                            <v-text-field v-model="imageUrlInputs[index]"
+                                                :label="`Image URL ${index + 1}`" variant="outlined"
+                                                prepend-inner-icon="mdi-link"
+                                                placeholder="https://example.com/image.jpg">
                                                 <template v-slot:append>
                                                     <v-btn icon="mdi-delete" size="small" variant="text" color="error"
-                                                        @click="removeImage(index)"></v-btn>
+                                                        @click="removeImageUrl(index)"></v-btn>
                                                 </template>
                                             </v-text-field>
-                                            <div v-if="form.images[index]" class="mt-2">
-                                                <v-img :src="form.images[index]" max-height="150" contain
-                                                    class="rounded elevation-1"></v-img>
+                                            <div v-if="imageUrlInputs[index]" class="mt-2">
+                                                <v-img :src="resolveImageUrl(imageUrlInputs[index])" max-height="150"
+                                                    contain class="rounded elevation-1"></v-img>
                                             </div>
                                         </div>
                                         <v-btn color="primary" variant="outlined" prepend-icon="mdi-plus"
-                                            @click="addImage">Add
-                                            Image URL</v-btn>
+                                            @click="addImageUrl">Add Image URL</v-btn>
                                     </v-col>
                                 </v-row>
                             </v-window-item>
@@ -995,6 +1024,7 @@
 <script>
 import axios from 'axios';
 import adminPaginationMixin from '../../../mixins/adminPaginationMixin';
+import { normalizeUploadPath, resolveUploadUrl } from '../../../utils/uploads';
 
 export default {
     mixins: [adminPaginationMixin],
@@ -1072,7 +1102,8 @@ export default {
             uploadingThumbnail: false,
             uploadingGallery: false,
             thumbnailPreview: null,
-            galleryPreviews: []
+            galleryPreviews: [],
+            imageUrlInputs: []
         };
     },
     async mounted() {
@@ -1103,7 +1134,11 @@ export default {
                     headers: this.getAuthHeaders()
                 });
 
-                this.products = response.data.data || [];
+                const products = response.data.data || [];
+                this.products = products.map(product => ({
+                    ...product,
+                    thumbnail: this.resolveImageUrl(product.thumbnail)
+                }));
                 this.updatePagination(response.data);
             } catch (error) {
                 this.handleApiError(error, 'Failed to load products');
@@ -1203,14 +1238,19 @@ export default {
 
                 console.log('Loaded product data:', data);
 
+                const normalizedThumbnail = this.normalizeImageInput(data.thumbnail || '');
+                const normalizedImages = Array.isArray(data.images)
+                    ? data.images.map(img => this.normalizeImageInput(img))
+                    : [];
+
                 this.form = {
                     title: data.title || '',
                     slug: data.slug || '',
                     sku: data.sku || '',
                     short_description: data.short_description || '',
                     description: data.description || '',
-                    thumbnail: data.thumbnail || '',
-                    images: Array.isArray(data.images) ? data.images : [],
+                    thumbnail: normalizedThumbnail,
+                    images: normalizedImages,
                     price: data.price || null,
                     price_range: data.price_range || '',
                     show_price: data.show_price !== false,
@@ -1226,12 +1266,16 @@ export default {
                     og_image: data.og_image || ''
                 };
 
+                // Reset image URL inputs (existing images are in form.images)
+                this.imageUrlInputs = [];
+
                 // Parse specifications (excluding special fields)
                 this.specificationsList = [];
                 if (data.specifications && typeof data.specifications === 'object') {
                     Object.keys(data.specifications).forEach(key => {
                         // Skip special fields stored in specifications
-                        if (!key.startsWith('_')) {
+                        // Also skip pure numeric keys (likely from corrupted array data)
+                        if (!key.startsWith('_') && !/^\d+$/.test(String(key))) {
                             this.specificationsList.push({
                                 key: key,
                                 value: data.specifications[key]
@@ -1341,6 +1385,7 @@ export default {
             this.thumbnailPreview = null;
             this.galleryFiles = [];
             this.galleryPreviews = [];
+            this.imageUrlInputs = [];
             this.formTab = 'basic';
         },
         generateSlug() {
@@ -1351,8 +1396,11 @@ export default {
                     .replace(/(^-|-$)/g, '');
             }
         },
-        addImage() {
-            this.form.images.push('');
+        addImageUrl() {
+            this.imageUrlInputs.push('');
+        },
+        removeImageUrl(index) {
+            this.imageUrlInputs.splice(index, 1);
         },
         removeImage(index) {
             this.form.images.splice(index, 1);
@@ -1380,6 +1428,7 @@ export default {
         previewGalleryImages(files) {
             if (!files) {
                 this.galleryPreviews = [];
+                this.galleryFiles = [];
                 return;
             }
 
@@ -1387,32 +1436,47 @@ export default {
             const filesToPreview = Array.isArray(files) ? files : [files];
             if (filesToPreview.length === 0) {
                 this.galleryPreviews = [];
+                this.galleryFiles = [];
                 return;
             }
 
+            // Store files for upload
+            this.galleryFiles = filesToPreview.filter(f => f);
+
             // Create previews for all selected files
-            this.galleryPreviews = [];
-            filesToPreview.forEach((file, index) => {
-                if (file) {
+            const newPreviews = [];
+            const filePromises = filesToPreview.map((file) => {
+                if (!file) return Promise.resolve(null);
+
+                return new Promise((resolve) => {
                     const reader = new FileReader();
                     reader.onload = (e) => {
-                        this.galleryPreviews.push({
+                        resolve({
                             url: e.target.result,
                             name: file.name,
                             size: file.size,
                             file: file
                         });
                     };
+                    reader.onerror = () => resolve(null);
                     reader.readAsDataURL(file);
-                }
+                });
+            });
+
+            // Wait for all previews to be created
+            Promise.all(filePromises).then(previews => {
+                this.galleryPreviews = previews.filter(p => p !== null);
             });
         },
         removeGalleryPreview(index) {
+            // Remove from previews
             this.galleryPreviews.splice(index, 1);
             // Also remove from galleryFiles array
-            if (Array.isArray(this.galleryFiles)) {
+            if (Array.isArray(this.galleryFiles) && this.galleryFiles.length > index) {
                 this.galleryFiles.splice(index, 1);
-            } else {
+            }
+            // If no previews left, clear files
+            if (this.galleryPreviews.length === 0) {
                 this.galleryFiles = [];
             }
         },
@@ -1447,7 +1511,8 @@ export default {
                 });
 
                 if (response.data.success) {
-                    return response.data.url;
+                    const uploadedPath = this.normalizeImageInput(response.data.path || response.data.url);
+                    return uploadedPath;
                 } else {
                     throw new Error(response.data.message || 'Failed to upload thumbnail');
                 }
@@ -1494,7 +1559,10 @@ export default {
                 });
 
                 if (response.data.success && response.data.images && response.data.images.length > 0) {
-                    uploadedUrls.push(...response.data.images.map(img => img.url));
+                    const normalizedPaths = response.data.images.map(img =>
+                        this.normalizeImageInput(img.path || img.url)
+                    );
+                    uploadedUrls.push(...normalizedPaths);
                 } else {
                     throw new Error(response.data.message || 'Failed to upload images');
                 }
@@ -1579,10 +1647,11 @@ export default {
                 });
 
                 if (response.data.success) {
-                    download.url = response.data.url;
+                    const uploadedPath = this.normalizeImageInput(response.data.path || response.data.url);
+                    download.url = uploadedPath;
                     download.size = this.formatFileSize(response.data.size);
                     download.uploaded = true;
-                    return response.data.url;
+                    return uploadedPath;
                 } else {
                     throw new Error(response.data.message || 'Failed to upload file');
                 }
@@ -1619,12 +1688,13 @@ export default {
                 this.saving = true;
 
                 // Upload thumbnail if a new file is selected
-                let thumbnailUrl = this.form.thumbnail;
+                let thumbnailPath = this.form.thumbnail;
                 if (this.thumbnailFile) {
                     try {
-                        thumbnailUrl = await this.uploadThumbnailFile();
-                        if (thumbnailUrl) {
-                            this.form.thumbnail = thumbnailUrl;
+                        const uploadedPath = await this.uploadThumbnailFile();
+                        if (uploadedPath) {
+                            thumbnailPath = uploadedPath;
+                            this.form.thumbnail = thumbnailPath;
                         }
                     } catch (error) {
                         this.showError(error.message || 'Failed to upload thumbnail');
@@ -1632,17 +1702,23 @@ export default {
                     }
                 }
 
-                // Upload gallery images if new files are selected
-                let galleryUrls = [...this.form.images.filter(img => img)];
+                // Collect existing images
+                let galleryPaths = [...this.form.images.filter(img => img).map(img => this.normalizeImageInput(img))];
+
+                // Upload new gallery images if files are selected
                 if (this.galleryPreviews && this.galleryPreviews.length > 0) {
                     try {
-                        const uploadedUrls = await this.uploadGalleryFiles();
-                        galleryUrls = [...galleryUrls, ...uploadedUrls];
+                        const uploadedPaths = await this.uploadGalleryFiles();
+                        galleryPaths = [...galleryPaths, ...uploadedPaths];
                     } catch (error) {
                         this.showError(error.message || 'Failed to upload gallery images');
                         return;
                     }
                 }
+
+                // Add image URLs from inputs
+                const imageUrls = this.imageUrlInputs.filter(url => url && url.trim()).map(url => this.normalizeImageInput(url.trim()));
+                galleryPaths = [...galleryPaths, ...imageUrls];
 
                 // Upload download files if new files are selected
                 for (let i = 0; i < this.downloadsList.length; i++) {
@@ -1658,10 +1734,16 @@ export default {
                 }
 
                 // Build specifications object
+                // Filter out numeric keys that look like array indices (likely corrupted data)
                 const specifications = {};
                 this.specificationsList.forEach(spec => {
                     if (spec.key && spec.value) {
-                        specifications[spec.key] = spec.value;
+                        // Skip pure numeric keys (likely from corrupted array data)
+                        // Allow keys that are numeric but have other characters (e.g., "0.5", "1a", etc.)
+                        const keyStr = String(spec.key);
+                        if (!/^\d+$/.test(keyStr)) {
+                            specifications[spec.key] = spec.value;
+                        }
                     }
                 });
 
@@ -1672,8 +1754,8 @@ export default {
                     sku: this.form.sku || null,
                     short_description: this.form.short_description || null,
                     description: this.form.description || null,
-                    thumbnail: thumbnailUrl || null,
-                    images: galleryUrls,
+                    thumbnail: this.normalizeImageInput(thumbnailPath) || null,
+                    images: galleryPaths.map(img => this.normalizeImageInput(img)),
                     price: this.form.price ? parseFloat(this.form.price) : null,
                     price_range: this.form.price_range || null,
                     show_price: this.form.show_price !== false,
@@ -1691,7 +1773,7 @@ export default {
                     meta_title: this.form.meta_title || null,
                     meta_description: this.form.meta_description || null,
                     meta_keywords: this.form.meta_keywords || null,
-                    og_image: this.form.og_image || null,
+                    og_image: this.normalizeImageInput(this.form.og_image) || null,
                     published: this.form.published || false,
                     featured: this.form.featured || false,
                     stock: this.form.stock ? parseInt(this.form.stock) : null,
@@ -1717,6 +1799,7 @@ export default {
                 this.thumbnailPreview = null;
                 this.galleryFiles = [];
                 this.galleryPreviews = [];
+                this.imageUrlInputs = [];
 
                 this.closeDialog();
                 await this.loadProducts();
@@ -1750,13 +1833,25 @@ export default {
                     throw new Error('No product data received');
                 }
 
+                // Resolve image URLs for display
+                if (data.thumbnail) {
+                    data.thumbnail = this.resolveImageUrl(data.thumbnail);
+                }
+                if (Array.isArray(data.images)) {
+                    data.images = data.images.map(img => this.resolveImageUrl(img));
+                }
+                if (data.og_image) {
+                    data.og_image = this.resolveImageUrl(data.og_image);
+                }
+
                 this.productDetails = data;
 
                 // Parse specifications
                 this.detailsSpecificationsList = [];
                 if (data.specifications && typeof data.specifications === 'object') {
                     Object.keys(data.specifications).forEach(key => {
-                        if (!key.startsWith('_')) {
+                        // Skip special fields and pure numeric keys (likely from corrupted array data)
+                        if (!key.startsWith('_') && !/^\d+$/.test(String(key))) {
                             this.detailsSpecificationsList.push({
                                 key: key,
                                 value: data.specifications[key]
@@ -1854,14 +1949,19 @@ export default {
                         await this.$nextTick(); // Ensure dialog is rendered
 
                         // Use the already loaded productDetails data
+                        const normalizedThumbnail = this.normalizeImageInput(productData.thumbnail || '');
+                        const normalizedImages = Array.isArray(productData.images)
+                            ? productData.images.map(img => this.normalizeImageInput(img))
+                            : [];
+
                         this.form = {
                             title: productData.title || '',
                             slug: productData.slug || '',
                             sku: productData.sku || '',
                             short_description: productData.short_description || '',
                             description: productData.description || '',
-                            thumbnail: productData.thumbnail || '',
-                            images: Array.isArray(productData.images) ? [...productData.images] : [],
+                            thumbnail: normalizedThumbnail,
+                            images: normalizedImages,
                             price: productData.price || null,
                             price_range: productData.price_range || '',
                             show_price: productData.show_price !== false,
@@ -1877,11 +1977,15 @@ export default {
                             og_image: productData.og_image || ''
                         };
 
+                        // Reset image URL inputs (existing images are in form.images)
+                        this.imageUrlInputs = [];
+
                         // Parse specifications
                         this.specificationsList = [];
                         if (productData.specifications && typeof productData.specifications === 'object') {
                             Object.keys(productData.specifications).forEach(key => {
-                                if (!key.startsWith('_')) {
+                                // Skip special fields and pure numeric keys (likely from corrupted array data)
+                                if (!key.startsWith('_') && !/^\d+$/.test(String(key))) {
                                     this.specificationsList.push({
                                         key: key,
                                         value: productData.specifications[key]
@@ -1976,6 +2080,12 @@ export default {
         onSort(field) {
             this.handleSort(field);
             this.loadProducts();
+        },
+        normalizeImageInput(imageValue) {
+            return normalizeUploadPath(imageValue);
+        },
+        resolveImageUrl(imageValue) {
+            return resolveUploadUrl(imageValue);
         }
     }
 };

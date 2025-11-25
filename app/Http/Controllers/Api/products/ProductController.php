@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use App\Support\MediaPath;
 
 class ProductController extends Controller
 {
@@ -56,6 +57,10 @@ class ProductController extends Controller
         // Paginate results
         $perPage = $request->get('per_page', 10);
         $products = $query->with(['categories', 'tags'])->paginate($perPage);
+
+        $products->getCollection()->transform(function ($product) {
+            return $this->transformProductWithImages($product);
+        });
         
         return response()->json($products);
     }
@@ -87,6 +92,19 @@ class ProductController extends Controller
 
         // Handle key_features, faqs, warranty_info - store in specifications or as separate data
         $productData = $validated;
+        
+        // Normalize image paths
+        if (!empty($productData['thumbnail'])) {
+            $productData['thumbnail'] = MediaPath::normalize($productData['thumbnail']);
+        }
+        if (!empty($productData['images']) && is_array($productData['images'])) {
+            $productData['images'] = array_map(function ($image) {
+                return MediaPath::normalize($image);
+            }, array_filter($productData['images']));
+        }
+        if (!empty($productData['og_image'])) {
+            $productData['og_image'] = MediaPath::normalize($productData['og_image']);
+        }
         
         // Store key_features, faqs, warranty_info in specifications JSON if provided
         if ($request->has('key_features') || $request->has('faqs') || $request->has('warranty_info')) {
@@ -127,7 +145,10 @@ class ProductController extends Controller
             $product->tags()->sync($tagIds);
         }
         
-        return response()->json($product->load(['categories', 'tags']), 201);
+        return response()->json(
+            $this->transformProductWithImages($product->load(['categories', 'tags'])),
+            201
+        );
     }
 
     public function show(Request $request, $id)
@@ -152,7 +173,7 @@ class ProductController extends Controller
         }
         $product->specifications = $specs;
         
-        return response()->json($product);
+        return response()->json($this->transformProductWithImages($product));
     }
 
     public function update(Request $request, $id)
@@ -192,31 +213,46 @@ class ProductController extends Controller
         // Handle key_features, faqs, warranty_info - merge with existing specifications
         $productData = $validated;
         
+        // Normalize image paths
+        if (array_key_exists('thumbnail', $productData) && !empty($productData['thumbnail'])) {
+            $productData['thumbnail'] = MediaPath::normalize($productData['thumbnail']);
+        }
+        if (array_key_exists('images', $productData) && is_array($productData['images'])) {
+            $productData['images'] = array_map(function ($image) {
+                return MediaPath::normalize($image);
+            }, array_filter($productData['images']));
+        }
+        if (array_key_exists('og_image', $productData) && !empty($productData['og_image'])) {
+            $productData['og_image'] = MediaPath::normalize($productData['og_image']);
+        }
+        
         // Get existing specifications
         $existingSpecs = $product->specifications ?? [];
         
-        // Merge new specifications with existing ones (preserve special fields)
+        // Start with empty merged specs
+        $mergedSpecs = [];
+        
+        // Handle regular specifications (non-special fields)
         if ($request->has('specifications') && is_array($request->specifications)) {
-            // Remove special fields from new specs before merging
-            $newSpecs = array_filter($request->specifications, function($key) {
-                return !str_starts_with($key, '_');
-            }, ARRAY_FILTER_USE_KEY);
-            
-            // Merge new specs with existing (excluding special fields)
-            $mergedSpecs = array_merge($existingSpecs, $newSpecs);
-            // Remove special fields from merged specs
-            $mergedSpecs = array_filter($mergedSpecs, function($key) {
-                return !str_starts_with($key, '_');
-            }, ARRAY_FILTER_USE_KEY);
-            // Add back the new specs
-            $mergedSpecs = array_merge($mergedSpecs, $newSpecs);
+            // Only include non-special fields (those that don't start with '_')
+            foreach ($request->specifications as $key => $value) {
+                if (!str_starts_with($key, '_')) {
+                    $mergedSpecs[$key] = $value;
+                }
+            }
         } else {
-            $mergedSpecs = array_filter($existingSpecs, function($key) {
-                return !str_starts_with($key, '_');
-            }, ARRAY_FILTER_USE_KEY);
+            // If no new specifications provided, preserve existing non-special fields
+            if (is_array($existingSpecs)) {
+                foreach ($existingSpecs as $key => $value) {
+                    if (!str_starts_with($key, '_')) {
+                        $mergedSpecs[$key] = $value;
+                    }
+                }
+            }
         }
         
-        // Add/update special fields
+        // Handle special fields (_key_features, _faqs, _warranty_info)
+        // These are stored in specifications but also can be sent separately
         if ($request->has('key_features')) {
             $mergedSpecs['_key_features'] = $request->key_features;
         } elseif (isset($existingSpecs['_key_features'])) {
@@ -235,6 +271,7 @@ class ProductController extends Controller
             $mergedSpecs['_warranty_info'] = $existingSpecs['_warranty_info'];
         }
         
+        // Only set specifications if there's actual data
         $productData['specifications'] = !empty($mergedSpecs) ? $mergedSpecs : null;
         
         // Update product
@@ -262,7 +299,24 @@ class ProductController extends Controller
             $product->tags()->sync($tagIds);
         }
         
-        return response()->json($product->load(['categories', 'tags']));
+        return response()->json($this->transformProductWithImages($product->load(['categories', 'tags'])));
+    }
+
+    private function transformProductWithImages(Product $product): Product
+    {
+        $product->thumbnail = MediaPath::url($product->thumbnail);
+
+        if (is_array($product->images)) {
+            $product->images = array_map(function ($image) {
+                return MediaPath::url($image);
+            }, array_filter($product->images));
+        }
+
+        if (!empty($product->og_image)) {
+            $product->og_image = MediaPath::url($product->og_image);
+        }
+
+        return $product;
     }
 
     public function destroy($id)
