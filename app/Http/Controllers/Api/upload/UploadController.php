@@ -40,10 +40,15 @@ class UploadController extends Controller
             $publicPath = public_path('uploads/' . $folder);
             if (!file_exists($publicPath)) {
                 File::makeDirectory($publicPath, 0755, true);
+                // Ensure .htaccess exists in uploads folder
+                $this->ensureUploadsHtaccess();
             }
             
             // Move file to public/uploads/{folder}/
             $file->move($publicPath, $filename);
+            
+            // Set proper file permissions (644 = readable by web server)
+            chmod($publicPath . '/' . $filename, 0644);
             
             // Get relative path and full URL
             $relativePath = 'uploads/' . $folder . '/' . $filename;
@@ -83,6 +88,8 @@ class UploadController extends Controller
             $publicPath = public_path('uploads/' . $folder);
             if (!file_exists($publicPath)) {
                 File::makeDirectory($publicPath, 0755, true);
+                // Ensure .htaccess exists in uploads folder
+                $this->ensureUploadsHtaccess();
             }
 
             // Generate filename base with prefix if provided
@@ -104,6 +111,9 @@ class UploadController extends Controller
                 
                 // Move file to public/uploads/{folder}/
                 $file->move($publicPath, $filename);
+                
+                // Set proper file permissions (644 = readable by web server)
+                chmod($publicPath . '/' . $filename, 0644);
                 
                 // Get relative path and full URL
                 $relativePath = 'uploads/' . $folder . '/' . $filename;
@@ -164,10 +174,15 @@ class UploadController extends Controller
             $publicPath = public_path('uploads/' . $folder);
             if (!file_exists($publicPath)) {
                 File::makeDirectory($publicPath, 0755, true);
+                // Ensure .htaccess exists in uploads folder
+                $this->ensureUploadsHtaccess();
             }
             
             // Move file to public/uploads/{folder}/
             $file->move($publicPath, $filename);
+            
+            // Set proper file permissions (644 = readable by web server)
+            chmod($publicPath . '/' . $filename, 0644);
             
             // Get relative path and full URL
             $relativePath = 'uploads/' . $folder . '/' . $filename;
@@ -218,6 +233,70 @@ class UploadController extends Controller
                 'success' => false,
                 'message' => 'Failed to delete image: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+    /**
+     * Ensure .htaccess file exists in uploads folder for proper file access
+     */
+    private function ensureUploadsHtaccess()
+    {
+        $htaccessPath = public_path('uploads/.htaccess');
+        
+        // Only create if it doesn't exist
+        if (!file_exists($htaccessPath)) {
+            $htaccessContent = <<<'HTACCESS'
+# Allow direct access to uploaded files
+<IfModule mod_rewrite.c>
+    RewriteEngine Off
+</IfModule>
+
+# Allow access to image and file types
+<FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico|pdf|doc|docx|xls|xlsx|zip|rar|txt|mp4|mp3|avi|mov|wmv|flv|swf)$">
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Allow from all
+    </IfModule>
+</FilesMatch>
+
+# Set proper MIME types for images
+<IfModule mod_mime.c>
+    AddType image/jpeg .jpg .jpeg
+    AddType image/png .png
+    AddType image/gif .gif
+    AddType image/webp .webp
+    AddType image/svg+xml .svg
+    AddType image/x-icon .ico
+</IfModule>
+
+# Enable CORS for images (if needed)
+<IfModule mod_headers.c>
+    <FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico)$">
+        Header set Access-Control-Allow-Origin "*"
+        Header set Access-Control-Allow-Methods "GET, OPTIONS"
+    </FilesMatch>
+</IfModule>
+
+# Disable directory browsing
+Options -Indexes
+
+# Prevent execution of PHP files in uploads folder (security)
+<FilesMatch "\.php$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+HTACCESS;
+            
+            file_put_contents($htaccessPath, $htaccessContent);
+            chmod($htaccessPath, 0644);
         }
     }
 }
