@@ -2,7 +2,8 @@
     <div>
         <div class="page-header">
             <h1 class="text-h4 page-title">Product Categories Management</h1>
-            <v-btn color="primary" prepend-icon="mdi-plus" @click="openDialog()" class="add-button">Create Category</v-btn>
+            <v-btn color="primary" prepend-icon="mdi-plus" @click="openDialog()" class="add-button">Create
+                Category</v-btn>
         </div>
 
         <!-- Search and Filter -->
@@ -40,7 +41,8 @@
                 <span class="text-caption text-grey">
                     Total Records: <strong>{{ pagination.total || 0 }}</strong>
                     <span v-if="categories.length > 0">
-                        | Showing {{ ((currentPage - 1) * perPage) + 1 }} to {{ Math.min(currentPage * perPage, pagination.total) }} of {{ pagination.total }}
+                        | Showing {{ ((currentPage - 1) * perPage) + 1 }} to {{ Math.min(currentPage * perPage,
+                            pagination.total) }} of {{ pagination.total }}
                     </span>
                 </span>
             </v-card-title>
@@ -90,7 +92,8 @@
                             </td>
                             <td>
                                 <div class="font-weight-medium">{{ category.name }}</div>
-                                <div v-if="category.children && category.children.length > 0" class="text-caption text-grey">
+                                <div v-if="category.children && category.children.length > 0"
+                                    class="text-caption text-grey">
                                     {{ category.children.length }} sub-category(ies)
                                 </div>
                             </td>
@@ -111,9 +114,9 @@
                                 </v-chip>
                             </td>
                             <td>
-                                <v-btn size="small" icon="mdi-pencil" @click="editCategory(category)"
-                                    variant="text" color="primary"></v-btn>
-                                <v-btn size="small" icon="mdi-delete" @click="deleteCategory(category.id)" variant="text"
+                                <v-btn size="small" icon="mdi-pencil" @click="editCategory(category)" variant="text"
+                                    color="primary"></v-btn>
+                                <v-btn size="small" icon="mdi-delete" @click="deleteCategory(category)" variant="text"
                                     color="error"></v-btn>
                             </td>
                         </tr>
@@ -127,7 +130,8 @@
                 <div class="d-flex justify-space-between align-center mt-4">
                     <div class="text-caption text-grey">
                         <span v-if="categories.length > 0">
-                            Showing {{ ((currentPage - 1) * perPage) + 1 }} to {{ Math.min(currentPage * perPage, pagination.total) }} of {{ pagination.total }} records
+                            Showing {{ ((currentPage - 1) * perPage) + 1 }} to {{ Math.min(currentPage * perPage,
+                                pagination.total) }} of {{ pagination.total }} records
                         </span>
                         <span v-else>No records found</span>
                     </div>
@@ -156,8 +160,7 @@
                             </v-col>
                             <v-col cols="12" md="6">
                                 <v-text-field v-model="form.slug" label="Slug *" variant="outlined"
-                                    hint="URL-friendly version of name"
-                                    :rules="[v => !!v || 'Slug is required']">
+                                    hint="URL-friendly version of name" :rules="[v => !!v || 'Slug is required']">
                                     <template v-slot:append>
                                         <v-btn icon="mdi-refresh" size="small" variant="text"
                                             @click="generateSlug"></v-btn>
@@ -173,11 +176,55 @@
                                     hint="Brief description of the category"></v-textarea>
                             </v-col>
                             <v-col cols="12">
-                                <v-text-field v-model="form.image" label="Image URL" variant="outlined"
-                                    prepend-inner-icon="mdi-image" hint="Category image URL"></v-text-field>
-                                <div v-if="form.image" class="mt-2">
-                                    <v-img :src="form.image" max-height="150" contain class="rounded"></v-img>
-                                </div>
+                                <v-label class="mb-2">Category Image</v-label>
+                                <v-card variant="outlined" class="pa-4">
+                                    <div class="d-flex flex-column flex-md-row gap-4">
+                                        <!-- Preview Section -->
+                                        <div v-if="imagePreview || form.image" class="flex-shrink-0">
+                                            <v-img :src="imagePreview || form.image" max-width="200" max-height="200"
+                                                contain class="rounded border"
+                                                style="min-width: 150px; min-height: 150px;">
+                                            </v-img>
+                                            <div class="mt-2">
+                                                <v-btn color="error" size="small" variant="text" @click="removeImage"
+                                                    prepend-icon="mdi-delete">
+                                                    Remove Image
+                                                </v-btn>
+                                            </div>
+                                        </div>
+
+                                        <!-- Upload Section -->
+                                        <div class="flex-grow-1">
+                                            <v-file-input v-model="imageFile" accept="image/*"
+                                                label="Select Category Image" variant="outlined" prepend-icon=""
+                                                prepend-inner-icon="mdi-image" show-size clearable
+                                                hint="Recommended size: 400x400px or larger. Max file size: 5MB"
+                                                persistent-hint @update:model-value="handleImageSelect">
+                                                <template v-slot:append>
+                                                    <v-progress-circular v-if="uploadingImage" indeterminate
+                                                        color="primary" size="24">
+                                                    </v-progress-circular>
+                                                </template>
+                                            </v-file-input>
+
+                                            <v-alert v-if="imageFile && imageFile.size > 5242880" type="warning"
+                                                variant="tonal" density="compact" class="mt-2">
+                                                File size is larger than 5MB. Please choose a smaller image.
+                                            </v-alert>
+
+                                            <div v-if="!imagePreview && !form.image && !imageFile"
+                                                class="text-caption text-medium-emphasis mt-2">
+                                                No image selected. Upload an image to display with this category.
+                                            </div>
+
+                                            <!-- Alternative: Direct URL input -->
+                                            <v-text-field v-model="form.image" label="Or enter image URL directly"
+                                                variant="outlined" density="compact" prepend-inner-icon="mdi-link"
+                                                hint="Enter a direct image URL" class="mt-2" clearable>
+                                            </v-text-field>
+                                        </div>
+                                    </div>
+                                </v-card>
                             </v-col>
                             <v-col cols="12" md="6">
                                 <v-select v-model="form.parent_id" :items="parentCategoryOptions" item-title="name"
@@ -249,7 +296,11 @@ export default {
                 order: 0,
                 published: true
             },
-            allCategories: []
+            allCategories: [],
+            originalSlug: null,
+            imageFile: null,
+            imagePreview: null,
+            uploadingImage: false
         };
     },
     computed: {
@@ -266,6 +317,16 @@ export default {
                     name: cat.name,
                     type: cat.type
                 }));
+        }
+    },
+    watch: {
+        'form.image'(newVal) {
+            // Update preview when image URL is directly entered (if no file is selected)
+            if (newVal && !this.imageFile) {
+                this.imagePreview = newVal;
+            } else if (!newVal && !this.imageFile) {
+                this.imagePreview = null;
+            }
         }
     },
     async mounted() {
@@ -327,7 +388,9 @@ export default {
         },
         async loadCategoryForEdit(category) {
             try {
-                const response = await axios.get(`/api/v1/categories/${category.id}`, {
+                // Use slug for route model binding (Category model uses slug as route key)
+                const identifier = category.slug || category.id;
+                const response = await axios.get(`/api/v1/categories/${identifier}`, {
                     headers: this.getAuthHeaders()
                 });
                 const data = response.data;
@@ -342,6 +405,11 @@ export default {
                     order: data.order || 0,
                     published: data.published !== false
                 };
+                // Store original slug for update request
+                this.originalSlug = data.slug;
+                // Reset image file and preview when loading existing category
+                this.imageFile = null;
+                this.imagePreview = data.image || null;
             } catch (error) {
                 this.handleApiError(error, 'Failed to load category');
             }
@@ -357,6 +425,8 @@ export default {
                 order: 0,
                 published: true
             };
+            this.imageFile = null;
+            this.imagePreview = null;
         },
         generateSlug() {
             if (this.form.name) {
@@ -364,6 +434,88 @@ export default {
                     .toLowerCase()
                     .replace(/[^a-z0-9]+/g, '-')
                     .replace(/(^-|-$)/g, '');
+            }
+        },
+        handleImageSelect(file) {
+            if (file) {
+                const selectedFile = Array.isArray(file) ? file[0] : file;
+
+                if (selectedFile && selectedFile.size > 5242880) {
+                    this.showError('Image file size must be less than 5MB');
+                    this.imageFile = null;
+                    return;
+                }
+
+                if (selectedFile && !selectedFile.type.startsWith('image/')) {
+                    this.showError('Please select a valid image file');
+                    this.imageFile = null;
+                    return;
+                }
+
+                this.imageFile = selectedFile;
+
+                if (selectedFile) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        this.imagePreview = e.target.result;
+                    };
+                    reader.onerror = () => {
+                        this.showError('Failed to read image file');
+                        this.imageFile = null;
+                        this.imagePreview = null;
+                    };
+                    reader.readAsDataURL(selectedFile);
+                } else {
+                    this.imagePreview = null;
+                }
+            } else {
+                this.imageFile = null;
+                if (!this.form.image) {
+                    this.imagePreview = null;
+                }
+            }
+        },
+        removeImage() {
+            if (confirm('Are you sure you want to remove this image?')) {
+                this.imagePreview = null;
+                this.imageFile = null;
+                this.form.image = '';
+            }
+        },
+        async uploadImage() {
+            if (!this.imageFile) return null;
+
+            const fileToUpload = Array.isArray(this.imageFile) ? this.imageFile[0] : this.imageFile;
+            if (!fileToUpload) return null;
+
+            this.uploadingImage = true;
+            try {
+                const formData = new FormData();
+                formData.append('image', fileToUpload);
+                formData.append('folder', 'categories');
+                if (this.form.name) {
+                    formData.append('prefix', this.form.name);
+                }
+
+                const response = await axios.post('/api/v1/upload/image', formData, {
+                    headers: {
+                        ...this.getAuthHeaders(),
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+
+                if (response.data.success) {
+                    return response.data.url;
+                } else {
+                    throw new Error(response.data.message || 'Failed to upload image');
+                }
+            } catch (error) {
+                const errorMessage = error.response?.data?.message ||
+                    error.response?.data?.error ||
+                    'Failed to upload image';
+                throw new Error(errorMessage);
+            } finally {
+                this.uploadingImage = false;
             }
         },
         async saveCategory() {
@@ -377,8 +529,23 @@ export default {
             try {
                 this.saving = true;
 
+                // Upload image if new file is selected
+                if (this.imageFile) {
+                    try {
+                        const imageUrl = await this.uploadImage();
+                        if (imageUrl) {
+                            this.form.image = imageUrl;
+                        }
+                    } catch (error) {
+                        this.showError(error.message || 'Failed to upload image');
+                        return;
+                    }
+                }
+
                 if (this.editingCategory) {
-                    await axios.put(`/api/v1/categories/${this.editingCategory.id}`, this.form, {
+                    // Use original slug for route model binding (Category model uses slug as route key)
+                    const identifier = this.originalSlug || this.editingCategory.slug || this.editingCategory.id;
+                    await axios.put(`/api/v1/categories/${identifier}`, this.form, {
                         headers: this.getAuthHeaders()
                     });
                     this.showSuccess('Category updated successfully');
@@ -403,10 +570,12 @@ export default {
         editCategory(category) {
             this.openDialog(category);
         },
-        async deleteCategory(id) {
+        async deleteCategory(category) {
             if (confirm('Are you sure you want to delete this category? This action cannot be undone.')) {
                 try {
-                    await axios.delete(`/api/v1/categories/${id}`, {
+                    // Use slug for route model binding (Category model uses slug as route key)
+                    const identifier = category.slug || category.id;
+                    await axios.delete(`/api/v1/categories/${identifier}`, {
                         headers: this.getAuthHeaders()
                     });
                     this.showSuccess('Category deleted successfully');
@@ -423,6 +592,9 @@ export default {
         closeDialog() {
             this.showDialog = false;
             this.editingCategory = null;
+            this.originalSlug = null;
+            this.imageFile = null;
+            this.imagePreview = null;
             this.resetForm();
             if (this.$refs.formRef) {
                 this.$refs.formRef.resetValidation();
