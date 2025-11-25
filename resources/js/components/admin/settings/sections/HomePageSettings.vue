@@ -6,17 +6,47 @@
         </div>
 
         <!-- Home Page Tabs -->
-        <v-tabs v-model="homePageTab" color="primary" class="mb-6">
-            <v-tab value="hero">Hero Section</v-tab>
-            <v-tab value="stats">Statistics</v-tab>
-            <v-tab value="visibility">Section Visibility</v-tab>
-            <v-tab value="trusted_by">Trusted By</v-tab>
-            <v-tab value="services">Services</v-tab>
-            <v-tab value="why_choose_us">Why Choose Us</v-tab>
-            <v-tab value="testimonials">Testimonials</v-tab>
-            <v-tab value="products">Products</v-tab>
-            <v-tab value="cta">CTA Section</v-tab>
-        </v-tabs>
+        <v-card elevation="2" rounded="lg" class="mb-6">
+            <v-tabs v-model="homePageTab" color="primary" bg-color="grey-lighten-4" slider-color="primary"
+                class="home-page-tabs">
+                <v-tab value="hero" class="tab-item">
+                    <v-icon icon="mdi-view-dashboard" class="mr-2"></v-icon>
+                    <span class="tab-label">Hero Section</span>
+                </v-tab>
+                <v-tab value="stats" class="tab-item">
+                    <v-icon icon="mdi-chart-line" class="mr-2"></v-icon>
+                    <span class="tab-label">Statistics</span>
+                </v-tab>
+                <v-tab value="trusted_by" class="tab-item">
+                    <v-icon icon="mdi-account-group" class="mr-2"></v-icon>
+                    <span class="tab-label">Trusted By</span>
+                </v-tab>
+                <v-tab value="services" class="tab-item">
+                    <v-icon icon="mdi-cog" class="mr-2"></v-icon>
+                    <span class="tab-label">Services</span>
+                </v-tab>
+                <v-tab value="why_choose_us" class="tab-item">
+                    <v-icon icon="mdi-star-circle" class="mr-2"></v-icon>
+                    <span class="tab-label">Why Choose Us</span>
+                </v-tab>
+                <v-tab value="testimonials" class="tab-item">
+                    <v-icon icon="mdi-format-quote-close" class="mr-2"></v-icon>
+                    <span class="tab-label">Testimonials</span>
+                </v-tab>
+                <v-tab value="products" class="tab-item">
+                    <v-icon icon="mdi-package-variant" class="mr-2"></v-icon>
+                    <span class="tab-label">Products</span>
+                </v-tab>
+                <v-tab value="cta" class="tab-item">
+                    <v-icon icon="mdi-bullhorn" class="mr-2"></v-icon>
+                    <span class="tab-label">CTA Section</span>
+                </v-tab>
+                <v-tab value="visibility" class="tab-item">
+                    <v-icon icon="mdi-eye-settings" class="mr-2"></v-icon>
+                    <span class="tab-label">Visibility</span>
+                </v-tab>
+            </v-tabs>
+        </v-card>
 
         <v-window v-model="homePageTab">
             <!-- Hero Section Tab -->
@@ -76,81 +106,6 @@
                         <v-text-field v-model="settings.stat_4_label.value" label="Stat 4 - Label" variant="outlined"
                             density="comfortable" color="primary" hint="e.g., Years Experience"
                             persistent-hint></v-text-field>
-                    </v-col>
-                </v-row>
-            </v-window-item>
-
-            <!-- Section Visibility Tab -->
-            <v-window-item value="visibility">
-                <v-row>
-                    <v-col cols="12">
-                        <div class="text-subtitle-1 font-weight-bold mb-4">Section Visibility</div>
-                        <p class="text-body-2 text-medium-emphasis mb-4">Enable or disable sections on the home page</p>
-                    </v-col>
-                    <v-col cols="12" md="6">
-                        <v-switch v-model="settings.hero_section_enabled.value" label="Hero Section" color="primary"
-                            hide-details :true-value="'1'" :false-value="'0'">
-                            <template v-slot:label>
-                                <span class="text-body-1">Hero Section</span>
-                            </template>
-                        </v-switch>
-                    </v-col>
-                    <v-col cols="12" md="6">
-                        <v-switch v-model="settings.stats_section_enabled.value" label="Stats Section" color="primary"
-                            hide-details :true-value="'1'" :false-value="'0'">
-                            <template v-slot:label>
-                                <span class="text-body-1">Stats Section</span>
-                            </template>
-                        </v-switch>
-                    </v-col>
-                    <v-col cols="12" md="6">
-                        <v-switch v-model="settings.trusted_by_section_enabled.value" label="Trusted By Section"
-                            color="primary" hide-details :true-value="'1'" :false-value="'0'">
-                            <template v-slot:label>
-                                <span class="text-body-1">Trusted By Section</span>
-                            </template>
-                        </v-switch>
-                    </v-col>
-                    <v-col cols="12" md="6">
-                        <v-switch v-model="settings.services_section_enabled.value" label="Services Section"
-                            color="primary" hide-details :true-value="'1'" :false-value="'0'">
-                            <template v-slot:label>
-                                <span class="text-body-1">Services Section</span>
-                            </template>
-                        </v-switch>
-                    </v-col>
-                    <v-col cols="12" md="6">
-                        <v-switch v-model="settings.why_choose_us_section_enabled.value" label="Why Choose Us Section"
-                            color="primary" hide-details :true-value="'1'" :false-value="'0'">
-                            <template v-slot:label>
-                                <span class="text-body-1">Why Choose Us Section</span>
-                            </template>
-                        </v-switch>
-                    </v-col>
-                    <v-col cols="12" md="6">
-                        <v-switch v-model="settings.testimonials_section_enabled.value" label="Testimonials Section"
-                            color="primary" hide-details :true-value="'1'" :false-value="'0'">
-                            <template v-slot:label>
-                                <span class="text-body-1">Testimonials Section</span>
-                            </template>
-                        </v-switch>
-                    </v-col>
-                    <v-col cols="12" md="6">
-                        <v-switch v-model="settings.featured_products_section_enabled.value"
-                            label="Featured Products Section" color="primary" hide-details :true-value="'1'"
-                            :false-value="'0'">
-                            <template v-slot:label>
-                                <span class="text-body-1">Featured Products Section</span>
-                            </template>
-                        </v-switch>
-                    </v-col>
-                    <v-col cols="12" md="6">
-                        <v-switch v-model="settings.cta_section_enabled.value" label="CTA Section" color="primary"
-                            hide-details :true-value="'1'" :false-value="'0'">
-                            <template v-slot:label>
-                                <span class="text-body-1">CTA Section</span>
-                            </template>
-                        </v-switch>
                     </v-col>
                 </v-row>
             </v-window-item>
@@ -474,6 +429,81 @@
                     </v-col>
                 </v-row>
             </v-window-item>
+
+            <!-- Section Visibility Tab -->
+            <v-window-item value="visibility">
+                <v-row>
+                    <v-col cols="12">
+                        <div class="text-subtitle-1 font-weight-bold mb-4">Section Visibility</div>
+                        <p class="text-body-2 text-medium-emphasis mb-4">Enable or disable sections on the home page</p>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-switch v-model="settings.hero_section_enabled.value" label="Hero Section" color="primary"
+                            hide-details :true-value="'1'" :false-value="'0'">
+                            <template v-slot:label>
+                                <span class="text-body-1">Hero Section</span>
+                            </template>
+                        </v-switch>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-switch v-model="settings.stats_section_enabled.value" label="Stats Section" color="primary"
+                            hide-details :true-value="'1'" :false-value="'0'">
+                            <template v-slot:label>
+                                <span class="text-body-1">Stats Section</span>
+                            </template>
+                        </v-switch>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-switch v-model="settings.trusted_by_section_enabled.value" label="Trusted By Section"
+                            color="primary" hide-details :true-value="'1'" :false-value="'0'">
+                            <template v-slot:label>
+                                <span class="text-body-1">Trusted By Section</span>
+                            </template>
+                        </v-switch>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-switch v-model="settings.services_section_enabled.value" label="Services Section"
+                            color="primary" hide-details :true-value="'1'" :false-value="'0'">
+                            <template v-slot:label>
+                                <span class="text-body-1">Services Section</span>
+                            </template>
+                        </v-switch>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-switch v-model="settings.why_choose_us_section_enabled.value" label="Why Choose Us Section"
+                            color="primary" hide-details :true-value="'1'" :false-value="'0'">
+                            <template v-slot:label>
+                                <span class="text-body-1">Why Choose Us Section</span>
+                            </template>
+                        </v-switch>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-switch v-model="settings.testimonials_section_enabled.value" label="Testimonials Section"
+                            color="primary" hide-details :true-value="'1'" :false-value="'0'">
+                            <template v-slot:label>
+                                <span class="text-body-1">Testimonials Section</span>
+                            </template>
+                        </v-switch>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-switch v-model="settings.featured_products_section_enabled.value"
+                            label="Featured Products Section" color="primary" hide-details :true-value="'1'"
+                            :false-value="'0'">
+                            <template v-slot:label>
+                                <span class="text-body-1">Featured Products Section</span>
+                            </template>
+                        </v-switch>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-switch v-model="settings.cta_section_enabled.value" label="CTA Section" color="primary"
+                            hide-details :true-value="'1'" :false-value="'0'">
+                            <template v-slot:label>
+                                <span class="text-body-1">CTA Section</span>
+                            </template>
+                        </v-switch>
+                    </v-col>
+                </v-row>
+            </v-window-item>
         </v-window>
     </div>
 </template>
@@ -752,3 +782,66 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.home-page-tabs {
+    border-radius: 8px;
+}
+
+.home-page-tabs :deep(.v-tab) {
+    min-width: 140px;
+    text-transform: none;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    padding: 12px 20px;
+    transition: all 0.3s ease;
+}
+
+.home-page-tabs :deep(.v-tab:hover) {
+    background-color: rgba(var(--v-theme-primary), 0.08);
+}
+
+.home-page-tabs :deep(.v-tab--selected) {
+    color: rgb(var(--v-theme-primary));
+    font-weight: 600;
+}
+
+.home-page-tabs :deep(.v-tab .v-icon) {
+    margin-right: 8px;
+    font-size: 20px;
+}
+
+.tab-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tab-label {
+    white-space: nowrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 960px) {
+    .home-page-tabs :deep(.v-tab) {
+        min-width: auto;
+        padding: 10px 12px;
+        font-size: 0.875rem;
+    }
+
+    .home-page-tabs :deep(.v-tab .v-icon) {
+        font-size: 18px;
+        margin-right: 4px;
+    }
+
+    .tab-label {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .home-page-tabs :deep(.v-tab) {
+        padding: 8px 10px;
+    }
+}
+</style>
