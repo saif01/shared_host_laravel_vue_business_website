@@ -213,6 +213,7 @@ export default {
                 contact_page: {
                     contact_email: { value: '', type: 'email', group: 'contact_page' },
                     contact_phone: { value: '', type: 'text', group: 'contact_page' },
+                    contact_phone_secondary: { value: '', type: 'text', group: 'contact_page' },
                     contact_address: { value: '', type: 'textarea', group: 'contact_page' },
                     contact_hero_title: { value: 'Contact Us', type: 'text', group: 'contact_page' },
                     contact_hero_subtitle: { value: 'We are here to help.', type: 'textarea', group: 'contact_page' },
