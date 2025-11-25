@@ -1,6 +1,6 @@
 <template>
-    <v-app-bar app class="main-app-bar px-md-12 transition-all" :class="{ 'scrolled-app-bar': isScrolled }"
-        height="80" elevation="0">
+    <v-app-bar app class="main-app-bar px-md-12 transition-all" :class="{ 'scrolled-app-bar': isScrolled }" height="80"
+        elevation="0">
         <div class="d-flex align-center w-100 position-relative z-index-2">
             <!-- Logo Area -->
             <router-link to="/" class="text-decoration-none d-flex align-center mr-8 logo-group">
@@ -14,7 +14,7 @@
                     <span class="text-h6 font-weight-black text-grey-darken-4 lh-1 tracking-tight logo-text">{{
                         siteName.toUpperCase() }}</span>
                     <span class="text-caption font-weight-bold text-primary tracking-widest">{{ siteTagline
-                        }}</span>
+                    }}</span>
                 </div>
             </router-link>
 
@@ -23,7 +23,7 @@
             <!-- Desktop Navigation -->
             <div class="d-none d-md-flex align-center gap-8">
                 <router-link v-for="item in menuItems" :key="item.id" :to="item.url"
-                    class="nav-link text-body-2 font-weight-bold text-grey-darken-3" active-class="active-nav-link">
+                    :class="['nav-link', 'text-body-2', 'font-weight-bold', 'text-grey-darken-3', { 'active-nav-link': isActiveRoute(item.url) }]">
                     {{ item.label }}
                 </router-link>
             </div>
@@ -72,7 +72,18 @@ export default {
             default: null
         }
     },
-    emits: ['toggle-drawer']
+    emits: ['toggle-drawer'],
+    methods: {
+        isActiveRoute(url) {
+            const currentPath = this.$route.path;
+            // For home route, only match exactly "/"
+            if (url === '/') {
+                return currentPath === '/';
+            }
+            // For other routes, match if current path starts with the route
+            return currentPath.startsWith(url);
+        }
+    }
 };
 </script>
 
@@ -225,4 +236,3 @@ export default {
     }
 }
 </style>
-

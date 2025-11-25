@@ -15,7 +15,7 @@
 
             <v-list nav class="bg-transparent">
                 <v-list-item v-for="item in menuItems" :key="item.id" :to="item.url" class="mb-2 rounded-lg"
-                    active-class="bg-primary-lighten-5 text-primary">
+                    :class="{ 'bg-primary-lighten-5 text-primary': isActiveRoute(item.url) }">
                     <v-list-item-title class="font-weight-bold">{{ item.label }}</v-list-item-title>
                 </v-list-item>
             </v-list>
@@ -65,6 +65,15 @@ export default {
     methods: {
         closeDrawer() {
             this.$emit('update:modelValue', false);
+        },
+        isActiveRoute(url) {
+            const currentPath = this.$route.path;
+            // For home route, only match exactly "/"
+            if (url === '/') {
+                return currentPath === '/';
+            }
+            // For other routes, match if current path starts with the route
+            return currentPath.startsWith(url);
         }
     }
 };
