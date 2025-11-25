@@ -35,7 +35,8 @@
                 <span class="text-caption text-grey">
                     Total Records: <strong>{{ pagination.total || 0 }}</strong>
                     <span v-if="users.length > 0">
-                        | Showing {{ ((currentPage - 1) * perPage) + 1 }} to {{ Math.min(currentPage * perPage, pagination.total) }} of {{ pagination.total }}
+                        | Showing {{ ((currentPage - 1) * perPage) + 1 }} to {{ Math.min(currentPage * perPage,
+                            pagination.total) }} of {{ pagination.total }}
                     </span>
                 </span>
             </v-card-title>
@@ -70,7 +71,8 @@
                             <td>
                                 <div class="d-flex align-center gap-2">
                                     <v-avatar size="32" color="primary">
-                                        <span class="text-white">{{ user.name.charAt(0).toUpperCase() }}</span>
+                                        <v-img v-if="user.avatar" :src="user.avatar" :alt="user.name"></v-img>
+                                        <span v-else class="text-white">{{ user.name.charAt(0).toUpperCase() }}</span>
                                     </v-avatar>
                                     {{ user.name }}
                                 </div>
@@ -102,7 +104,8 @@
                 <div class="d-flex justify-space-between align-center mt-4">
                     <div class="text-caption text-grey">
                         <span v-if="users.length > 0">
-                            Showing {{ ((currentPage - 1) * perPage) + 1 }} to {{ Math.min(currentPage * perPage, pagination.total) }} of {{ pagination.total }} records
+                            Showing {{ ((currentPage - 1) * perPage) + 1 }} to {{ Math.min(currentPage * perPage,
+                                pagination.total) }} of {{ pagination.total }} records
                         </span>
                         <span v-else>
                             No records found
@@ -177,8 +180,42 @@
                             </template>
                         </v-text-field>
 
-                        <v-text-field v-model="form.avatar" label="Avatar URL" hint="URL to user's avatar image"
-                            persistent-hint class="mb-4"></v-text-field>
+                        <!-- Avatar Upload Section -->
+                        <div class="mb-4">
+                            <div class="text-subtitle-2 font-weight-medium mb-2">Avatar</div>
+
+                            <!-- Avatar Preview -->
+                            <div v-if="form.avatar" class="mb-3 text-center">
+                                <v-avatar size="80" class="mb-2">
+                                    <v-img :src="form.avatar" alt="Avatar Preview"></v-img>
+                                </v-avatar>
+                                <div>
+                                    <v-btn size="small" variant="text" color="error" prepend-icon="mdi-delete"
+                                        @click="clearAvatar">Remove
+                                        Avatar</v-btn>
+                                </div>
+                            </div>
+
+                            <!-- File Upload -->
+                            <v-file-input v-model="avatarFile" label="Upload Avatar" variant="outlined"
+                                density="comfortable" color="primary" accept="image/*" prepend-icon="mdi-image"
+                                hint="Upload an avatar image (JPG, PNG, GIF, WebP - Max 5MB). Recommended size: 200x200px"
+                                persistent-hint show-size @update:model-value="handleAvatarUpload" class="mb-3">
+                                <template v-slot:append-inner v-if="uploadingAvatar">
+                                    <v-progress-circular indeterminate size="20" color="primary"></v-progress-circular>
+                                </template>
+                            </v-file-input>
+
+                            <!-- Or Enter URL -->
+                            <v-text-field v-model="form.avatar" label="Or Enter Avatar URL" variant="outlined"
+                                density="comfortable" color="primary" hint="Enter a direct URL to the avatar image"
+                                persistent-hint prepend-inner-icon="mdi-link">
+                                <template v-slot:append-inner v-if="form.avatar && !avatarFile">
+                                    <v-btn icon="mdi-open-in-new" variant="text" size="small"
+                                        @click="window.open(form.avatar, '_blank')"></v-btn>
+                                </template>
+                            </v-text-field>
+                        </div>
                     </v-form>
                 </v-card-text>
                 <v-card-actions>
@@ -234,7 +271,9 @@ export default {
             },
             currentUserId: null,
             showPassword: false,
-            showPasswordConfirmation: false
+            showPasswordConfirmation: false,
+            avatarFile: null,
+            uploadingAvatar: false
         };
     },
     async mounted() {
@@ -297,6 +336,7 @@ export default {
             });
         },
         openDialog(user) {
+            this.avatarFile = null; // Reset avatar file when opening dialog
             if (user) {
                 this.editingUser = user;
                 // Extract role IDs from user.roles array
@@ -338,9 +378,78 @@ export default {
             };
             this.showPassword = false;
             this.showPasswordConfirmation = false;
+            this.avatarFile = null;
             if (this.$refs.form) {
                 this.$refs.form.resetValidation();
             }
+        },
+        async handleAvatarUpload() {
+            if (!this.avatarFile) {
+                return;
+            }
+
+            const fileToUpload = Array.isArray(this.avatarFile) ? this.avatarFile[0] : this.avatarFile;
+            if (!fileToUpload) {
+                return;
+            }
+
+            // Validate file type
+            if (!fileToUpload.type.startsWith('image/')) {
+                this.showError('Please select a valid image file');
+                this.avatarFile = null;
+                return;
+            }
+
+            // Validate file size (5MB max)
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            if (fileToUpload.size > maxSize) {
+                this.showError('File size must be less than 5MB');
+                this.avatarFile = null;
+                return;
+            }
+
+            this.uploadingAvatar = true;
+            try {
+                const formData = new FormData();
+                formData.append('image', fileToUpload);
+                formData.append('folder', 'users');
+                // Add user name as prefix if available
+                if (this.form.name) {
+                    formData.append('prefix', this.form.name);
+                }
+
+                const token = localStorage.getItem('admin_token');
+                const response = await axios.post('/api/v1/upload/image', formData, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+
+                if (response.data.success) {
+                    this.form.avatar = response.data.url;
+                    this.avatarFile = null;
+                    this.showSuccess('Avatar uploaded successfully');
+                } else {
+                    throw new Error(response.data.message || 'Failed to upload avatar');
+                }
+            } catch (error) {
+                console.error('Error uploading avatar:', error);
+                let errorMessage = 'Failed to upload avatar';
+                if (error.response) {
+                    errorMessage = error.response.data?.message || error.response.statusText || errorMessage;
+                } else if (error.message) {
+                    errorMessage = error.message;
+                }
+                this.showError(errorMessage);
+                this.avatarFile = null;
+            } finally {
+                this.uploadingAvatar = false;
+            }
+        },
+        clearAvatar() {
+            this.form.avatar = '';
+            this.avatarFile = null;
         },
         async saveUser() {
             // Manual validation for password confirmation

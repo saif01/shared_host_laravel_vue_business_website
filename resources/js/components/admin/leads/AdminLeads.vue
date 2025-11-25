@@ -9,12 +9,12 @@
         <v-card class="mb-4">
             <v-card-text>
                 <v-row>
-                    <v-col cols="12" md="3">
+                    <v-col cols="12" md="2">
                         <v-select v-model="perPage" :items="perPageOptions" label="Items per page"
                             prepend-inner-icon="mdi-format-list-numbered" variant="outlined" density="compact"
                             @update:model-value="onPerPageChange"></v-select>
                     </v-col>
-                    <v-col cols="12" md="3">
+                    <v-col cols="12" md="2">
                         <v-select v-model="statusFilter" :items="statusOptions" label="Filter by Status"
                             prepend-inner-icon="mdi-filter" variant="outlined" density="compact" clearable
                             @update:model-value="loadLeads"></v-select>
@@ -29,7 +29,7 @@
                             prepend-inner-icon="mdi-email" variant="outlined" density="compact" clearable
                             @update:model-value="loadLeads"></v-select>
                     </v-col>
-                    <v-col cols="12" md="3">
+                    <v-col cols="12" md="4">
                         <v-text-field v-model="search" label="Search leads" prepend-inner-icon="mdi-magnify"
                             variant="outlined" density="compact" clearable
                             @update:model-value="loadLeads"></v-text-field>
