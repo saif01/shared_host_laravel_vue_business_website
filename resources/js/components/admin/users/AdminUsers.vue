@@ -71,7 +71,8 @@
                             <td>
                                 <div class="d-flex align-center gap-2">
                                     <v-avatar size="32" color="primary">
-                                        <v-img v-if="user.avatar" :src="resolveImageUrl(user.avatar)" :alt="user.name"></v-img>
+                                        <v-img v-if="user.avatar" :src="resolveImageUrl(user.avatar)"
+                                            :alt="user.name"></v-img>
                                         <span v-else class="text-white">{{ user.name.charAt(0).toUpperCase() }}</span>
                                     </v-avatar>
                                     {{ user.name }}
@@ -352,7 +353,7 @@ export default {
                     role_ids: roleIds,
                     password: '',
                     password_confirmation: '',
-                    avatar: this.normalizeAvatarInput(user.avatar || '')
+                    avatar: this.normalizeImageInput(user.avatar || '')
                 };
             } else {
                 this.editingUser = null;
@@ -432,7 +433,7 @@ export default {
                 });
 
                 if (response.data.success) {
-                    const uploadedPath = this.normalizeAvatarInput(response.data.path || response.data.url);
+                    const uploadedPath = this.normalizeImageInput(response.data.path || response.data.url);
                     this.form.avatar = uploadedPath;
                     this.avatarFile = null;
                     this.showSuccess('Avatar uploaded successfully');
@@ -506,7 +507,7 @@ export default {
                     delete data.password_confirmation;
                 }
 
-                data.avatar = this.normalizeAvatarInput(data.avatar);
+                data.avatar = this.normalizeImageInput(data.avatar);
 
                 // Remove legacy role field if it exists
                 delete data.role;
@@ -587,8 +588,8 @@ export default {
             this.handleSort(field);
             this.loadUsers();
         },
-        normalizeAvatarInput(value) {
-            return normalizeUploadPath(value);
+        normalizeImageInput(imageValue) {
+            return normalizeUploadPath(imageValue);
         },
         resolveImageUrl(value) {
             return resolveUploadUrl(value);

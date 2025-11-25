@@ -94,8 +94,8 @@
                                         <v-card variant="outlined" class="pa-4">
                                             <div class="d-flex flex-column flex-md-row align-start">
                                                 <!-- Image Preview -->
-                                                <div v-if="imagePreview" class="mr-md-4 mb-4 mb-md-0">
-                                                    <v-img :src="imagePreview" max-width="300" max-height="300"
+                                                <div v-if="imagePreview || form.image" class="mr-md-4 mb-4 mb-md-0">
+                                                    <v-img :src="imagePreview || resolveImageUrl(form.image)" max-width="300" max-height="300"
                                                         class="rounded elevation-2" cover></v-img>
                                                     <div class="mt-2">
                                                         <v-btn color="error" size="small" variant="text"
@@ -297,8 +297,8 @@
                                         <v-card variant="outlined" class="pa-4">
                                             <div class="d-flex flex-column flex-md-row align-start">
                                                 <!-- OG Image Preview -->
-                                                <div v-if="ogImagePreview" class="mr-md-4 mb-4 mb-md-0">
-                                                    <v-img :src="ogImagePreview" max-width="300" max-height="300"
+                                                <div v-if="ogImagePreview || form.og_image" class="mr-md-4 mb-4 mb-md-0">
+                                                    <v-img :src="ogImagePreview || resolveImageUrl(form.og_image)" max-width="300" max-height="300"
                                                         class="rounded elevation-2" cover></v-img>
                                                     <div class="mt-2">
                                                         <v-btn color="error" size="small" variant="text"
@@ -385,6 +385,7 @@
 import axios from 'axios';
 import adminPaginationMixin from '../../../mixins/adminPaginationMixin';
 import Quill from 'quill';
+import { normalizeUploadPath, resolveUploadUrl } from '../../../utils/uploads';
 // Import Quill styles
 import 'quill/dist/quill.snow.css';
 
@@ -565,8 +566,13 @@ export default {
                     order: data.order || 0
                 };
 
-                this.imagePreview = data.image || null;
-                this.ogImagePreview = data.og_image || null;
+                // Normalize and resolve image URLs
+                const normalizedImage = this.normalizeImageInput(data.image || '');
+                const normalizedOgImage = this.normalizeImageInput(data.og_image || '');
+                this.form.image = normalizedImage;
+                this.form.og_image = normalizedOgImage;
+                this.imagePreview = this.resolveImageUrl(data.image || normalizedImage);
+                this.ogImagePreview = this.resolveImageUrl(data.og_image || normalizedOgImage);
                 this.featuresText = Array.isArray(data.features) ? data.features.join('\n') : '';
                 this.benefitsText = Array.isArray(data.benefits) ? data.benefits.join('\n') : '';
             } catch (error) {
@@ -699,6 +705,9 @@ export default {
                 this.imageFile = null;
                 if (!this.form.image) {
                     this.imagePreview = null;
+                } else {
+                    // Update preview when image URL is directly entered (if no file is selected)
+                    this.imagePreview = this.resolveImageUrl(this.form.image);
                 }
             }
         },
@@ -745,6 +754,9 @@ export default {
                 this.ogImageFile = null;
                 if (!this.form.og_image) {
                     this.ogImagePreview = null;
+                } else {
+                    // Update preview when OG image URL is directly entered (if no file is selected)
+                    this.ogImagePreview = this.resolveImageUrl(this.form.og_image);
                 }
             }
         },
@@ -925,7 +937,11 @@ export default {
                 });
 
                 if (response.data.success) {
-                    return response.data.url;
+                    const uploadedPath = this.normalizeImageInput(response.data.path || response.data.url);
+                    this.form.image = uploadedPath;
+                    this.imagePreview = this.resolveImageUrl(response.data.url || uploadedPath);
+                    this.imageFile = null;
+                    return uploadedPath;
                 } else {
                     throw new Error(response.data.message || 'Failed to upload image');
                 }
@@ -961,7 +977,11 @@ export default {
                 });
 
                 if (response.data.success) {
-                    return response.data.url;
+                    const uploadedPath = this.normalizeImageInput(response.data.path || response.data.url);
+                    this.form.og_image = uploadedPath;
+                    this.ogImagePreview = this.resolveImageUrl(response.data.url || uploadedPath);
+                    this.ogImageFile = null;
+                    return uploadedPath;
                 } else {
                     throw new Error(response.data.message || 'Failed to upload OG image');
                 }
@@ -997,10 +1017,7 @@ export default {
                 // Upload images if new files are selected
                 if (this.imageFile) {
                     try {
-                        const imageUrl = await this.uploadImage();
-                        if (imageUrl) {
-                            this.form.image = imageUrl;
-                        }
+                        await this.uploadImage();
                     } catch (error) {
                         this.showError(error.message || 'Failed to upload image');
                         return;
@@ -1009,31 +1026,28 @@ export default {
 
                 if (this.ogImageFile) {
                     try {
-                        const ogImageUrl = await this.uploadOgImage();
-                        if (ogImageUrl) {
-                            this.form.og_image = ogImageUrl;
-                        }
+                        await this.uploadOgImage();
                     } catch (error) {
                         this.showError(error.message || 'Failed to upload OG image');
                         return;
                     }
                 }
 
-                // Prepare payload
+                // Prepare payload with normalized image paths
                 const payload = {
                     title: this.form.title,
                     slug: this.form.slug,
                     short_description: this.form.short_description || null,
                     description: this.form.description || null,
                     icon: this.form.icon || null,
-                    image: this.form.image || null,
+                    image: this.normalizeImageInput(this.form.image) || null,
                     price_range: this.form.price_range || null,
                     features: this.form.features.length > 0 ? this.form.features : null,
                     benefits: this.form.benefits.length > 0 ? this.form.benefits : null,
                     meta_title: this.form.meta_title || null,
                     meta_description: this.form.meta_description || null,
                     meta_keywords: this.form.meta_keywords || null,
-                    og_image: this.form.og_image || null,
+                    og_image: this.normalizeImageInput(this.form.og_image) || null,
                     published: this.form.published || false,
                     order: this.form.order || 0
                 };
@@ -1058,6 +1072,12 @@ export default {
             } finally {
                 this.saving = false;
             }
+        },
+        normalizeImageInput(imageValue) {
+            return normalizeUploadPath(imageValue);
+        },
+        resolveImageUrl(imageValue) {
+            return resolveUploadUrl(imageValue);
         }
     }
 };

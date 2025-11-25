@@ -56,7 +56,7 @@
                             <!-- Avatar Preview -->
                             <div v-if="testimonial.avatar" class="mb-3 text-center">
                                 <v-avatar size="80" class="mb-2">
-                                    <v-img :src="testimonial.avatar" cover>
+                                    <v-img :src="resolveImageUrl(testimonial.avatar)" cover>
                                         <template v-slot:placeholder>
                                             <div
                                                 class="d-flex align-center justify-center fill-height bg-grey-lighten-3">
@@ -82,7 +82,7 @@
                                 persistent-hint prepend-inner-icon="mdi-link" @input="updateTestimonials">
                                 <template v-slot:append-inner v-if="testimonial.avatar && !testimonial.file">
                                     <v-btn icon="mdi-open-in-new" variant="text" size="small"
-                                        @click="window.open(testimonial.avatar, '_blank')"></v-btn>
+                                        @click="window.open(resolveImageUrl(testimonial.avatar), '_blank')"></v-btn>
                                 </template>
                             </v-text-field>
                         </v-col>
@@ -95,6 +95,7 @@
 
 <script>
 import axios from 'axios';
+import { normalizeUploadPath, resolveUploadUrl } from '../../../../../utils/uploads';
 
 export default {
     name: 'TestimonialsSectionSettings',
@@ -212,7 +213,8 @@ export default {
                 });
 
                 if (response.data.success) {
-                    testimonial.avatar = response.data.url;
+                    const uploadedPath = this.normalizeImageInput(response.data.path || response.data.url);
+                    testimonial.avatar = uploadedPath;
                     testimonial.file = null;
                     this.updateTestimonials();
                     this.showSuccess('Avatar uploaded successfully');
@@ -257,6 +259,12 @@ export default {
             } else {
                 alert(message);
             }
+        },
+        normalizeImageInput(imageValue) {
+            return normalizeUploadPath(imageValue);
+        },
+        resolveImageUrl(imageValue) {
+            return resolveUploadUrl(imageValue);
         }
     }
 };

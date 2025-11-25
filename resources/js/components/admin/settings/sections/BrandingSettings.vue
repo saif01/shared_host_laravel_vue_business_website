@@ -13,7 +13,7 @@
 
                     <!-- Logo Preview -->
                     <div v-if="settings.logo.value" class="mb-4 text-center">
-                        <v-img :src="settings.logo.value" alt="Logo Preview" max-height="120" max-width="300" contain
+                        <v-img :src="resolveImageUrl(settings.logo.value)" alt="Logo Preview" max-height="120" max-width="300" contain
                             class="mx-auto mb-2" style="border: 1px solid rgba(0,0,0,0.1); border-radius: 4px;">
                         </v-img>
                         <v-btn size="small" variant="text" color="error" prepend-icon="mdi-delete"
@@ -36,7 +36,7 @@
                         persistent-hint prepend-inner-icon="mdi-link">
                         <template v-slot:append-inner v-if="settings.logo.value && !logoFile">
                             <v-btn icon="mdi-open-in-new" variant="text" size="small"
-                                @click="window.open(settings.logo.value, '_blank')"></v-btn>
+                                @click="window.open(resolveImageUrl(settings.logo.value), '_blank')"></v-btn>
                         </template>
                     </v-text-field>
                 </v-card>
@@ -49,7 +49,7 @@
 
                     <!-- Favicon Preview -->
                     <div v-if="settings.favicon.value" class="mb-4 text-center">
-                        <v-img :src="settings.favicon.value" alt="Favicon Preview" max-height="64" max-width="64"
+                        <v-img :src="resolveImageUrl(settings.favicon.value)" alt="Favicon Preview" max-height="64" max-width="64"
                             contain class="mx-auto mb-2" style="border: 1px solid rgba(0,0,0,0.1); border-radius: 4px;">
                         </v-img>
                         <v-btn size="small" variant="text" color="error" prepend-icon="mdi-delete"
@@ -73,7 +73,7 @@
                         persistent-hint prepend-inner-icon="mdi-link">
                         <template v-slot:append-inner v-if="settings.favicon.value && !faviconFile">
                             <v-btn icon="mdi-open-in-new" variant="text" size="small"
-                                @click="window.open(settings.favicon.value, '_blank')"></v-btn>
+                                @click="window.open(resolveImageUrl(settings.favicon.value), '_blank')"></v-btn>
                         </template>
                     </v-text-field>
                 </v-card>
@@ -91,6 +91,7 @@
 
 <script>
 import axios from 'axios';
+import { normalizeUploadPath, resolveUploadUrl } from '../../../../utils/uploads';
 
 export default {
     name: 'BrandingSettings',
@@ -149,7 +150,8 @@ export default {
                 });
 
                 if (response.data.success) {
-                    this.settings.logo.value = response.data.url;
+                    const uploadedPath = this.normalizeImageInput(response.data.path || response.data.url);
+                    this.settings.logo.value = uploadedPath;
                     this.logoFile = null;
                     this.showSuccess('Logo uploaded successfully');
                 } else {
@@ -203,7 +205,8 @@ export default {
                 });
 
                 if (response.data.success) {
-                    this.settings.favicon.value = response.data.url;
+                    const uploadedPath = this.normalizeImageInput(response.data.path || response.data.url);
+                    this.settings.favicon.value = uploadedPath;
                     this.faviconFile = null;
                     this.showSuccess('Favicon uploaded successfully');
                 } else {
@@ -244,6 +247,12 @@ export default {
             } else {
                 alert(message);
             }
+        },
+        normalizeImageInput(imageValue) {
+            return normalizeUploadPath(imageValue);
+        },
+        resolveImageUrl(imageValue) {
+            return resolveUploadUrl(imageValue);
         }
     }
 };

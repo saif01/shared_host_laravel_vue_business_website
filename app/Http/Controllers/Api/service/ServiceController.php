@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\service;
 use App\Http\Controllers\Controller;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use App\Support\MediaPath;
 
 class ServiceController extends Controller
 {
@@ -49,6 +50,10 @@ class ServiceController extends Controller
         // Paginate results
         $perPage = $request->get('per_page', 10);
         $services = $query->paginate($perPage);
+
+        $services->getCollection()->transform(function ($service) {
+            return $this->transformServiceWithImages($service);
+        });
         
         return response()->json($services);
     }
@@ -73,15 +78,23 @@ class ServiceController extends Controller
             'order' => 'integer',
         ]);
 
+        // Normalize image paths
+        if (!empty($validated['image'])) {
+            $validated['image'] = MediaPath::normalize($validated['image']);
+        }
+        if (!empty($validated['og_image'])) {
+            $validated['og_image'] = MediaPath::normalize($validated['og_image']);
+        }
+
         $service = Service::create($validated);
-        return response()->json($service, 201);
+        return response()->json($this->transformServiceWithImages($service), 201);
     }
 
     public function show($id)
     {
         // Support both id and slug for route model binding
         $service = Service::where('id', $id)->orWhere('slug', $id)->firstOrFail();
-        return response()->json($service->load(['categories', 'tags']));
+        return response()->json($this->transformServiceWithImages($service->load(['categories', 'tags'])));
     }
 
     public function update(Request $request, $id)
@@ -107,8 +120,27 @@ class ServiceController extends Controller
             'order' => 'integer',
         ]);
 
+        // Normalize image paths
+        if (array_key_exists('image', $validated) && !empty($validated['image'])) {
+            $validated['image'] = MediaPath::normalize($validated['image']);
+        }
+        if (array_key_exists('og_image', $validated) && !empty($validated['og_image'])) {
+            $validated['og_image'] = MediaPath::normalize($validated['og_image']);
+        }
+
         $service->update($validated);
-        return response()->json($service);
+        return response()->json($this->transformServiceWithImages($service));
+    }
+
+    private function transformServiceWithImages(Service $service): Service
+    {
+        $service->image = MediaPath::url($service->image);
+
+        if (!empty($service->og_image)) {
+            $service->og_image = MediaPath::url($service->og_image);
+        }
+
+        return $service;
     }
 
     public function destroy($id)

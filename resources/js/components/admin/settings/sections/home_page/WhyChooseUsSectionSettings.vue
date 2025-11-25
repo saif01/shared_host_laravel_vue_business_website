@@ -110,6 +110,7 @@
 
 <script>
 import axios from 'axios';
+import { normalizeUploadPath, resolveUploadUrl } from '../../../../../utils/uploads';
 
 export default {
     name: 'WhyChooseUsSectionSettings',
@@ -128,7 +129,8 @@ export default {
     },
     computed: {
         imageUrl() {
-            return this.settings.why_choose_us_image?.value || '';
+            const value = this.settings.why_choose_us_image?.value || '';
+            return value ? this.resolveImageUrl(value) : '';
         }
     },
     mounted() {
@@ -256,7 +258,8 @@ export default {
                             group: 'home_page'
                         };
                     }
-                    this.settings.why_choose_us_image.value = response.data.url;
+                    const uploadedPath = this.normalizeImageInput(response.data.path || response.data.url);
+                    this.settings.why_choose_us_image.value = uploadedPath;
                     this.imageFile = null;
                     this.showSuccess('Image uploaded successfully');
                 } else {
@@ -295,6 +298,12 @@ export default {
             } else {
                 alert(message);
             }
+        },
+        normalizeImageInput(imageValue) {
+            return normalizeUploadPath(imageValue);
+        },
+        resolveImageUrl(imageValue) {
+            return resolveUploadUrl(imageValue);
         }
     }
 };

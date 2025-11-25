@@ -32,7 +32,7 @@
 
                             <!-- Logo Preview -->
                             <div v-if="client.logo" class="mb-3 text-center">
-                                <v-img :src="client.logo" max-height="120" max-width="200" class="mx-auto mb-2" contain>
+                                <v-img :src="resolveImageUrl(client.logo)" max-height="120" max-width="200" class="mx-auto mb-2" contain>
                                     <template v-slot:placeholder>
                                         <div class="d-flex align-center justify-center fill-height bg-grey-lighten-3">
                                             <v-progress-circular indeterminate color="primary"></v-progress-circular>
@@ -58,7 +58,7 @@
                                 persistent-hint prepend-inner-icon="mdi-link" @input="updateTrustedByClients">
                                 <template v-slot:append-inner v-if="client.logo && !client.file">
                                     <v-btn icon="mdi-open-in-new" variant="text" size="small"
-                                        @click="window.open(client.logo, '_blank')"></v-btn>
+                                        @click="window.open(resolveImageUrl(client.logo), '_blank')"></v-btn>
                                 </template>
                             </v-text-field>
                         </v-card-text>
@@ -71,6 +71,7 @@
 
 <script>
 import axios from 'axios';
+import { normalizeUploadPath, resolveUploadUrl } from '../../../../../utils/uploads';
 
 export default {
     name: 'TrustedBySectionSettings',
@@ -150,7 +151,8 @@ export default {
                 });
 
                 if (response.data.success) {
-                    client.logo = response.data.url;
+                    const uploadedPath = this.normalizeImageInput(response.data.path || response.data.url);
+                    client.logo = uploadedPath;
                     client.file = null;
                     this.updateTrustedByClients();
                     this.showSuccess('Logo uploaded successfully');
@@ -190,6 +192,12 @@ export default {
             } else {
                 alert(message);
             }
+        },
+        normalizeImageInput(imageValue) {
+            return normalizeUploadPath(imageValue);
+        },
+        resolveImageUrl(imageValue) {
+            return resolveUploadUrl(imageValue);
         }
     }
 };
