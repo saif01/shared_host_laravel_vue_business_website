@@ -9,7 +9,7 @@
             </div>
 
             <v-list-item v-if="currentUser" class="user-profile-header"
-                :prepend-avatar="currentUser.avatar || '/assets/logo/logo.png'"
+                :prepend-avatar="brandingLogo || currentUser.avatar || '/assets/logo/logo.png'"
                 :title="currentUser.name || 'Admin Panel'"
                 :subtitle="userRoles && userRoles.length > 0 ? userRoles.map(r => r.name).join(', ') : 'No roles assigned'">
             </v-list-item>
@@ -174,6 +174,7 @@ export default {
             currentYear: new Date().getFullYear(), // Current year for copyright
             unreadCount: 0, // Count of unread leads/messages
             unreadCountInterval: null, // Interval for polling unread count
+            brandingLogo: null, // Logo from branding settings
         };
     },
     methods: {
@@ -225,6 +226,31 @@ export default {
                     localStorage.removeItem('admin_token');
                     this.$router.push('/admin/login');
                 }
+            }
+        },
+        /**
+         * Load branding settings to get the logo
+         */
+        async loadBrandingSettings() {
+            try {
+                const token = localStorage.getItem('admin_token');
+                if (!token) {
+                    return;
+                }
+
+                const response = await axios.get('/api/v1/settings', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                // Extract logo from branding settings
+                if (response.data.branding && response.data.branding.logo && response.data.branding.logo.value) {
+                    this.brandingLogo = response.data.branding.logo.value;
+                }
+            } catch (error) {
+                console.error('Error loading branding settings:', error);
+                // Don't show error to user, just use default logo
             }
         },
         /**
@@ -338,6 +364,8 @@ export default {
                 // Start polling for unread count after user is loaded
                 this.startUnreadCountPolling();
             });
+            // Load branding settings for logo
+            this.loadBrandingSettings();
         }
     },
     provide() {
