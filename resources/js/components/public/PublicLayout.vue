@@ -18,6 +18,9 @@
 
         <!-- Floating WhatsApp Button -->
         <WhatsAppFloat />
+
+        <!-- Go to Top Button -->
+        <GoToTopButton />
     </v-app>
 </template>
 
@@ -27,6 +30,7 @@ import AppBar from './layout/AppBar.vue';
 import MobileDrawer from './layout/MobileDrawer.vue';
 import Footer from './layout/Footer.vue';
 import WhatsAppFloat from './layout/WhatsAppFloat.vue';
+import GoToTopButton from './layout/GoToTopButton.vue';
 
 export default {
     name: 'PublicLayout',
@@ -34,7 +38,8 @@ export default {
         AppBar,
         MobileDrawer,
         Footer,
-        WhatsAppFloat
+        WhatsAppFloat,
+        GoToTopButton
     },
     data() {
         return {
