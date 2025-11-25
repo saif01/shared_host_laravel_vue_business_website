@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use App\Support\MediaPath;
 
 class UploadController extends Controller
 {
@@ -51,8 +52,8 @@ class UploadController extends Controller
             chmod($publicPath . '/' . $filename, 0644);
             
             // Get relative path and full URL
-            $relativePath = 'uploads/' . $folder . '/' . $filename;
-            $url = asset($relativePath);
+            $relativePath = MediaPath::normalize('uploads/' . $folder . '/' . $filename);
+            $url = MediaPath::url($relativePath);
             
             return response()->json([
                 'success' => true,
@@ -116,8 +117,8 @@ class UploadController extends Controller
                 chmod($publicPath . '/' . $filename, 0644);
                 
                 // Get relative path and full URL
-                $relativePath = 'uploads/' . $folder . '/' . $filename;
-                $url = asset($relativePath);
+                $relativePath = MediaPath::normalize('uploads/' . $folder . '/' . $filename);
+                $url = MediaPath::url($relativePath);
 
                 $uploaded[] = [
                     'url' => $url,
@@ -185,8 +186,8 @@ class UploadController extends Controller
             chmod($publicPath . '/' . $filename, 0644);
             
             // Get relative path and full URL
-            $relativePath = 'uploads/' . $folder . '/' . $filename;
-            $url = asset($relativePath);
+            $relativePath = MediaPath::normalize('uploads/' . $folder . '/' . $filename);
+            $url = MediaPath::url($relativePath);
             
             return response()->json([
                 'success' => true,
@@ -212,9 +213,14 @@ class UploadController extends Controller
         ]);
 
         try {
-            // Remove 'uploads/' or 'storage/' prefix if present in the path
-            $path = str_replace(['uploads/', 'storage/'], '', $request->path);
-            $fullPath = public_path('uploads/' . $path);
+            // Normalize to uploads/ path
+            $normalizedPath = MediaPath::normalize($request->path);
+            $relativePath = $normalizedPath ? ltrim($normalizedPath, '/') : '';
+            if (Str::startsWith($relativePath, 'storage/uploads')) {
+                $relativePath = ltrim(Str::replaceFirst('storage/', '', $relativePath), '/');
+            }
+
+            $fullPath = public_path($relativePath);
             
             if (file_exists($fullPath)) {
                 unlink($fullPath);
@@ -300,4 +306,3 @@ HTACCESS;
         }
     }
 }
-

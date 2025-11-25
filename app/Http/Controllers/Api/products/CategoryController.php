@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\products;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use App\Support\MediaPath;
 
 class CategoryController extends Controller
 {
@@ -86,7 +86,7 @@ class CategoryController extends Controller
         ]);
 
         if (!empty($validated['image'])) {
-            $validated['image'] = $this->normalizeImagePath($validated['image']);
+            $validated['image'] = MediaPath::normalize($validated['image']);
         }
 
         $category = Category::create($validated);
@@ -116,7 +116,7 @@ class CategoryController extends Controller
         ]);
 
         if (array_key_exists('image', $validated)) {
-            $validated['image'] = $this->normalizeImagePath($validated['image']);
+            $validated['image'] = MediaPath::normalize($validated['image']);
         }
 
         // Prevent category from being its own parent
@@ -154,10 +154,10 @@ class CategoryController extends Controller
 
     private function transformCategoryWithImage(Category $category): Category
     {
-        $category->image = $this->buildImageUrl($category->image);
+        $category->image = MediaPath::url($category->image);
 
         if ($category->relationLoaded('parent') && $category->parent) {
-            $category->parent->image = $this->buildImageUrl($category->parent->image);
+            $category->parent->image = MediaPath::url($category->parent->image);
         }
 
         if ($category->relationLoaded('children')) {
@@ -167,62 +167,5 @@ class CategoryController extends Controller
         }
 
         return $category;
-    }
-
-    private function normalizeImagePath(?string $image): ?string
-    {
-        if (!$image) {
-            return null;
-        }
-
-        $image = trim($image);
-        if ($image === '') {
-            return null;
-        }
-
-        $relativePattern = '/^(uploads\/|storage\/uploads\/|storage\/)/i';
-        $trimmed = ltrim($image, '/');
-
-        if (preg_match($relativePattern, $trimmed)) {
-            return $trimmed;
-        }
-
-        if (preg_match('#^https?://#i', $image)) {
-            $parsed = parse_url($image);
-            $path = isset($parsed['path']) ? ltrim($parsed['path'], '/') : '';
-
-            if ($path && preg_match($relativePattern, $path)) {
-                return $path;
-            }
-
-            return $image;
-        }
-
-        return $trimmed;
-    }
-
-    private function buildImageUrl(?string $image): ?string
-    {
-        if (!$image) {
-            return null;
-        }
-
-        $image = trim($image);
-        if ($image === '') {
-            return null;
-        }
-
-        if (Str::startsWith($image, ['http://', 'https://', '//'])) {
-            $parsed = parse_url($image);
-            $path = isset($parsed['path']) ? ltrim($parsed['path'], '/') : '';
-
-            if ($path && preg_match('/^(uploads\/|storage\/uploads\/|storage\/)/i', $path)) {
-                return asset($path);
-            }
-
-            return $image;
-        }
-
-        return asset(ltrim($image, '/'));
     }
 }

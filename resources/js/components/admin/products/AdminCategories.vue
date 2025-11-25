@@ -265,6 +265,7 @@
 <script>
 import axios from 'axios';
 import adminPaginationMixin from '../../../mixins/adminPaginationMixin';
+import { normalizeUploadPath, resolveUploadUrl } from '../../../utils/uploads';
 
 export default {
     mixins: [adminPaginationMixin],
@@ -624,73 +625,10 @@ export default {
             this.loadCategories();
         },
         normalizeImageInput(imageValue) {
-            if (!imageValue) return '';
-
-            const value = String(imageValue).trim();
-            if (value === '') return '';
-
-            const uploadsPathPattern = /^\/?(uploads|storage)\//i;
-
-            if (/^https?:\/\//i.test(value)) {
-                try {
-                    const url = new URL(value);
-                    const path = (url.pathname || '').replace(/^\/+/, '');
-                    if (uploadsPathPattern.test(path)) {
-                        return path.replace(/^\//, '');
-                    }
-                    return value;
-                } catch {
-                    return value;
-                }
-            }
-
-            if (uploadsPathPattern.test(value)) {
-                return value.replace(/^\//, '');
-            }
-
-            return value.replace(/^\//, '');
-        },
-        getAppBaseUrl() {
-            const metaApiBase = document.querySelector('meta[name="api-base-url"]')?.getAttribute('content');
-            if (metaApiBase) {
-                try {
-                    const metaUrl = new URL(metaApiBase, window.location.origin);
-                    const basePath = metaUrl.pathname.replace(/\/api(\/v\d+)?\/?$/, '');
-                    return `${metaUrl.origin}${basePath}`;
-                } catch (err) {
-                    console.warn('Invalid api-base-url meta tag, falling back to origin.', err);
-                }
-            }
-
-            const origin = window.location.origin;
-            const path = window.location.pathname || '/';
-            const publicIndex = path.indexOf('/public');
-            const basePath = publicIndex !== -1 ? path.slice(0, publicIndex + '/public'.length) : '';
-
-            return `${origin}${basePath}`;
+            return normalizeUploadPath(imageValue);
         },
         resolveImageUrl(imageValue) {
-            if (!imageValue) return '';
-            if (typeof imageValue !== 'string') {
-                return '';
-            }
-
-            const value = imageValue.trim();
-            if (value === '') return '';
-
-            if (/^(data:|https?:\/\/|\/\/)/i.test(value)) {
-                return value;
-            }
-
-            const baseUrl = this.getAppBaseUrl().replace(/\/$/, '');
-            const normalized = value.startsWith('/') ? value : `/${value}`;
-
-            try {
-                return new URL(normalized, `${baseUrl}/`).href;
-            } catch (error) {
-                console.warn('Failed to resolve image URL', error);
-                return `${baseUrl}${normalized}`;
-            }
+            return resolveUploadUrl(imageValue);
         }
     }
 };
