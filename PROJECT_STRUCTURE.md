@@ -106,7 +106,16 @@ This is a comprehensive business website platform built according to the SRS doc
 - `users/AdminPermissions.vue` - Permission management
 - `settings/AdminSettings.vue` - Settings management (main container)
   - `settings/sections/GeneralSettings.vue` - General site settings
-  - `settings/sections/HomePageSettings.vue` - Home page settings with tabs
+  - `settings/sections/HomePageSettings.vue` - Home page settings container with tabs
+    - `settings/sections/home_page/HeroSectionSettings.vue` - Hero section settings
+    - `settings/sections/home_page/StatsSectionSettings.vue` - Statistics section settings
+    - `settings/sections/home_page/TrustedBySectionSettings.vue` - Trusted By section with client logo management
+    - `settings/sections/home_page/ServicesSectionSettings.vue` - Services section with dynamic service management
+    - `settings/sections/home_page/WhyChooseUsSectionSettings.vue` - Why Choose Us section with features management
+    - `settings/sections/home_page/TestimonialsSectionSettings.vue` - Testimonials section settings
+    - `settings/sections/home_page/ProductsSectionSettings.vue` - Featured Products section settings
+    - `settings/sections/home_page/CTASectionSettings.vue` - CTA section settings
+    - `settings/sections/home_page/VisibilitySectionSettings.vue` - Section visibility toggles
   - `settings/sections/ContactPageSettings.vue` - Contact page settings
   - `settings/sections/BrandingSettings.vue` - Branding settings
   - `settings/sections/SocialSettings.vue` - Social media links
@@ -265,7 +274,16 @@ npm run dev
 - User management
 - Settings management with modular section components:
   - General settings (site name, tagline, contact info)
-  - Home page settings with tabs (hero, stats, visibility, trusted by, services, why choose us, testimonials, products, CTA)
+  - Home page settings with tabbed interface and split components:
+    - Hero section settings
+    - Statistics section settings
+    - Trusted By section with dynamic client logo management
+    - Services section with dynamic service management (WHAT WE DO)
+    - Why Choose Us section with features management
+    - Testimonials section settings
+    - Featured Products section settings
+    - CTA section settings
+    - Section visibility toggles
   - Contact page settings
   - Branding settings (logo, favicon, colors)
   - Social media links
@@ -296,6 +314,9 @@ npm run dev
 - Utility functions for axios configuration
 - Organized component structure (admin and public folders organized by feature)
 - Component-based architecture with split settings sections for better maintainability
+  - HomePageSettings split into 9 separate components for each section (Hero, Stats, Trusted By, Services, Why Choose Us, Testimonials, Products, CTA, Visibility)
+  - Each section component manages its own state and logic independently
+  - Improved code organization and maintainability
 - Mixins for shared functionality
 - Centralized CSS variables for theming
 - Responsive design with compact tables
@@ -354,7 +375,17 @@ resources/js/
     │   │   ├── AdminSettings.vue # Settings management (main container)
     │   │   └── sections/          # Settings section components
     │   │       ├── GeneralSettings.vue      # General site settings
-    │   │       ├── HomePageSettings.vue     # Home page settings (with tabs)
+    │   │       ├── HomePageSettings.vue     # Home page settings container (with tabs)
+    │   │       ├── home_page/               # Home page section components
+    │   │       │   ├── HeroSectionSettings.vue
+    │   │       │   ├── StatsSectionSettings.vue
+    │   │       │   ├── TrustedBySectionSettings.vue
+    │   │       │   ├── ServicesSectionSettings.vue
+    │   │       │   ├── WhyChooseUsSectionSettings.vue
+    │   │       │   ├── TestimonialsSectionSettings.vue
+    │   │       │   ├── ProductsSectionSettings.vue
+    │   │       │   ├── CTASectionSettings.vue
+    │   │       │   └── VisibilitySectionSettings.vue
     │   │       ├── ContactPageSettings.vue   # Contact page settings
     │   │       ├── BrandingSettings.vue     # Branding settings
     │   │       ├── SocialSettings.vue        # Social media links
