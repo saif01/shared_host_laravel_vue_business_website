@@ -175,8 +175,71 @@ export default {
     },
     async mounted() {
         await this.loadServices();
+        this.updateMetaTags();
+    },
+    beforeUnmount() {
+        this.cleanupMetaTags();
     },
     methods: {
+        // Update SEO meta tags for services page
+        updateMetaTags() {
+            const appName = import.meta.env.VITE_APP_NAME || 'Micro Control Technology';
+            const baseUrl = window.location.origin;
+
+            // Page Title
+            document.title = `Services - ${appName}`;
+
+            // Meta Description
+            const description = 'Explore our comprehensive power solutions including UPS systems, backup generators, and professional maintenance services.';
+            this.updateMetaTag('name', 'description', description);
+
+            // Meta Keywords
+            const keywords = 'power solutions, UPS systems, backup generators, power maintenance, electrical services, Micro Control Technology';
+            this.updateMetaTag('name', 'keywords', keywords);
+
+            // Open Graph Tags
+            this.updateMetaTag('property', 'og:title', `Services - ${appName}`);
+            this.updateMetaTag('property', 'og:description', description);
+            this.updateMetaTag('property', 'og:type', 'website');
+            this.updateMetaTag('property', 'og:url', `${baseUrl}${this.$route.fullPath}`);
+
+            // Twitter Card Tags
+            this.updateMetaTag('name', 'twitter:card', 'summary');
+            this.updateMetaTag('name', 'twitter:title', `Services - ${appName}`);
+            this.updateMetaTag('name', 'twitter:description', description);
+        },
+
+        // Helper to update or create meta tag
+        updateMetaTag(attr, value, content) {
+            if (!content) return;
+
+            const metaTag = document.querySelector(`meta[${attr}="${value}"]`);
+            if (metaTag) {
+                metaTag.setAttribute('content', content);
+            } else {
+                const tag = document.createElement('meta');
+                tag.setAttribute(attr, value);
+                tag.setAttribute('content', content);
+                document.head.appendChild(tag);
+            }
+        },
+
+        // Clean up meta tags when component is destroyed
+        cleanupMetaTags() {
+            // Reset to default title
+            const appName = import.meta.env.VITE_APP_NAME || 'Micro Control Technology';
+            document.title = `${appName}`;
+
+            // Remove page-specific meta tags
+            const ogTags = ['og:title', 'og:description', 'og:image', 'og:url'];
+            const twitterTags = ['twitter:title', 'twitter:description', 'twitter:image'];
+
+            [...ogTags, ...twitterTags].forEach(tag => {
+                const meta = document.querySelector(`meta[property="${tag}"], meta[name="${tag}"]`);
+                if (meta) meta.remove();
+            });
+        },
+
         async loadServices() {
             this.loading = true;
             this.error = null;

@@ -158,7 +158,84 @@ export default {
             this.loadOtherServices();
         }
     },
+    beforeUnmount() {
+        this.cleanupMetaTags();
+    },
     methods: {
+        // Update SEO meta tags
+        updateMetaTags() {
+            const appName = import.meta.env.VITE_APP_NAME || 'Micro Control Technology';
+            const baseUrl = window.location.origin;
+            
+            // Page Title
+            const title = this.service.meta_title || this.service.title || 'Service';
+            document.title = `${title} - ${appName}`;
+            
+            // Meta Description
+            const description = this.service.meta_description || this.service.short_description || '';
+            this.updateMetaTag('name', 'description', description);
+            
+            // Meta Keywords
+            if (this.service.meta_keywords) {
+                this.updateMetaTag('name', 'keywords', this.service.meta_keywords);
+            }
+            
+            // Open Graph Tags
+            this.updateMetaTag('property', 'og:title', title);
+            this.updateMetaTag('property', 'og:description', description);
+            this.updateMetaTag('property', 'og:type', 'website');
+            this.updateMetaTag('property', 'og:url', `${baseUrl}${this.$route.fullPath}`);
+            
+            // OG Image
+            const ogImage = this.service.og_image || this.service.image || '';
+            if (ogImage) {
+                // Ensure absolute URL
+                const imageUrl = ogImage.startsWith('http') ? ogImage : `${baseUrl}${ogImage}`;
+                this.updateMetaTag('property', 'og:image', imageUrl);
+                this.updateMetaTag('property', 'og:image:secure_url', imageUrl);
+            }
+            
+            // Twitter Card Tags
+            this.updateMetaTag('name', 'twitter:card', 'summary_large_image');
+            this.updateMetaTag('name', 'twitter:title', title);
+            this.updateMetaTag('name', 'twitter:description', description);
+            if (ogImage) {
+                const imageUrl = ogImage.startsWith('http') ? ogImage : `${baseUrl}${ogImage}`;
+                this.updateMetaTag('name', 'twitter:image', imageUrl);
+            }
+        },
+        
+        // Helper to update or create meta tag
+        updateMetaTag(attr, value, content) {
+            if (!content) return;
+            
+            const metaTag = document.querySelector(`meta[${attr}="${value}"]`);
+            if (metaTag) {
+                metaTag.setAttribute('content', content);
+            } else {
+                const tag = document.createElement('meta');
+                tag.setAttribute(attr, value);
+                tag.setAttribute('content', content);
+                document.head.appendChild(tag);
+            }
+        },
+        
+        // Clean up meta tags when component is destroyed
+        cleanupMetaTags() {
+            // Reset to default title
+            const appName = import.meta.env.VITE_APP_NAME || 'Micro Control Technology';
+            document.title = `${appName}`;
+            
+            // Remove service-specific meta tags (keep base ones)
+            const ogTags = ['og:title', 'og:description', 'og:image', 'og:image:secure_url', 'og:url'];
+            const twitterTags = ['twitter:title', 'twitter:description', 'twitter:image'];
+            
+            [...ogTags, ...twitterTags].forEach(tag => {
+                const meta = document.querySelector(`meta[property="${tag}"], meta[name="${tag}"]`);
+                if (meta) meta.remove();
+            });
+        },
+        
         async loadService() {
             this.loading = true;
             this.error = null;
@@ -168,10 +245,10 @@ export default {
                 const response = await axios.get(`/api/openapi/services/${slug}`);
                 this.service = response.data;
 
-                // Update page title
-                if (this.service.meta_title) {
-                    document.title = `${this.service.meta_title} - ${import.meta.env.VITE_APP_NAME || 'Micro Control Technology'}`;
-                }
+                // Update SEO meta tags after service loads
+                this.$nextTick(() => {
+                    this.updateMetaTags();
+                });
             } catch (error) {
                 console.error('Error loading service:', error);
 
