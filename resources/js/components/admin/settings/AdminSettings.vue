@@ -182,6 +182,7 @@ export default {
                     services_overline: { value: 'WHAT WE DO', type: 'text', group: 'home_page' },
                     services_title: { value: 'Power Support Solutions', type: 'text', group: 'home_page' },
                     services_subtitle: { value: 'We ensure uninterrupted operations for businesses and households with high-quality power products and services.', type: 'textarea', group: 'home_page' },
+                    services_data: { value: '', type: 'textarea', group: 'home_page' },
                     why_choose_us_overline: { value: 'WHY CHOOSE US', type: 'text', group: 'home_page' },
                     why_choose_us_title: { value: 'Reliable Power, Guaranteed', type: 'text', group: 'home_page' },
                     why_choose_us_image: { value: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', type: 'text', group: 'home_page' },
