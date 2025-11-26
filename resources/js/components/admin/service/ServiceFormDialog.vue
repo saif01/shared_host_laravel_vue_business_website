@@ -95,8 +95,9 @@
                                             <div class="d-flex flex-column flex-md-row align-start">
                                                 <!-- Image Preview -->
                                                 <div v-if="imagePreview || form.image" class="mr-md-4 mb-4 mb-md-0">
-                                                    <v-img :src="imagePreview || resolveImageUrl(form.image)" max-width="300" max-height="300"
-                                                        class="rounded elevation-2" cover></v-img>
+                                                    <v-img :src="imagePreview || resolveImageUrl(form.image)"
+                                                        max-width="300" max-height="300" class="rounded elevation-2"
+                                                        cover></v-img>
                                                     <div class="mt-2">
                                                         <v-btn color="error" size="small" variant="text"
                                                             @click="removeImage" prepend-icon="mdi-delete">
@@ -122,6 +123,14 @@
                                                     <v-alert v-if="imageFile && imageFile.size > 5242880" type="warning"
                                                         variant="tonal" density="compact" class="mt-2">
                                                         File size is larger than 5MB. Please choose a smaller image.
+                                                    </v-alert>
+
+                                                    <v-alert v-if="imageError" type="error" variant="tonal"
+                                                        density="compact" class="mt-2" closable
+                                                        @click:close="imageError = null">
+                                                        <div class="text-body-2">
+                                                            <strong>Upload Error:</strong> {{ imageError }}
+                                                        </div>
                                                     </v-alert>
 
                                                     <div v-if="!imagePreview && !imageFile"
@@ -297,9 +306,11 @@
                                         <v-card variant="outlined" class="pa-4">
                                             <div class="d-flex flex-column flex-md-row align-start">
                                                 <!-- OG Image Preview -->
-                                                <div v-if="ogImagePreview || form.og_image" class="mr-md-4 mb-4 mb-md-0">
-                                                    <v-img :src="ogImagePreview || resolveImageUrl(form.og_image)" max-width="300" max-height="300"
-                                                        class="rounded elevation-2" cover></v-img>
+                                                <div v-if="ogImagePreview || form.og_image"
+                                                    class="mr-md-4 mb-4 mb-md-0">
+                                                    <v-img :src="ogImagePreview || resolveImageUrl(form.og_image)"
+                                                        max-width="300" max-height="300" class="rounded elevation-2"
+                                                        cover></v-img>
                                                     <div class="mt-2">
                                                         <v-btn color="error" size="small" variant="text"
                                                             @click="removeOgImage" prepend-icon="mdi-delete">
@@ -329,6 +340,14 @@
                                                     <v-alert v-if="ogImageFile && ogImageFile.size > 5242880"
                                                         type="warning" variant="tonal" density="compact" class="mt-2">
                                                         File size is larger than 5MB. Please choose a smaller image.
+                                                    </v-alert>
+
+                                                    <v-alert v-if="ogImageError" type="error" variant="tonal"
+                                                        density="compact" class="mt-2" closable
+                                                        @click:close="ogImageError = null">
+                                                        <div class="text-body-2">
+                                                            <strong>Upload Error:</strong> {{ ogImageError }}
+                                                        </div>
                                                     </v-alert>
 
                                                     <div v-if="!ogImagePreview && !ogImageFile"
@@ -411,9 +430,11 @@ export default {
             imageFile: null,
             imagePreview: null,
             uploadingImage: false,
+            imageError: null,
             ogImageFile: null,
             ogImagePreview: null,
             uploadingOgImage: false,
+            ogImageError: null,
             featuresText: '',
             benefitsText: '',
             quillEditor: null,
@@ -529,8 +550,10 @@ export default {
             };
             this.imageFile = null;
             this.imagePreview = null;
+            this.imageError = null;
             this.ogImageFile = null;
             this.ogImagePreview = null;
+            this.ogImageError = null;
             this.featuresText = '';
             this.benefitsText = '';
 
@@ -670,17 +693,20 @@ export default {
             }
         },
         handleImageSelect(file) {
+            // Clear previous error
+            this.imageError = null;
+
             if (file) {
                 const selectedFile = Array.isArray(file) ? file[0] : file;
 
                 if (selectedFile && selectedFile.size > 5242880) {
-                    this.showError('Image file size must be less than 5MB');
+                    this.imageError = 'Image file size must be less than 5MB';
                     this.imageFile = null;
                     return;
                 }
 
                 if (selectedFile && !selectedFile.type.startsWith('image/')) {
-                    this.showError('Please select a valid image file');
+                    this.imageError = 'Please select a valid image file (jpeg, jpg, png, gif, webp)';
                     this.imageFile = null;
                     return;
                 }
@@ -716,20 +742,24 @@ export default {
                 this.imagePreview = null;
                 this.imageFile = null;
                 this.form.image = '';
+                this.imageError = null; // Clear error
             }
         },
         handleOgImageSelect(file) {
+            // Clear previous error
+            this.ogImageError = null;
+
             if (file) {
                 const selectedFile = Array.isArray(file) ? file[0] : file;
 
                 if (selectedFile && selectedFile.size > 5242880) {
-                    this.showError('OG image file size must be less than 5MB');
+                    this.ogImageError = 'OG image file size must be less than 5MB';
                     this.ogImageFile = null;
                     return;
                 }
 
                 if (selectedFile && !selectedFile.type.startsWith('image/')) {
-                    this.showError('Please select a valid image file');
+                    this.ogImageError = 'Please select a valid image file (jpeg, jpg, png, gif, webp)';
                     this.ogImageFile = null;
                     return;
                 }
@@ -765,6 +795,7 @@ export default {
                 this.ogImagePreview = null;
                 this.ogImageFile = null;
                 this.form.og_image = '';
+                this.ogImageError = null; // Clear error
             }
         },
         generateMetaTitle() {
@@ -941,14 +972,34 @@ export default {
                     this.form.image = uploadedPath;
                     this.imagePreview = this.resolveImageUrl(response.data.url || uploadedPath);
                     this.imageFile = null;
+                    this.imageError = null; // Clear error on success
                     return uploadedPath;
                 } else {
                     throw new Error(response.data.message || 'Failed to upload image');
                 }
             } catch (error) {
-                const errorMessage = error.response?.data?.message ||
-                    error.response?.data?.error ||
-                    'Failed to upload image';
+                console.error('Error uploading image:', error);
+                console.error('Error response:', error.response?.data);
+
+                // Extract validation errors
+                let errorMessage = 'Failed to upload image';
+                if (error.response?.status === 422) {
+                    // Validation error
+                    const errors = error.response.data.errors;
+                    if (errors && errors.image) {
+                        errorMessage = Array.isArray(errors.image) ? errors.image.join(', ') : errors.image;
+                    } else if (error.response.data.message) {
+                        errorMessage = error.response.data.message;
+                    }
+                } else if (error.response?.data?.message) {
+                    errorMessage = error.response.data.message;
+                } else if (error.response?.data?.error) {
+                    errorMessage = error.response.data.error;
+                } else if (error.message) {
+                    errorMessage = error.message;
+                }
+
+                this.imageError = errorMessage;
                 throw new Error(errorMessage);
             } finally {
                 this.uploadingImage = false;
@@ -981,14 +1032,34 @@ export default {
                     this.form.og_image = uploadedPath;
                     this.ogImagePreview = this.resolveImageUrl(response.data.url || uploadedPath);
                     this.ogImageFile = null;
+                    this.ogImageError = null; // Clear error on success
                     return uploadedPath;
                 } else {
                     throw new Error(response.data.message || 'Failed to upload OG image');
                 }
             } catch (error) {
-                const errorMessage = error.response?.data?.message ||
-                    error.response?.data?.error ||
-                    'Failed to upload OG image';
+                console.error('Error uploading OG image:', error);
+                console.error('Error response:', error.response?.data);
+
+                // Extract validation errors
+                let errorMessage = 'Failed to upload OG image';
+                if (error.response?.status === 422) {
+                    // Validation error
+                    const errors = error.response.data.errors;
+                    if (errors && errors.image) {
+                        errorMessage = Array.isArray(errors.image) ? errors.image.join(', ') : errors.image;
+                    } else if (error.response.data.message) {
+                        errorMessage = error.response.data.message;
+                    }
+                } else if (error.response?.data?.message) {
+                    errorMessage = error.response.data.message;
+                } else if (error.response?.data?.error) {
+                    errorMessage = error.response.data.error;
+                } else if (error.message) {
+                    errorMessage = error.message;
+                }
+
+                this.ogImageError = errorMessage;
                 throw new Error(errorMessage);
             } finally {
                 this.uploadingOgImage = false;
