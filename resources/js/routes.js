@@ -53,6 +53,18 @@ const routes = [
                 name: 'Contact',
                 meta: { title: 'Contact' }
             },
+            {
+                path: 'blog',
+                component: () => import('./components/public/blog/BlogPage.vue'),
+                name: 'Blog',
+                meta: { title: 'Blog' }
+            },
+            {
+                path: 'blog/:slug',
+                component: () => import('./components/public/blog/BlogDetailPage.vue'),
+                name: 'BlogDetail',
+                meta: { title: 'Blog Post' }
+            },
         ]
     },
 

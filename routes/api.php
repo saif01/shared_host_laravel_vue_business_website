@@ -21,6 +21,7 @@ use App\Http\Controllers\Public\pages\PageController as PublicPageController;
 use App\Http\Controllers\Public\products\ProductController as PublicProductController;
 use App\Http\Controllers\Public\services\ServiceController as PublicServiceController;
 use App\Http\Controllers\Public\about\AboutController as PublicAboutController;
+use App\Http\Controllers\Public\blog\BlogController as PublicBlogController;
 use App\Http\Controllers\Api\about\AboutController;
 use App\Http\Controllers\Api\blog\BlogController;
 use Illuminate\Support\Facades\Route;
@@ -78,6 +79,9 @@ Route::prefix('openapi')->group(function () {
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::get('/settings', [SettingController::class, 'publicIndex']);
     Route::get('/about', [PublicAboutController::class, 'index']);
+    Route::get('/blog', [PublicBlogController::class, 'index']);
+    Route::get('/blog/{slug}', [PublicBlogController::class, 'show']);
+    Route::get('/blog/categories', [PublicBlogController::class, 'categories']);
     Route::post('/contact', [ContactController::class, 'submit']);
     Route::post('/newsletter/subscribe', [PublicNewsletterController::class, 'subscribe']);
 

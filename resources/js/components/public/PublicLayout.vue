@@ -68,8 +68,9 @@ export default {
                 { id: 1, label: 'Home', url: '/' },
                 { id: 2, label: 'Services', url: '/services' },
                 { id: 3, label: 'Products', url: '/products' },
-                { id: 4, label: 'About Us', url: '/about' },
-                { id: 5, label: 'Contact', url: '/contact' },
+                { id: 4, label: 'Blog', url: '/blog' },
+                { id: 5, label: 'About Us', url: '/about' },
+                { id: 6, label: 'Contact', url: '/contact' },
             ]
         };
     },
