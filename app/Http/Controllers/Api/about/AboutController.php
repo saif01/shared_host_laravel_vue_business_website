@@ -63,6 +63,10 @@ class AboutController extends Controller
             'team.*.image' => 'nullable|string',
             'team.*.linkedin' => 'nullable|url',
             'team.*.twitter' => 'nullable|url',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string',
+            'meta_keywords' => 'nullable|string',
+            'og_image' => 'nullable|string',
         ]);
 
         // Normalize image paths
@@ -76,6 +80,10 @@ class AboutController extends Controller
                     $member['image'] = MediaPath::normalize($member['image']);
                 }
             }
+        }
+
+        if (!empty($validated['og_image'])) {
+            $validated['og_image'] = MediaPath::normalize($validated['og_image']);
         }
 
         $about = About::firstOrCreate([], $validated);
@@ -133,6 +141,10 @@ class AboutController extends Controller
             'team.*.image' => 'nullable|string',
             'team.*.linkedin' => 'nullable|url',
             'team.*.twitter' => 'nullable|url',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string',
+            'meta_keywords' => 'nullable|string',
+            'og_image' => 'nullable|string',
         ]);
 
         // Convert camelCase to snake_case for database
@@ -166,6 +178,10 @@ class AboutController extends Controller
             }
         }
 
+        if (isset($validated['og_image']) && !empty($validated['og_image'])) {
+            $validated['og_image'] = MediaPath::normalize($validated['og_image']);
+        }
+
         $about->update($validated);
         return response()->json($this->transformAboutWithImages($about));
     }
@@ -191,6 +207,11 @@ class AboutController extends Controller
             }
         }
 
+        // Transform OG image
+        if (!empty($data['og_image'])) {
+            $data['og_image'] = MediaPath::url($data['og_image']);
+        }
+
         // Transform snake_case to camelCase for frontend
         $transformed = [
             'hero' => $data['hero'] ?? null,
@@ -201,8 +222,12 @@ class AboutController extends Controller
             'teamOverline' => $data['team_overline'] ?? null,
             'teamTitle' => $data['team_title'] ?? null,
             'team' => $data['team'] ?? null,
+            'meta_title' => $data['meta_title'] ?? null,
+            'meta_description' => $data['meta_description'] ?? null,
+            'meta_keywords' => $data['meta_keywords'] ?? null,
+            'og_image' => $data['og_image'] ?? null,
         ];
-
         return $transformed;
     }
 }
+

@@ -64,6 +64,7 @@ class UploadController extends Controller
                 'mime_type' => $mimeType,
             ], 200);
         } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Upload failed: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to upload image: ' . $e->getMessage()

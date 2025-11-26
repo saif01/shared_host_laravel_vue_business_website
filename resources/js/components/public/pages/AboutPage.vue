@@ -201,22 +201,36 @@ export default {
             const appName = import.meta.env.VITE_APP_NAME || 'Micro Control Technology';
             const baseUrl = window.location.origin;
 
-            document.title = `About Us - ${appName}`;
+            // Title
+            const title = this.aboutData?.meta_title || `About Us - ${appName}`;
+            document.title = title;
 
-            const description = this.aboutData?.hero?.subtitle || 'Learn about our company, mission, values, and team.';
+            // Description
+            const description = this.aboutData?.meta_description || this.aboutData?.hero?.subtitle || 'Learn about our company, mission, values, and team.';
             this.updateMetaTag('name', 'description', description);
 
-            const keywords = 'about us, company, team, mission, values, Micro Control Technology';
+            // Keywords
+            const keywords = this.aboutData?.meta_keywords || 'about us, company, team, mission, values, Micro Control Technology';
             this.updateMetaTag('name', 'keywords', keywords);
 
-            this.updateMetaTag('property', 'og:title', `About Us - ${appName}`);
+            // OG Tags
+            this.updateMetaTag('property', 'og:title', title);
             this.updateMetaTag('property', 'og:description', description);
             this.updateMetaTag('property', 'og:type', 'website');
             this.updateMetaTag('property', 'og:url', `${baseUrl}${this.$route.fullPath}`);
+            
+            if (this.aboutData?.og_image) {
+                this.updateMetaTag('property', 'og:image', this.resolveImageUrl(this.aboutData.og_image));
+            }
 
-            this.updateMetaTag('name', 'twitter:card', 'summary');
-            this.updateMetaTag('name', 'twitter:title', `About Us - ${appName}`);
+            // Twitter Tags
+            this.updateMetaTag('name', 'twitter:card', 'summary_large_image');
+            this.updateMetaTag('name', 'twitter:title', title);
             this.updateMetaTag('name', 'twitter:description', description);
+            
+            if (this.aboutData?.og_image) {
+                this.updateMetaTag('name', 'twitter:image', this.resolveImageUrl(this.aboutData.og_image));
+            }
         },
         updateMetaTag(attr, value, content) {
             if (!content) return;

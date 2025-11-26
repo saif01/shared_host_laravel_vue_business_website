@@ -23,6 +23,7 @@
                         <v-tab value="story">Our Story</v-tab>
                         <v-tab value="values">Core Values</v-tab>
                         <v-tab value="team">Team</v-tab>
+                        <v-tab value="seo">SEO & Meta</v-tab>
                     </v-tabs>
 
                     <v-window v-model="activeTab">
@@ -312,6 +313,104 @@
                                 </v-row>
                             </div>
                         </v-window-item>
+
+
+                        <!-- SEO & Meta Tab -->
+                        <v-window-item value="seo">
+                            <div class="pa-6">
+                                <v-row>
+                                    <v-col cols="12">
+                                        <v-alert type="info" variant="tonal" class="mb-4" density="compact">
+                                            These settings control how the About page appears in search engine results and when shared on social media.
+                                        </v-alert>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <v-text-field v-model="form.meta_title" label="Meta Title" variant="outlined"
+                                            counter="60"
+                                            hint="Recommended length: 50-60 characters. Appears in browser tab and search results."
+                                            persistent-hint>
+                                            <template v-slot:append>
+                                                <v-btn size="small" variant="text" color="primary"
+                                                    @click="generateMetaTitle"
+                                                    :disabled="!form.hero.title">
+                                                    Generate
+                                                </v-btn>
+                                            </template>
+                                        </v-text-field>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <v-textarea v-model="form.meta_description" label="Meta Description"
+                                            variant="outlined" rows="3" counter="160"
+                                            hint="Recommended length: 150-160 characters. Summarize the page content."
+                                            persistent-hint>
+                                            <template v-slot:append>
+                                                <v-btn size="small" variant="text" color="primary"
+                                                    @click="generateMetaDescription"
+                                                    :disabled="!form.hero.subtitle && !form.story.description">
+                                                    Generate
+                                                </v-btn>
+                                            </template>
+                                        </v-textarea>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <v-textarea v-model="form.meta_keywords" label="Meta Keywords"
+                                            variant="outlined" rows="2"
+                                            hint="Comma-separated keywords relevant to the page content."
+                                            persistent-hint>
+                                            <template v-slot:append>
+                                                <v-btn size="small" variant="text" color="primary"
+                                                    @click="generateMetaKeywords"
+                                                    :disabled="!form.values.length && !form.hero.title">
+                                                    Generate
+                                                </v-btn>
+                                            </template>
+                                        </v-textarea>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <v-label class="mb-2">Open Graph Image (Social Share Image)</v-label>
+                                        <v-card variant="outlined" class="pa-4">
+                                            <div class="d-flex flex-column flex-md-row align-start">
+                                                <div v-if="ogImagePreview || form.og_image"
+                                                    class="mr-md-4 mb-4 mb-md-0">
+                                                    <v-img :src="ogImagePreview || resolveImageUrl(form.og_image)"
+                                                        max-width="300" max-height="157" class="rounded elevation-2"
+                                                        cover aspect-ratio="1.91"></v-img>
+                                                    <div class="mt-2">
+                                                        <v-btn color="error" size="small" variant="text"
+                                                            @click="removeOgImage" prepend-icon="mdi-delete">
+                                                            Remove Image
+                                                        </v-btn>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <v-file-input v-model="ogImageFile" accept="image/*"
+                                                        label="Select OG Image" variant="outlined" prepend-icon=""
+                                                        prepend-inner-icon="mdi-image" show-size clearable
+                                                        hint="Recommended size: 1200x630px. Max file size: 5MB"
+                                                        persistent-hint @update:model-value="handleOgImageSelect">
+                                                        <template v-slot:append>
+                                                            <v-progress-circular v-if="uploadingOgImage"
+                                                                indeterminate color="primary"
+                                                                size="24"></v-progress-circular>
+                                                        </template>
+                                                    </v-file-input>
+
+                                                    <v-alert v-if="ogImageFile && ogImageFile.size > 5242880"
+                                                        type="warning" variant="tonal" density="compact" class="mt-2">
+                                                        File size is larger than 5MB. Please choose a smaller image.
+                                                    </v-alert>
+
+                                                    <div v-if="!ogImagePreview && !ogImageFile && !form.og_image"
+                                                        class="text-caption text-medium-emphasis mt-2">
+                                                        No image selected. This image will be displayed when the page is shared on social media.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </v-card>
+                                    </v-col>
+                                </v-row>
+                            </div>
+                        </v-window-item>
                     </v-window>
                 </v-form>
             </v-card-text>
@@ -357,6 +456,9 @@ export default {
             storyImagePreview: null,
             uploadingStoryImage: false,
             storyQuillEditor: null,
+            ogImageFile: null,
+            ogImagePreview: null,
+            uploadingOgImage: false,
             form: {
                 hero: {
                     overline: 'WHO WE ARE',
@@ -375,7 +477,11 @@ export default {
                 values: [],
                 teamOverline: 'OUR TEAM',
                 teamTitle: 'Meet the Experts',
-                team: []
+                team: [],
+                meta_title: '',
+                meta_description: '',
+                meta_keywords: '',
+                og_image: ''
             }
         };
     },
@@ -452,11 +558,17 @@ export default {
                 values: [],
                 teamOverline: 'OUR TEAM',
                 teamTitle: 'Meet the Experts',
-                team: []
+                team: [],
+                meta_title: '',
+                meta_description: '',
+                meta_keywords: '',
+                og_image: ''
             };
 
             this.storyImageFile = null;
             this.storyImagePreview = null;
+            this.ogImageFile = null;
+            this.ogImagePreview = null;
         },
         loadAboutForEdit() {
             if (!this.aboutData) {
@@ -509,6 +621,15 @@ export default {
                     imageFile: null,
                     uploadingImage: false
                 })) : [];
+
+                // Load SEO data
+                this.form.meta_title = this.aboutData.meta_title || '';
+                this.form.meta_description = this.aboutData.meta_description || '';
+                this.form.meta_keywords = this.aboutData.meta_keywords || '';
+                this.form.og_image = this.aboutData.og_image || '';
+                if (this.form.og_image) {
+                    this.ogImagePreview = this.resolveImageUrl(this.form.og_image);
+                }
 
                 // Initialize editor with content if on story tab
                 this.$nextTick(() => {
@@ -751,30 +872,30 @@ export default {
                 if (selectedFile) {
                     const reader = new FileReader();
                     reader.onload = (e) => {
-                        this.$set(this.form.team[index], 'imagePreview', e.target.result);
+                        this.form.team[index].imagePreview = e.target.result;
                     };
                     reader.onerror = () => {
                         this.showError('Failed to read image file');
                         this.form.team[index].imageFile = null;
-                        this.$set(this.form.team[index], 'imagePreview', null);
+                        this.form.team[index].imagePreview = null;
                     };
                     reader.readAsDataURL(selectedFile);
                 } else {
-                    this.$set(this.form.team[index], 'imagePreview', null);
+                    this.form.team[index].imagePreview = null;
                 }
             } else {
                 this.form.team[index].imageFile = null;
                 if (!this.form.team[index].image) {
-                    this.$set(this.form.team[index], 'imagePreview', null);
+                    this.form.team[index].imagePreview = null;
                 } else {
                     // Update preview when image URL is directly entered (if no file is selected)
-                    this.$set(this.form.team[index], 'imagePreview', this.resolveImageUrl(this.form.team[index].image));
+                    this.form.team[index].imagePreview = this.resolveImageUrl(this.form.team[index].image);
                 }
             }
         },
         removeTeamMemberImage(index) {
             if (confirm('Are you sure you want to remove this image?')) {
-                this.$set(this.form.team[index], 'imagePreview', null);
+                this.form.team[index].imagePreview = null;
                 this.form.team[index].imageFile = null;
                 this.form.team[index].image = '';
             }
