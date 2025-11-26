@@ -36,14 +36,13 @@
                                             persistent-hint></v-text-field>
                                     </v-col>
                                     <v-col cols="12">
-                                        <v-text-field v-model="form.hero.title" label="Hero Title *"
-                                            variant="outlined" :rules="[v => !!v || 'Title is required']"
+                                        <v-text-field v-model="form.hero.title" label="Hero Title *" variant="outlined"
+                                            :rules="[v => !!v || 'Title is required']"
                                             hint="Main heading for the hero section" persistent-hint></v-text-field>
                                     </v-col>
                                     <v-col cols="12">
                                         <v-textarea v-model="form.hero.subtitle" label="Hero Subtitle *"
-                                            variant="outlined" rows="3"
-                                            :rules="[v => !!v || 'Subtitle is required']"
+                                            variant="outlined" rows="3" :rules="[v => !!v || 'Subtitle is required']"
                                             hint="Subtitle text below the main title" persistent-hint></v-textarea>
                                     </v-col>
                                 </v-row>
@@ -60,9 +59,8 @@
                                             persistent-hint></v-text-field>
                                     </v-col>
                                     <v-col cols="12">
-                                        <v-text-field v-model="form.story.title" label="Story Title"
-                                            variant="outlined" hint="Main heading for the story section"
-                                            persistent-hint></v-text-field>
+                                        <v-text-field v-model="form.story.title" label="Story Title" variant="outlined"
+                                            hint="Main heading for the story section" persistent-hint></v-text-field>
                                     </v-col>
                                     <v-col cols="12">
                                         <v-label class="mb-2">Story Description</v-label>
@@ -74,9 +72,11 @@
                                         <v-label class="mb-2">Story Image</v-label>
                                         <v-card variant="outlined" class="pa-4">
                                             <div class="d-flex flex-column flex-md-row align-start">
-                                                <div v-if="storyImagePreview || form.story.image" class="mr-md-4 mb-4 mb-md-0">
+                                                <div v-if="storyImagePreview || form.story.image"
+                                                    class="mr-md-4 mb-4 mb-md-0">
                                                     <v-img :src="storyImagePreview || resolveImageUrl(form.story.image)"
-                                                        max-width="300" max-height="300" class="rounded elevation-2" cover></v-img>
+                                                        max-width="300" max-height="300" class="rounded elevation-2"
+                                                        cover></v-img>
                                                     <div class="mt-2">
                                                         <v-btn color="error" size="small" variant="text"
                                                             @click="removeStoryImage" prepend-icon="mdi-delete">
@@ -86,15 +86,27 @@
                                                 </div>
                                                 <div class="flex-grow-1">
                                                     <v-file-input v-model="storyImageFile" accept="image/*"
-                                                        label="Select Story Image" variant="outlined"
-                                                        prepend-icon="" prepend-inner-icon="mdi-image" show-size
-                                                        clearable hint="Recommended size: 800x500px. Max file size: 5MB"
+                                                        label="Select Story Image" variant="outlined" prepend-icon=""
+                                                        prepend-inner-icon="mdi-image" show-size clearable
+                                                        hint="Recommended size: 800x500px. Max file size: 5MB"
                                                         persistent-hint @update:model-value="handleStoryImageSelect">
                                                         <template v-slot:append>
-                                                            <v-progress-circular v-if="uploadingStoryImage" indeterminate
-                                                                color="primary" size="24"></v-progress-circular>
+                                                            <v-progress-circular v-if="uploadingStoryImage"
+                                                                indeterminate color="primary"
+                                                                size="24"></v-progress-circular>
                                                         </template>
                                                     </v-file-input>
+
+                                                    <v-alert v-if="storyImageFile && storyImageFile.size > 5242880"
+                                                        type="warning" variant="tonal" density="compact" class="mt-2">
+                                                        File size is larger than 5MB. Please choose a smaller image.
+                                                    </v-alert>
+
+                                                    <div v-if="!storyImagePreview && !storyImageFile && !form.story.image"
+                                                        class="text-caption text-medium-emphasis mt-2">
+                                                        No image selected. Upload an image to display with the story
+                                                        section.
+                                                    </div>
                                                 </div>
                                             </div>
                                         </v-card>
@@ -112,11 +124,13 @@
                                                 <v-row>
                                                     <v-col cols="12" md="6">
                                                         <v-text-field v-model="stat.value" label="Value"
-                                                            variant="outlined" hint="e.g., 15+, 500+" persistent-hint></v-text-field>
+                                                            variant="outlined" hint="e.g., 15+, 500+"
+                                                            persistent-hint></v-text-field>
                                                     </v-col>
                                                     <v-col cols="12" md="6">
                                                         <v-text-field v-model="stat.label" label="Label"
-                                                            variant="outlined" hint="e.g., Years Experience" persistent-hint></v-text-field>
+                                                            variant="outlined" hint="e.g., Years Experience"
+                                                            persistent-hint></v-text-field>
                                                     </v-col>
                                                 </v-row>
                                             </v-card>
@@ -139,8 +153,8 @@
                                     </v-col>
                                     <v-col cols="12">
                                         <v-textarea v-model="form.valuesSubtitle" label="Values Section Subtitle"
-                                            variant="outlined" rows="2"
-                                            hint="Subtitle text for the values section" persistent-hint></v-textarea>
+                                            variant="outlined" rows="2" hint="Subtitle text for the values section"
+                                            persistent-hint></v-textarea>
                                     </v-col>
                                     <v-col cols="12">
                                         <v-divider class="my-4"></v-divider>
@@ -155,16 +169,19 @@
                                                 <v-row>
                                                     <v-col cols="12" md="6">
                                                         <v-text-field v-model="value.title" label="Title *"
-                                                            variant="outlined" :rules="[v => !!v || 'Title is required']"
+                                                            variant="outlined"
+                                                            :rules="[v => !!v || 'Title is required']"
                                                             hint="Value title" persistent-hint></v-text-field>
                                                     </v-col>
                                                     <v-col cols="12" md="6">
                                                         <v-text-field v-model="value.icon" label="Icon"
                                                             variant="outlined"
                                                             hint="Material Design Icon name (e.g., mdi-shield-check)"
-                                                            persistent-hint prepend-inner-icon="mdi-information-outline">
+                                                            persistent-hint
+                                                            prepend-inner-icon="mdi-information-outline">
                                                             <template v-slot:append>
-                                                                <v-icon v-if="value.icon" :icon="value.icon" size="small"></v-icon>
+                                                                <v-icon v-if="value.icon" :icon="value.icon"
+                                                                    size="small"></v-icon>
                                                             </template>
                                                         </v-text-field>
                                                     </v-col>
@@ -223,12 +240,16 @@
                                                         <v-label class="mb-2">Member Image</v-label>
                                                         <v-card variant="outlined" class="pa-4">
                                                             <div class="d-flex flex-column flex-md-row align-start">
-                                                                <div v-if="member.imagePreview || member.image" class="mr-md-4 mb-4 mb-md-0">
-                                                                    <v-img :src="member.imagePreview || resolveImageUrl(member.image)"
-                                                                        max-width="150" max-height="150" class="rounded elevation-2" cover></v-img>
+                                                                <div v-if="member.imagePreview || member.image"
+                                                                    class="mr-md-4 mb-4 mb-md-0">
+                                                                    <v-img
+                                                                        :src="member.imagePreview || resolveImageUrl(member.image)"
+                                                                        max-width="150" max-height="150"
+                                                                        class="rounded elevation-2" cover></v-img>
                                                                     <div class="mt-2">
                                                                         <v-btn color="error" size="small" variant="text"
-                                                                            @click="removeTeamMemberImage(index)" prepend-icon="mdi-delete">
+                                                                            @click="removeTeamMemberImage(index)"
+                                                                            prepend-icon="mdi-delete">
                                                                             Remove Image
                                                                         </v-btn>
                                                                     </div>
@@ -236,11 +257,35 @@
                                                                 <div class="flex-grow-1">
                                                                     <v-file-input :ref="`teamImageFile_${index}`"
                                                                         @update:model-value="(file) => handleTeamMemberImageSelect(file, index)"
-                                                                        accept="image/*" label="Select Team Member Image"
-                                                                        variant="outlined" prepend-icon="" prepend-inner-icon="mdi-image"
-                                                                        show-size clearable
+                                                                        accept="image/*"
+                                                                        label="Select Team Member Image"
+                                                                        variant="outlined" prepend-icon=""
+                                                                        prepend-inner-icon="mdi-image" show-size
+                                                                        clearable
                                                                         hint="Recommended: Square image. Max file size: 5MB"
-                                                                        persistent-hint></v-file-input>
+                                                                        persistent-hint>
+                                                                        <template v-slot:append>
+                                                                            <v-progress-circular
+                                                                                v-if="member.uploadingImage"
+                                                                                indeterminate color="primary"
+                                                                                size="24"></v-progress-circular>
+                                                                        </template>
+                                                                    </v-file-input>
+
+                                                                    <v-alert
+                                                                        v-if="member.imageFile && member.imageFile.size > 5242880"
+                                                                        type="warning" variant="tonal" density="compact"
+                                                                        class="mt-2">
+                                                                        File size is larger than 5MB. Please choose a
+                                                                        smaller image.
+                                                                    </v-alert>
+
+                                                                    <div v-if="!member.imagePreview && !member.imageFile && !member.image"
+                                                                        class="text-caption text-medium-emphasis mt-2">
+                                                                        No image selected. Upload an image to display
+                                                                        with
+                                                                        this team member.
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </v-card>
@@ -248,18 +293,21 @@
                                                     <v-col cols="12" md="6">
                                                         <v-text-field v-model="member.linkedin" label="LinkedIn URL"
                                                             variant="outlined" hint="Optional LinkedIn profile URL"
-                                                            persistent-hint prepend-inner-icon="mdi-linkedin"></v-text-field>
+                                                            persistent-hint
+                                                            prepend-inner-icon="mdi-linkedin"></v-text-field>
                                                     </v-col>
                                                     <v-col cols="12" md="6">
                                                         <v-text-field v-model="member.twitter" label="Twitter URL"
                                                             variant="outlined" hint="Optional Twitter profile URL"
-                                                            persistent-hint prepend-inner-icon="mdi-twitter"></v-text-field>
+                                                            persistent-hint
+                                                            prepend-inner-icon="mdi-twitter"></v-text-field>
                                                     </v-col>
                                                 </v-row>
                                             </v-card>
                                         </div>
                                         <v-btn color="primary" variant="outlined" prepend-icon="mdi-plus"
-                                            @click="addTeamMember">Add Team Member</v-btn>
+                                            @click="addTeamMember">Add Team
+                                            Member</v-btn>
                                     </v-col>
                                 </v-row>
                             </div>
@@ -350,6 +398,11 @@ export default {
                 } else {
                     this.resetForm();
                 }
+            } else {
+                // Clean up editor when dialog closes
+                if (this.storyQuillEditor) {
+                    this.destroyStoryEditor();
+                }
             }
         },
         aboutData: {
@@ -364,9 +417,12 @@ export default {
         },
         activeTab(newTab) {
             if (newTab === 'story' && this.dialog && !this.loading) {
-                setTimeout(() => {
-                    this.initStoryEditor();
-                }, 300);
+                // Use nextTick and a small delay to ensure DOM is ready
+                this.$nextTick(() => {
+                    setTimeout(() => {
+                        this.initStoryEditor();
+                    }, 300);
+                });
             } else if (newTab !== 'story' && this.storyQuillEditor) {
                 this.destroyStoryEditor();
             }
@@ -425,6 +481,10 @@ export default {
                         image: this.aboutData.story.image || '',
                         stats: this.aboutData.story.stats ? [...this.aboutData.story.stats] : []
                     };
+                    // Set preview for existing story image
+                    if (this.form.story.image) {
+                        this.storyImagePreview = this.resolveImageUrl(this.form.story.image);
+                    }
                 }
 
                 // Load values data
@@ -445,15 +505,17 @@ export default {
                     image: m.image || '',
                     linkedin: m.linkedin || '',
                     twitter: m.twitter || '',
-                    imagePreview: null
+                    imagePreview: m.image ? this.resolveImageUrl(m.image) : null,
+                    imageFile: null,
+                    uploadingImage: false
                 })) : [];
 
-                // Initialize editor with content
+                // Initialize editor with content if on story tab
                 this.$nextTick(() => {
                     if (this.activeTab === 'story') {
                         setTimeout(() => {
                             this.initStoryEditor();
-                        }, 300);
+                        }, 500);
                     }
                 });
             } catch (error) {
@@ -468,51 +530,155 @@ export default {
                 this.destroyStoryEditor();
             }
 
-            const container = this.$refs.storyEditorContainer;
-            if (!container) return;
-
-            this.storyQuillEditor = new Quill(container, {
-                theme: 'snow',
-                modules: {
-                    toolbar: [
-                        [{ 'header': [1, 2, 3, false] }],
-                        ['bold', 'italic', 'underline', 'strike'],
-                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                        [{ 'align': [] }],
-                        ['link'],
-                        ['clean']
-                    ]
+            this.$nextTick(() => {
+                const container = this.$refs.storyEditorContainer;
+                if (!container || this.activeTab !== 'story') {
+                    return;
                 }
-            });
 
-            if (this.form.story.description) {
-                this.storyQuillEditor.root.innerHTML = this.form.story.description;
-            }
+                try {
+                    // Clear container before initializing
+                    container.innerHTML = '';
 
-            this.storyQuillEditor.on('text-change', () => {
-                this.form.story.description = this.storyQuillEditor.root.innerHTML;
+                    this.storyQuillEditor = new Quill(container, {
+                        theme: 'snow',
+                        modules: {
+                            toolbar: [
+                                [{ 'header': [1, 2, 3, false] }],
+                                ['bold', 'italic', 'underline', 'strike'],
+                                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                                [{ 'align': [] }],
+                                ['link'],
+                                ['clean']
+                            ]
+                        },
+                        placeholder: 'Enter story description...'
+                    });
+
+                    // Set initial content with a small delay to ensure Quill is fully initialized
+                    const description = this.form.story.description || '';
+                    if (description) {
+                        setTimeout(() => {
+                            if (this.storyQuillEditor) {
+                                this.storyQuillEditor.root.innerHTML = description;
+                            }
+                        }, 100);
+                    }
+
+                    // Update form when editor content changes
+                    this.storyQuillEditor.on('text-change', () => {
+                        if (!this.storyQuillEditor) return;
+                        const content = this.storyQuillEditor.root.innerHTML.trim();
+                        // Only update if content is not empty
+                        if (content && content !== '<p><br></p>' && content !== '<p></p>') {
+                            this.form.story.description = this.storyQuillEditor.root.innerHTML;
+                        } else if (!content || content === '<p><br></p>' || content === '<p></p>') {
+                            // Clear description if editor is empty
+                            this.form.story.description = '';
+                        }
+                    });
+
+                    // Also update on selection change for better sync
+                    this.storyQuillEditor.on('selection-change', () => {
+                        if (!this.storyQuillEditor) return;
+                        const content = this.storyQuillEditor.root.innerHTML.trim();
+                        if (content && content !== '<p><br></p>' && content !== '<p></p>') {
+                            this.form.story.description = this.storyQuillEditor.root.innerHTML;
+                        }
+                    });
+                } catch (error) {
+                    console.error('Error initializing Quill editor:', error);
+                    this.showError('Failed to initialize text editor');
+                }
             });
         },
         destroyStoryEditor() {
             if (this.storyQuillEditor) {
-                this.storyQuillEditor = null;
+                try {
+                    // Save content before destroying
+                    if (this.storyQuillEditor.root && this.storyQuillEditor.root.innerHTML) {
+                        const content = this.storyQuillEditor.root.innerHTML.trim();
+                        if (content && content !== '<p><br></p>' && content !== '<p></p>') {
+                            this.form.story.description = this.storyQuillEditor.root.innerHTML;
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error saving editor content:', error);
+                }
+
+                try {
+                    this.storyQuillEditor = null;
+                    if (this.$refs.storyEditorContainer) {
+                        this.$refs.storyEditorContainer.innerHTML = '';
+                    }
+                } catch (error) {
+                    console.error('Error destroying editor:', error);
+                    this.storyQuillEditor = null;
+                }
+            } else if (this.$refs.storyEditorContainer) {
+                this.$refs.storyEditorContainer.innerHTML = '';
             }
         },
-        async handleStoryImageSelect(file) {
-            if (!file || !file[0]) return;
+        handleStoryImageSelect(file) {
+            if (file) {
+                const selectedFile = Array.isArray(file) ? file[0] : file;
 
-            const selectedFile = file[0];
-            if (selectedFile.size > 5242880) {
-                this.showError('File size is larger than 5MB. Please choose a smaller image.');
-                return;
+                if (selectedFile && selectedFile.size > 5242880) {
+                    this.showError('Image file size must be less than 5MB');
+                    this.storyImageFile = null;
+                    return;
+                }
+
+                if (selectedFile && !selectedFile.type.startsWith('image/')) {
+                    this.showError('Please select a valid image file');
+                    this.storyImageFile = null;
+                    return;
+                }
+
+                this.storyImageFile = selectedFile;
+
+                if (selectedFile) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        this.storyImagePreview = e.target.result;
+                    };
+                    reader.onerror = () => {
+                        this.showError('Failed to read image file');
+                        this.storyImageFile = null;
+                        this.storyImagePreview = null;
+                    };
+                    reader.readAsDataURL(selectedFile);
+                } else {
+                    this.storyImagePreview = null;
+                }
+            } else {
+                this.storyImageFile = null;
+                if (!this.form.story.image) {
+                    this.storyImagePreview = null;
+                } else {
+                    // Update preview when image URL is directly entered (if no file is selected)
+                    this.storyImagePreview = this.resolveImageUrl(this.form.story.image);
+                }
             }
+        },
+        removeStoryImage() {
+            if (confirm('Are you sure you want to remove this image?')) {
+                this.storyImagePreview = null;
+                this.storyImageFile = null;
+                this.form.story.image = '';
+            }
+        },
+        async uploadStoryImage() {
+            if (!this.storyImageFile) return null;
 
-            this.storyImageFile = selectedFile;
+            const fileToUpload = Array.isArray(this.storyImageFile) ? this.storyImageFile[0] : this.storyImageFile;
+            if (!fileToUpload) return null;
+
             this.uploadingStoryImage = true;
-
             try {
                 const formData = new FormData();
-                formData.append('image', selectedFile);
+                formData.append('image', fileToUpload);
+                formData.append('folder', 'about');
 
                 const response = await axios.post('/api/v1/upload/image', formData, {
                     headers: {
@@ -521,21 +687,23 @@ export default {
                     }
                 });
 
-                if (response.data && response.data.path) {
-                    this.form.story.image = normalizeUploadPath(response.data.path);
-                    this.storyImagePreview = resolveUploadUrl(response.data.path);
-                    this.showSuccess('Image uploaded successfully');
+                if (response.data.success || response.data.path) {
+                    const uploadedPath = normalizeUploadPath(response.data.path || response.data.url);
+                    this.form.story.image = uploadedPath;
+                    this.storyImagePreview = resolveUploadUrl(response.data.url || uploadedPath);
+                    this.storyImageFile = null;
+                    return uploadedPath;
+                } else {
+                    throw new Error(response.data.message || 'Failed to upload image');
                 }
             } catch (error) {
-                this.handleApiError(error, 'Failed to upload image');
+                const errorMessage = error.response?.data?.message ||
+                    error.response?.data?.error ||
+                    'Failed to upload image';
+                throw new Error(errorMessage);
             } finally {
                 this.uploadingStoryImage = false;
             }
-        },
-        removeStoryImage() {
-            this.form.story.image = '';
-            this.storyImagePreview = null;
-            this.storyImageFile = null;
         },
         addStat() {
             this.form.story.stats.push({ value: '', label: '' });
@@ -562,21 +730,70 @@ export default {
         removeTeamMember(index) {
             this.form.team.splice(index, 1);
         },
-        async handleTeamMemberImageSelect(file, index) {
-            if (!file || !file[0]) return;
+        handleTeamMemberImageSelect(file, index) {
+            if (file) {
+                const selectedFile = Array.isArray(file) ? file[0] : file;
 
-            const selectedFile = file[0];
-            if (selectedFile.size > 5242880) {
-                this.showError('File size is larger than 5MB. Please choose a smaller image.');
-                return;
+                if (selectedFile && selectedFile.size > 5242880) {
+                    this.showError('Image file size must be less than 5MB');
+                    this.form.team[index].imageFile = null;
+                    return;
+                }
+
+                if (selectedFile && !selectedFile.type.startsWith('image/')) {
+                    this.showError('Please select a valid image file');
+                    this.form.team[index].imageFile = null;
+                    return;
+                }
+
+                this.form.team[index].imageFile = selectedFile;
+
+                if (selectedFile) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        this.$set(this.form.team[index], 'imagePreview', e.target.result);
+                    };
+                    reader.onerror = () => {
+                        this.showError('Failed to read image file');
+                        this.form.team[index].imageFile = null;
+                        this.$set(this.form.team[index], 'imagePreview', null);
+                    };
+                    reader.readAsDataURL(selectedFile);
+                } else {
+                    this.$set(this.form.team[index], 'imagePreview', null);
+                }
+            } else {
+                this.form.team[index].imageFile = null;
+                if (!this.form.team[index].image) {
+                    this.$set(this.form.team[index], 'imagePreview', null);
+                } else {
+                    // Update preview when image URL is directly entered (if no file is selected)
+                    this.$set(this.form.team[index], 'imagePreview', this.resolveImageUrl(this.form.team[index].image));
+                }
             }
+        },
+        removeTeamMemberImage(index) {
+            if (confirm('Are you sure you want to remove this image?')) {
+                this.$set(this.form.team[index], 'imagePreview', null);
+                this.form.team[index].imageFile = null;
+                this.form.team[index].image = '';
+            }
+        },
+        async uploadTeamMemberImage(index) {
+            const member = this.form.team[index];
+            if (!member.imageFile) return null;
 
-            this.form.team[index].imageFile = selectedFile;
-            this.form.team[index].uploadingImage = true;
+            const fileToUpload = Array.isArray(member.imageFile) ? member.imageFile[0] : member.imageFile;
+            if (!fileToUpload) return null;
 
+            member.uploadingImage = true;
             try {
                 const formData = new FormData();
-                formData.append('image', selectedFile);
+                formData.append('image', fileToUpload);
+                formData.append('folder', 'about/team');
+                if (member.name) {
+                    formData.append('prefix', member.name);
+                }
 
                 const response = await axios.post('/api/v1/upload/image', formData, {
                     headers: {
@@ -585,21 +802,23 @@ export default {
                     }
                 });
 
-                if (response.data && response.data.path) {
-                    this.form.team[index].image = normalizeUploadPath(response.data.path);
-                    this.form.team[index].imagePreview = resolveUploadUrl(response.data.path);
-                    this.showSuccess('Image uploaded successfully');
+                if (response.data.success || response.data.path) {
+                    const uploadedPath = normalizeUploadPath(response.data.path || response.data.url);
+                    member.image = uploadedPath;
+                    this.$set(member, 'imagePreview', resolveUploadUrl(response.data.url || uploadedPath));
+                    member.imageFile = null;
+                    return uploadedPath;
+                } else {
+                    throw new Error(response.data.message || 'Failed to upload image');
                 }
             } catch (error) {
-                this.handleApiError(error, 'Failed to upload image');
+                const errorMessage = error.response?.data?.message ||
+                    error.response?.data?.error ||
+                    'Failed to upload image';
+                throw new Error(errorMessage);
             } finally {
-                this.form.team[index].uploadingImage = false;
+                member.uploadingImage = false;
             }
-        },
-        removeTeamMemberImage(index) {
-            this.form.team[index].image = '';
-            this.form.team[index].imagePreview = null;
-            this.form.team[index].imageFile = null;
         },
         async saveAbout() {
             // Validate form
@@ -614,27 +833,56 @@ export default {
                 return;
             }
 
-            // Save editor content
-            if (this.storyQuillEditor) {
-                this.form.story.description = this.storyQuillEditor.root.innerHTML;
+            // Save editor content before submitting
+            if (this.storyQuillEditor && this.storyQuillEditor.root) {
+                const content = this.storyQuillEditor.root.innerHTML.trim();
+                if (content && content !== '<p><br></p>' && content !== '<p></p>') {
+                    this.form.story.description = this.storyQuillEditor.root.innerHTML;
+                } else {
+                    this.form.story.description = '';
+                }
             }
 
             this.saving = true;
 
             try {
+                // Upload story image if a new file is selected
+                if (this.storyImageFile) {
+                    try {
+                        await this.uploadStoryImage();
+                    } catch (error) {
+                        this.handleApiError(error, 'Failed to upload story image');
+                        this.saving = false;
+                        return;
+                    }
+                }
+
+                // Upload team member images if new files are selected
+                for (let i = 0; i < this.form.team.length; i++) {
+                    if (this.form.team[i].imageFile) {
+                        try {
+                            await this.uploadTeamMemberImage(i);
+                        } catch (error) {
+                            this.handleApiError(error, `Failed to upload image for ${this.form.team[i].name || 'team member'}`);
+                            this.saving = false;
+                            return;
+                        }
+                    }
+                }
+
                 const payload = { ...this.form };
 
-                await axios.put('/api/v1/about', payload, {
-                    headers: this.getAuthHeaders()
-                });
+                try {
+                    await axios.put('/api/v1/about', payload, {
+                        headers: this.getAuthHeaders()
+                    });
 
-                this.showSuccess('About content saved successfully');
-                this.$emit('saved');
-                this.closeDialog();
-            } catch (error) {
-                // If 404, try POST instead
-                if (error.response?.status === 404) {
-                    try {
+                    this.showSuccess('About content saved successfully');
+                    this.$emit('saved');
+                    this.closeDialog();
+                } catch (putError) {
+                    // If 404, try POST instead
+                    if (putError.response?.status === 404) {
                         await axios.post('/api/v1/about', payload, {
                             headers: this.getAuthHeaders()
                         });
@@ -642,17 +890,18 @@ export default {
                         this.showSuccess('About content created successfully');
                         this.$emit('saved');
                         this.closeDialog();
-                    } catch (postError) {
-                        this.handleApiError(postError, 'Failed to save about content');
+                    } else {
+                        this.handleApiError(putError, 'Failed to save about content');
                     }
-                } else {
-                    this.handleApiError(error, 'Failed to save about content');
                 }
+            } catch (error) {
+                this.handleApiError(error, 'Failed to save about content');
             } finally {
                 this.saving = false;
             }
         },
         closeDialog() {
+            // Save editor content before closing
             if (this.storyQuillEditor) {
                 this.destroyStoryEditor();
             }
@@ -681,4 +930,3 @@ export default {
     min-height: 200px;
 }
 </style>
-

@@ -41,8 +41,7 @@
                             </h1>
                             <p
                                 class="text-h6 text-white opacity-90 mw-700 mx-auto font-weight-light animate-slide-up-delay">
-                                {{ aboutData?.hero?.subtitle || 'We are dedicated to providing reliable, efficient, and
-                                sustainable power solutions for businesses and homes across the globe.' }}
+                                {{ aboutData?.hero?.subtitle || defaultSubtitle }}
                             </p>
                         </div>
                     </v-fade-transition>
@@ -112,7 +111,7 @@
                                 <h3 class="text-h5 font-weight-bold mb-4 text-grey-darken-3">{{ value.title }}</h3>
                                 <p class="text-body-1 text-medium-emphasis lh-relaxed">{{ value.description ||
                                     value.desc
-                                }}</p>
+                                    }}</p>
                             </v-card>
                         </v-col>
                     </v-row>
@@ -166,6 +165,7 @@ export default {
     name: 'AboutPage',
     data() {
         return {
+            defaultSubtitle: 'We are dedicated to providing reliable, efficient, and sustainable power solutions for businesses and homes across the globe.',
             aboutData: null,
             loading: true,
             error: null
