@@ -79,9 +79,12 @@ Route::prefix('openapi')->group(function () {
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::get('/settings', [SettingController::class, 'publicIndex']);
     Route::get('/about', [PublicAboutController::class, 'index']);
+    
+    // Blog routes - specific routes must come before parameterized routes
     Route::get('/blog', [PublicBlogController::class, 'index']);
-    Route::get('/blog/{slug}', [PublicBlogController::class, 'show']);
     Route::get('/blog/categories', [PublicBlogController::class, 'categories']);
+    Route::get('/blog/{slug}', [PublicBlogController::class, 'show']);
+    
     Route::post('/contact', [ContactController::class, 'submit']);
     Route::post('/newsletter/subscribe', [PublicNewsletterController::class, 'subscribe']);
 

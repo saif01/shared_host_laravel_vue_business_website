@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Public\blog;
 use App\Http\Controllers\Controller;
 use App\Models\BlogPost;
 use App\Models\Category;
+use App\Models\CategoryPost;
 use Illuminate\Http\Request;
 use App\Support\MediaPath;
+use Illuminate\Support\Facades\Schema;
 
 class BlogController extends Controller
 {
@@ -111,20 +113,54 @@ class BlogController extends Controller
 
     public function categories()
     {
-        $categories = Category::where('type', 'post')
-            ->where('published', true)
-            ->select('id', 'name', 'slug', 'description', 'image', 'order')
-            ->orderBy('order')
-            ->get();
-        
-        $categories->transform(function ($category) {
-            if (!empty($category->image)) {
-                $category->image = MediaPath::url($category->image);
+        try {
+            $query = Category::where('type', 'post');
+            
+            // Filter by published if column exists
+            if (Schema::hasColumn('categories', 'published')) {
+                $query->where('published', true);
             }
-            return $category;
-        });
-        
-        return response()->json($categories);
+            
+            // Build select array dynamically based on available columns
+            $selectColumns = ['id', 'name', 'slug'];
+            
+            if (Schema::hasColumn('categories', 'description')) {
+                $selectColumns[] = 'description';
+            }
+            if (Schema::hasColumn('categories', 'image')) {
+                $selectColumns[] = 'image';
+            }
+            if (Schema::hasColumn('categories', 'order')) {
+                $selectColumns[] = 'order';
+            }
+            
+            $categories = $query->select($selectColumns);
+            
+            // Order by order if column exists, otherwise by name
+            if (Schema::hasColumn('categories', 'order')) {
+                $categories = $categories->orderByRaw('COALESCE(`order`, 0) ASC')
+                    ->orderBy('name', 'ASC');
+            } else {
+                $categories = $categories->orderBy('name', 'ASC');
+            }
+            
+            $categories = $categories->get();
+            
+            $categories->transform(function ($category) {
+                if (!empty($category->image)) {
+                    $category->image = MediaPath::url($category->image);
+                }
+                return $category;
+            });
+            
+            return response()->json($categories);
+        } catch (\Exception $e) {
+            // Log the error and return empty array
+            \Log::error('Error loading blog categories: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json([]);
+        }
     }
 
     private function transformPostWithImages(BlogPost $post): BlogPost

@@ -16,8 +16,10 @@
                     <div>
                         <div class="glass-pill d-inline-flex align-center px-5 py-3 rounded-pill mb-8 animate-float">
                             <div class="pulse-dot mr-2"></div>
-                            <v-icon icon="mdi-book-open-page-variant" color="amber-accent-4" size="small" class="mr-2"></v-icon>
-                            <span class="text-subtitle-2 font-weight-bold tracking-wide text-white">LATEST INSIGHTS</span>
+                            <v-icon icon="mdi-book-open-page-variant" color="amber-accent-4" size="small"
+                                class="mr-2"></v-icon>
+                            <span class="text-subtitle-2 font-weight-bold tracking-wide text-white">LATEST
+                                INSIGHTS</span>
                         </div>
                         <h1
                             class="text-h4 text-lg-h2 font-weight-black text-white mb-6 lh-tight text-shadow-sm animate-slide-up">
@@ -40,38 +42,19 @@
                     <v-card-text class="pa-4">
                         <v-row>
                             <v-col cols="12" md="6">
-                                <v-text-field
-                                    v-model="searchQuery"
-                                    label="Search posts"
-                                    prepend-inner-icon="mdi-magnify"
-                                    variant="outlined"
-                                    density="compact"
-                                    clearable
-                                    @update:model-value="handleSearch"
-                                ></v-text-field>
+                                <v-text-field v-model="searchQuery" label="Search posts"
+                                    prepend-inner-icon="mdi-magnify" variant="outlined" density="compact" clearable
+                                    @update:model-value="handleSearch"></v-text-field>
                             </v-col>
                             <v-col cols="12" md="3">
-                                <v-select
-                                    v-model="selectedCategory"
-                                    :items="categoryOptions"
-                                    label="Category"
-                                    prepend-inner-icon="mdi-filter"
-                                    variant="outlined"
-                                    density="compact"
-                                    clearable
-                                    @update:model-value="loadPosts"
-                                ></v-select>
+                                <v-select v-model="selectedCategory" :items="categoryOptions" label="Category"
+                                    prepend-inner-icon="mdi-filter" variant="outlined" density="compact" clearable
+                                    @update:model-value="loadPosts"></v-select>
                             </v-col>
                             <v-col cols="12" md="3">
-                                <v-select
-                                    v-model="sortBy"
-                                    :items="sortOptions"
-                                    label="Sort by"
-                                    prepend-inner-icon="mdi-sort"
-                                    variant="outlined"
-                                    density="compact"
-                                    @update:model-value="loadPosts"
-                                ></v-select>
+                                <v-select v-model="sortBy" :items="sortOptions" label="Sort by"
+                                    prepend-inner-icon="mdi-sort" variant="outlined" density="compact"
+                                    @update:model-value="loadPosts"></v-select>
                             </v-col>
                         </v-row>
                     </v-card-text>
@@ -87,20 +70,13 @@
                             </v-card-title>
                             <v-card-text class="pa-0">
                                 <v-list density="compact">
-                                    <v-list-item
-                                        :active="!selectedCategory"
-                                        @click="setCategory(null)"
-                                        class="cursor-pointer"
-                                    >
+                                    <v-list-item :active="!selectedCategory" @click="setCategory(null)"
+                                        class="cursor-pointer">
                                         <v-list-item-title>All Categories</v-list-item-title>
                                     </v-list-item>
-                                    <v-list-item
-                                        v-for="category in categories"
-                                        :key="category.id"
-                                        :active="selectedCategory === category.slug"
-                                        @click="setCategory(category.slug)"
-                                        class="cursor-pointer"
-                                    >
+                                    <v-list-item v-for="category in categories" :key="category.id"
+                                        :active="selectedCategory === category.slug" @click="setCategory(category.slug)"
+                                        class="cursor-pointer">
                                         <v-list-item-title>{{ category.name }}</v-list-item-title>
                                     </v-list-item>
                                 </v-list>
@@ -137,13 +113,8 @@
 
                         <!-- Pagination -->
                         <div v-if="pagination.last_page > 1" class="d-flex justify-center mt-8">
-                            <v-pagination
-                                v-model="currentPage"
-                                :length="pagination.last_page"
-                                :total-visible="7"
-                                density="comfortable"
-                                @update:model-value="loadPosts"
-                            ></v-pagination>
+                            <v-pagination v-model="currentPage" :length="pagination.last_page" :total-visible="7"
+                                density="comfortable" @update:model-value="loadPosts"></v-pagination>
                         </div>
                     </v-col>
                 </v-row>
@@ -232,6 +203,12 @@ const loadCategories = async () => {
         categories.value = response.data || [];
     } catch (error) {
         console.error('Error loading categories:', error);
+        // Set empty array on error so the page still works
+        categories.value = [];
+        // Optionally show a user-friendly message
+        if (error.response?.status !== 404) {
+            console.warn('Categories could not be loaded. The page will continue to work without category filtering.');
+        }
     }
 };
 
@@ -328,12 +305,16 @@ onMounted(async () => {
 }
 
 @keyframes float {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: translate(0, 0) scale(1);
     }
+
     33% {
         transform: translate(30px, -30px) scale(1.1);
     }
+
     66% {
         transform: translate(-20px, 20px) scale(0.9);
     }
@@ -354,10 +335,13 @@ onMounted(async () => {
 }
 
 @keyframes pulse {
-    0%, 100% {
+
+    0%,
+    100% {
         opacity: 1;
         transform: scale(1);
     }
+
     50% {
         opacity: 0.5;
         transform: scale(1.2);
@@ -381,6 +365,7 @@ onMounted(async () => {
         opacity: 0;
         transform: translateY(30px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -399,4 +384,3 @@ onMounted(async () => {
     cursor: pointer;
 }
 </style>
-
