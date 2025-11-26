@@ -159,7 +159,7 @@
                         <!-- Skeleton Loaders -->
                         <tr v-if="loading" v-for="n in 5" :key="`skeleton-${n}`">
                             <td>
-                                <v-skeleton-loader type="checkbox" width="24" height="24"></v-skeleton-loader>
+                                <v-skeleton-loader type="text" width="24" height="24"></v-skeleton-loader>
                             </td>
                             <td>
                                 <v-skeleton-loader type="chip" width="120" height="24"></v-skeleton-loader>
@@ -169,7 +169,8 @@
                             </td>
                             <td>
                                 <div class="d-flex">
-                                    <v-skeleton-loader type="chip" width="80" height="24" class="mr-1"></v-skeleton-loader>
+                                    <v-skeleton-loader type="chip" width="80" height="24"
+                                        class="mr-1"></v-skeleton-loader>
                                     <v-skeleton-loader type="chip" width="40" height="20"></v-skeleton-loader>
                                 </div>
                             </td>
@@ -187,7 +188,8 @@
                             </td>
                             <td>
                                 <div class="d-flex">
-                                    <v-skeleton-loader type="button" width="32" height="32" class="mr-1"></v-skeleton-loader>
+                                    <v-skeleton-loader type="button" width="32" height="32"
+                                        class="mr-1"></v-skeleton-loader>
                                     <v-skeleton-loader type="button" width="32" height="32"></v-skeleton-loader>
                                 </div>
                             </td>
