@@ -65,7 +65,8 @@
                                     </v-col>
                                     <v-col cols="12">
                                         <v-label class="mb-2">Story Description</v-label>
-                                        <RichTextEditor v-model="form.story.description" :active="activeTab === 'story'"
+                                        <RichTextEditor v-model="form.story.description"
+                                            :active="dialog && activeTab === 'story'"
                                             placeholder="Enter story description..." />
                                     </v-col>
                                     <v-col cols="12">
@@ -603,9 +604,6 @@ export default {
             ogImagePreview: null,
             uploadingOgImage: false,
             ogImageError: null,
-            ogImageFile: null,
-            ogImagePreview: null,
-            uploadingOgImage: false,
             form: {
                 hero: {
                     overline: 'WHO WE ARE',
