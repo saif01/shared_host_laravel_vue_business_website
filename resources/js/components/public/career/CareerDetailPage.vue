@@ -131,10 +131,12 @@
                             </v-card>
 
                             <!-- Back Button -->
-                            <v-btn color="grey" variant="outlined" block class="mt-4" :to="{ name: 'Careers' }">
-                                <v-icon icon="mdi-arrow-left" class="mr-2"></v-icon>
-                                Back to Careers
-                            </v-btn>
+                            <v-card class="mt-4" elevation="2" :to="{ name: 'Careers' }" style="cursor: pointer;">
+                                <v-card-text class="pa-4 d-flex align-center justify-center">
+                                    <v-icon icon="mdi-arrow-left" class="mr-2" color="primary"></v-icon>
+                                    <span class="text-body-1 font-weight-medium text-primary">Back to Careers</span>
+                                </v-card-text>
+                            </v-card>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -236,6 +238,9 @@ export default {
                 });
 
                 if (response.data.success) {
+                    // Reset form immediately after successful submission
+                    this.resetForm();
+
                     // Show success message
                     if (window.Swal) {
                         window.Swal.fire({
@@ -243,28 +248,9 @@ export default {
                             title: 'Application Submitted!',
                             text: response.data.message || 'Your application has been submitted successfully.',
                             confirmButtonText: 'OK'
-                        }).then(() => {
-                            // Reset form
-                            this.applicationForm = {
-                                name: '',
-                                email: '',
-                                phone: '',
-                                cover_letter: '',
-                                resume: null
-                            };
-                            this.$refs.applicationForm.resetValidation();
                         });
                     } else {
                         alert(response.data.message || 'Application submitted successfully!');
-                        // Reset form
-                        this.applicationForm = {
-                            name: '',
-                            email: '',
-                            phone: '',
-                            cover_letter: '',
-                            resume: null
-                        };
-                        this.$refs.applicationForm.resetValidation();
                     }
                 }
             } catch (error) {
@@ -289,6 +275,22 @@ export default {
                 }
             } finally {
                 this.submitting = false;
+            }
+        },
+        resetForm() {
+            // Reset form data
+            this.applicationForm = {
+                name: '',
+                email: '',
+                phone: '',
+                cover_letter: '',
+                resume: null
+            };
+
+            // Reset form validation
+            if (this.$refs.applicationForm) {
+                this.$refs.applicationForm.resetValidation();
+                this.$refs.applicationForm.reset();
             }
         },
         formatDate(date) {
@@ -331,5 +333,16 @@ export default {
 
 .career-detail-page {
     min-height: 100vh;
+}
+
+/* Back Button Card Hover Effect */
+.v-card[style*="cursor: pointer"] {
+    transition: all 0.3s ease;
+}
+
+.v-card[style*="cursor: pointer"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15) !important;
+    background-color: rgba(var(--v-theme-primary), 0.05);
 }
 </style>
