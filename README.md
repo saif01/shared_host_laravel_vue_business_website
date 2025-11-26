@@ -131,6 +131,31 @@ A comprehensive, generic business website platform built according to SRS specif
   - Slug auto-generation
   - Tag usage tracking
 
+#### Blog Management
+- **Blog Post Management**:
+  - Complete CRUD operations for blog posts
+  - Rich text editor for content
+  - Featured image upload with preview
+  - Excerpt management
+  - Author assignment (automatic from authenticated user)
+  - Category assignment (multiple categories per post)
+  - Tag assignment (multiple tags per post)
+  - Publication date scheduling
+  - Draft/Published status
+  - SEO optimization (meta title, description, keywords, OG image)
+  - View counter tracking
+  - Search and filter functionality
+  - Sorting by title, date, views, published status
+  - Pagination support
+- **Blog Category Management**:
+  - Category CRUD operations
+  - Category type filtering (post type)
+  - Hierarchical category support
+  - Category description and images
+  - Published/Draft status
+  - Display order management
+  - SEO optimization
+
 #### User Management
 - **User Administration**:
   - User creation and editing
@@ -222,6 +247,39 @@ A comprehensive, generic business website platform built according to SRS specif
 #### Services Display
 - **Services Listing**: Grid view of all published services
 - **Service Detail Page**: Complete service information with features and benefits
+
+#### Blog System
+- **Blog Listing Page**:
+  - Modern hero section with animated gradient effects
+  - Real-time search across post titles, excerpts, and content
+  - Category-based filtering with sidebar navigation
+  - Multiple sorting options (Latest, Oldest, Most Views, Title A-Z)
+  - Pagination support with configurable items per page
+  - Responsive card-based layout
+  - Loading states and empty state handling
+  - Category badges and tag display
+  - Author information and view counters
+  - Featured image support
+- **Blog Detail Page**:
+  - Hero section with featured image overlay
+  - Full post content with rich HTML rendering
+  - Breadcrumb navigation
+  - Author information card
+  - Social sharing (Facebook, Twitter, LinkedIn, Copy link)
+  - Tags and categories display
+  - Automatic view counter increment
+  - Related posts placeholder
+  - Styled content typography (headings, lists, blockquotes, code blocks)
+  - Responsive image display
+- **Blog Features**:
+  - SEO-friendly URLs (slug-based)
+  - Meta tags and Open Graph support
+  - Category management
+  - Tag system
+  - Author attribution
+  - Publication date management
+  - Draft/Published status
+  - View tracking
 
 #### Contact & Communication
 - **Contact Form**: 
@@ -326,6 +384,18 @@ All admin endpoints require authentication via Bearer token.
 - `POST /api/v1/about` - Create/update about page (requires `manage-pages` permission)
 - `PUT /api/v1/about` - Update about page (requires `manage-pages` permission)
 
+**Blog Management:**
+- `GET /api/v1/blog-posts` - List blog posts (with pagination, filtering, sorting, search) (requires `manage-pages` permission)
+- `POST /api/v1/blog-posts` - Create blog post (requires `manage-pages` permission)
+- `GET /api/v1/blog-posts/{id}` - Get blog post (by ID or slug) (requires `manage-pages` permission)
+- `PUT /api/v1/blog-posts/{id}` - Update blog post (requires `manage-pages` permission)
+- `DELETE /api/v1/blog-posts/{id}` - Delete blog post (requires `manage-pages` permission)
+- `GET /api/v1/blog-categories` - List blog categories (requires `manage-pages` permission)
+- `POST /api/v1/blog-categories` - Create blog category (requires `manage-pages` permission)
+- `GET /api/v1/blog-categories/{id}` - Get blog category (requires `manage-pages` permission)
+- `PUT /api/v1/blog-categories/{id}` - Update blog category (requires `manage-pages` permission)
+- `DELETE /api/v1/blog-categories/{id}` - Delete blog category (requires `manage-pages` permission)
+
 **Services Management:**
 - `GET /api/v1/services` - List services (with pagination, filtering, sorting)
 - `POST /api/v1/services` - Create service (requires `manage-services` permission)
@@ -420,6 +490,10 @@ All admin endpoints require authentication via Bearer token.
 - `GET /api/openapi/products` - List published products (supports category filter, search, sorting)
 - `GET /api/openapi/products/{slug}` - Get product by slug (includes categories, tags, specifications, downloads)
 - `GET /api/openapi/categories` - List categories (supports type filter, pagination)
+- `GET /api/openapi/blog` - List published blog posts (supports search, category filter, tag filter, sorting, pagination)
+- `GET /api/openapi/blog/{slug}` - Get blog post by slug (includes author, categories, tags, auto-increments views)
+- `GET /api/openapi/blog/categories` - List published blog categories
+- `GET /api/openapi/about` - Get about page content
 - `GET /api/openapi/settings` - Get public settings
 - `POST /api/openapi/contact` - Submit contact form (creates lead)
 - `POST /api/openapi/newsletter/subscribe` - Subscribe to newsletter
@@ -460,6 +534,7 @@ app/
 │   │   ├── Api/              # Admin API controllers
 │   │   │   ├── auth/
 │   │   │   ├── about/
+│   │   │   ├── blog/
 │   │   │   ├── leads/
 │   │   │   ├── NewsletterController.php
 │   │   │   ├── logs/
@@ -469,6 +544,7 @@ app/
 │   │   │   └── users/
 │   │   └── Public/            # Public website controllers
 │   │       ├── pages/
+│   │       ├── blog/
 │   │       ├── NewsletterController.php
 │   │       ├── products/
 │   │       └── services/
@@ -485,6 +561,7 @@ resources/
 │   │   ├── admin/            # Admin panel components
 │   │   │   ├── auth/
 │   │   │   ├── about/
+│   │   │   ├── blog/
 │   │   │   ├── leads/
 │   │   │   ├── newsletters/
 │   │   │   ├── logs/
@@ -493,6 +570,7 @@ resources/
 │   │   │   └── users/
 │   │   └── public/           # Public website components
 │   │       ├── pages/
+│   │       ├── blog/
 │   │       ├── products/
 │   │       └── services/
 │   ├── mixins/               # Vue mixins
