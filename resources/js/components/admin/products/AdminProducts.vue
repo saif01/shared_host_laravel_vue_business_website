@@ -80,51 +80,89 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="product in products" :key="product.id">
+                        <!-- Skeleton Loaders -->
+                        <tr v-if="loading" v-for="n in 5" :key="`skeleton-${n}`">
                             <td>
-                                <v-avatar size="40" v-if="product.thumbnail">
-                                    <v-img :src="resolveImageUrl(product.thumbnail)" cover></v-img>
-                                </v-avatar>
-                                <v-avatar size="40" v-else color="grey-lighten-2">
-                                    <v-icon icon="mdi-package-variant"></v-icon>
-                                </v-avatar>
+                                <v-skeleton-loader type="avatar" width="40" height="40"></v-skeleton-loader>
                             </td>
                             <td>
-                                <div class="font-weight-medium">{{ product.title }}</div>
-                                <v-chip v-if="product.featured" color="amber" size="x-small"
-                                    class="mt-1">Featured</v-chip>
+                                <v-skeleton-loader type="text" width="200" class="mb-1"></v-skeleton-loader>
+                                <v-skeleton-loader type="chip" width="60" height="20"></v-skeleton-loader>
                             </td>
                             <td>
-                                <v-chip size="small" variant="outlined">{{ product.sku || '-' }}</v-chip>
+                                <v-skeleton-loader type="chip" width="100" height="24"></v-skeleton-loader>
                             </td>
                             <td>
                                 <div class="d-flex flex-wrap gap-1">
-                                    <v-chip v-for="cat in (product.categories || [])" :key="cat.id" size="x-small"
-                                        color="primary" variant="tonal">
-                                        {{ cat.name }}
-                                    </v-chip>
-                                    <span v-if="!product.categories || product.categories.length === 0"
-                                        class="text-caption text-grey">-</span>
+                                    <v-skeleton-loader type="chip" width="80" height="20"
+                                        class="mr-1"></v-skeleton-loader>
+                                    <v-skeleton-loader type="chip" width="70" height="20"></v-skeleton-loader>
                                 </div>
                             </td>
-                            <td>{{ product.price ? '$' + product.price : (product.price_range || '-') }}</td>
                             <td>
-                                <v-chip :color="product.published ? 'success' : 'error'" size="small">
-                                    {{ product.published ? 'Published' : 'Draft' }}
-                                </v-chip>
+                                <v-skeleton-loader type="text" width="80"></v-skeleton-loader>
                             </td>
                             <td>
-                                <v-btn size="small" icon="mdi-eye" @click="viewProduct(product)" variant="text"
-                                    color="info" class="mr-1"></v-btn>
-                                <v-btn size="small" icon="mdi-pencil" @click="editProduct(product)" variant="text"
-                                    color="primary" class="mr-1"></v-btn>
-                                <v-btn size="small" icon="mdi-delete" @click="deleteProduct(product.id)" variant="text"
-                                    color="error"></v-btn>
+                                <v-skeleton-loader type="chip" width="70" height="24"></v-skeleton-loader>
+                            </td>
+                            <td>
+                                <div class="d-flex">
+                                    <v-skeleton-loader type="button" width="32" height="32"
+                                        class="mr-1"></v-skeleton-loader>
+                                    <v-skeleton-loader type="button" width="32" height="32"
+                                        class="mr-1"></v-skeleton-loader>
+                                    <v-skeleton-loader type="button" width="32" height="32"></v-skeleton-loader>
+                                </div>
                             </td>
                         </tr>
-                        <tr v-if="products.length === 0">
-                            <td colspan="7" class="text-center py-4">No products found</td>
-                        </tr>
+                        <!-- Actual Product Data -->
+                        <template v-else>
+                            <tr v-for="product in products" :key="product.id">
+                                <td>
+                                    <v-avatar size="40" v-if="product.thumbnail">
+                                        <v-img :src="resolveImageUrl(product.thumbnail)" cover></v-img>
+                                    </v-avatar>
+                                    <v-avatar size="40" v-else color="grey-lighten-2">
+                                        <v-icon icon="mdi-package-variant"></v-icon>
+                                    </v-avatar>
+                                </td>
+                                <td>
+                                    <div class="font-weight-medium">{{ product.title }}</div>
+                                    <v-chip v-if="product.featured" color="amber" size="x-small"
+                                        class="mt-1">Featured</v-chip>
+                                </td>
+                                <td>
+                                    <v-chip size="small" variant="outlined">{{ product.sku || '-' }}</v-chip>
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-wrap gap-1">
+                                        <v-chip v-for="cat in (product.categories || [])" :key="cat.id" size="x-small"
+                                            color="primary" variant="tonal">
+                                            {{ cat.name }}
+                                        </v-chip>
+                                        <span v-if="!product.categories || product.categories.length === 0"
+                                            class="text-caption text-grey">-</span>
+                                    </div>
+                                </td>
+                                <td>{{ product.price ? '$' + product.price : (product.price_range || '-') }}</td>
+                                <td>
+                                    <v-chip :color="product.published ? 'success' : 'error'" size="small">
+                                        {{ product.published ? 'Published' : 'Draft' }}
+                                    </v-chip>
+                                </td>
+                                <td>
+                                    <v-btn size="small" icon="mdi-eye" @click="viewProduct(product)" variant="text"
+                                        color="info" class="mr-1"></v-btn>
+                                    <v-btn size="small" icon="mdi-pencil" @click="editProduct(product)" variant="text"
+                                        color="primary" class="mr-1"></v-btn>
+                                    <v-btn size="small" icon="mdi-delete" @click="deleteProduct(product.id)"
+                                        variant="text" color="error"></v-btn>
+                                </td>
+                            </tr>
+                            <tr v-if="products.length === 0">
+                                <td colspan="7" class="text-center py-4">No products found</td>
+                            </tr>
+                        </template>
                     </tbody>
                 </v-table>
 
@@ -156,18 +194,16 @@
             :specifications-list="specificationsList" :features-list="featuresList" :downloads-list="downloadsList"
             :faqs-list="faqsList" :warranty-info="warrantyInfo" :download-types="downloadTypes"
             :thumbnail-file="thumbnailFile" :gallery-files="galleryFiles" :thumbnail-preview="thumbnailPreview"
-            :gallery-previews="galleryPreviews" :image-url-inputs="imageUrlInputs"
-            :thumbnail-error="thumbnailError" :gallery-error="galleryError" @update:form="form = $event"
-            @update:form-tab="formTab = $event" @update:specifications-list="specificationsList = $event"
-            @update:features-list="featuresList = $event" @update:downloads-list="downloadsList = $event"
-            @update:faqs-list="faqsList = $event" @update:warranty-info="warrantyInfo = $event"
-            @update:thumbnail-file="thumbnailFile = $event" @update:gallery-files="galleryFiles = $event"
-            @update:thumbnail-preview="thumbnailPreview = $event" @update:gallery-previews="galleryPreviews = $event"
-            @update:image-url-inputs="imageUrlInputs = $event"
+            :gallery-previews="galleryPreviews" :image-url-inputs="imageUrlInputs" :thumbnail-error="thumbnailError"
+            :gallery-error="galleryError" @update:form="form = $event" @update:form-tab="formTab = $event"
+            @update:specifications-list="specificationsList = $event" @update:features-list="featuresList = $event"
+            @update:downloads-list="downloadsList = $event" @update:faqs-list="faqsList = $event"
+            @update:warranty-info="warrantyInfo = $event" @update:thumbnail-file="thumbnailFile = $event"
+            @update:gallery-files="galleryFiles = $event" @update:thumbnail-preview="thumbnailPreview = $event"
+            @update:gallery-previews="galleryPreviews = $event" @update:image-url-inputs="imageUrlInputs = $event"
             @update:thumbnail-error="thumbnailError = $event" @update:gallery-error="galleryError = $event"
-            @close="closeDialog" @save="saveProduct"
-            @generate-slug="generateSlug" @add-image-url="addImageUrl" @remove-image-url="removeImageUrl"
-            @remove-image="removeImage" @preview-thumbnail="previewThumbnail"
+            @close="closeDialog" @save="saveProduct" @generate-slug="generateSlug" @add-image-url="addImageUrl"
+            @remove-image-url="removeImageUrl" @remove-image="removeImage" @preview-thumbnail="previewThumbnail"
             @preview-gallery-images="previewGalleryImages" @remove-gallery-preview="removeGalleryPreview"
             @add-specification="addSpecification" @remove-specification="removeSpecification" @add-feature="addFeature"
             @remove-feature="removeFeature" @add-download="addDownload" @remove-download="removeDownload"
@@ -722,7 +758,7 @@ export default {
             } catch (error) {
                 console.error('Error uploading thumbnail:', error);
                 console.error('Error response:', error.response?.data);
-                
+
                 // Extract validation errors
                 let errorMessage = 'Failed to upload thumbnail';
                 if (error.response?.status === 422) {
@@ -740,7 +776,7 @@ export default {
                 } else if (error.message) {
                     errorMessage = error.message;
                 }
-                
+
                 this.thumbnailError = errorMessage;
                 throw new Error(errorMessage);
             } finally {
@@ -793,7 +829,7 @@ export default {
             } catch (error) {
                 console.error('Error uploading gallery images:', error);
                 console.error('Error response:', error.response?.data);
-                
+
                 // Extract validation errors
                 let errorMessage = 'Failed to upload images';
                 if (error.response?.status === 422) {
@@ -824,7 +860,7 @@ export default {
                 } else if (error.message) {
                     errorMessage = error.message;
                 }
-                
+
                 this.galleryError = errorMessage;
                 throw new Error(errorMessage);
             } finally {
@@ -884,7 +920,7 @@ export default {
 
             // Preserve file size before upload (in case API doesn't return it)
             const fileSize = download.file.size || 0;
-            
+
             download.uploading = true;
             try {
                 const formData = new FormData();

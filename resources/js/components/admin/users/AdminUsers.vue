@@ -67,36 +67,66 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="user in users" :key="user.id">
+                        <!-- Skeleton Loaders -->
+                        <tr v-if="loading" v-for="n in 5" :key="`skeleton-${n}`">
                             <td>
                                 <div class="d-flex align-center gap-2">
-                                    <v-avatar size="32" color="primary">
-                                        <v-img v-if="user.avatar" :src="user.avatar" :alt="user.name"></v-img>
-                                        <span v-else class="text-white">{{ user.name.charAt(0).toUpperCase() }}</span>
-                                    </v-avatar>
-                                    {{ user.name }}
+                                    <v-skeleton-loader type="avatar" width="32" height="32"></v-skeleton-loader>
+                                    <v-skeleton-loader type="text" width="150"></v-skeleton-loader>
                                 </div>
                             </td>
-                            <td>{{ user.email }}</td>
                             <td>
-                                <div v-if="user.roles && user.roles.length > 0" class="d-flex flex-wrap gap-1">
-                                    <v-chip v-for="role in user.roles" :key="role.id" :color="getRoleColor(role.slug)"
-                                        size="small">
-                                        {{ role.name }}
-                                    </v-chip>
+                                <v-skeleton-loader type="text" width="200"></v-skeleton-loader>
+                            </td>
+                            <td>
+                                <div class="d-flex flex-wrap gap-1">
+                                    <v-skeleton-loader type="chip" width="80" height="24" class="mr-1"></v-skeleton-loader>
+                                    <v-skeleton-loader type="chip" width="70" height="24"></v-skeleton-loader>
                                 </div>
-                                <span v-else class="text-caption text-grey">No roles</span>
                             </td>
-                            <td>{{ formatDate(user.created_at) }}</td>
                             <td>
-                                <v-btn size="small" icon="mdi-pencil" @click="openDialog(user)" variant="text"></v-btn>
-                                <v-btn size="small" icon="mdi-delete" @click="deleteUser(user)" variant="text"
-                                    color="error" :disabled="user.id === currentUserId"></v-btn>
+                                <v-skeleton-loader type="text" width="120"></v-skeleton-loader>
+                            </td>
+                            <td>
+                                <div class="d-flex">
+                                    <v-skeleton-loader type="button" width="32" height="32" class="mr-1"></v-skeleton-loader>
+                                    <v-skeleton-loader type="button" width="32" height="32"></v-skeleton-loader>
+                                </div>
                             </td>
                         </tr>
-                        <tr v-if="users.length === 0">
-                            <td colspan="5" class="text-center py-4">No users found</td>
-                        </tr>
+                        <!-- Actual User Data -->
+                        <template v-else>
+                            <tr v-for="user in users" :key="user.id">
+                                <td>
+                                    <div class="d-flex align-center gap-2">
+                                        <v-avatar size="32" color="primary">
+                                            <v-img v-if="user.avatar" :src="user.avatar" :alt="user.name"></v-img>
+                                            <span v-else class="text-white">{{ user.name.charAt(0).toUpperCase() }}</span>
+                                        </v-avatar>
+                                        {{ user.name }}
+                                    </div>
+                                </td>
+                                <td>{{ user.email }}</td>
+                                <td>
+                                    <div v-if="user.roles && user.roles.length > 0" class="d-flex flex-wrap gap-1">
+                                        <v-chip v-for="role in user.roles" :key="role.id" :color="getRoleColor(role.slug)"
+                                            size="small">
+                                            {{ role.name }}
+                                        </v-chip>
+                                    </div>
+                                    <span v-else class="text-caption text-grey">No roles</span>
+                                </td>
+                                <td>{{ formatDate(user.created_at) }}</td>
+                                <td>
+                                    <v-btn size="small" icon="mdi-pencil" @click="openDialog(user)" variant="text"></v-btn>
+                                    <v-btn size="small" icon="mdi-delete" @click="deleteUser(user)" variant="text"
+                                        color="error" :disabled="user.id === currentUserId"></v-btn>
+                                </td>
+                            </tr>
+                            <tr v-if="users.length === 0">
+                                <td colspan="5" class="text-center py-4">No users found</td>
+                            </tr>
+                        </template>
                     </tbody>
                 </v-table>
 
