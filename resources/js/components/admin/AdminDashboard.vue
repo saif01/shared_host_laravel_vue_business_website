@@ -295,7 +295,6 @@ export default {
         return {
             loading: false,
             stats: {
-                pages: 0,
                 services: 0,
                 products: 0,
                 leads: 0,
@@ -504,11 +503,7 @@ export default {
                 const token = localStorage.getItem('admin_token');
 
                 // Load all data in parallel
-                const [pagesRes, servicesRes, productsRes, leadsRes, visitorStatsRes, loginStatsRes] = await Promise.all([
-                    axios.get('/api/v1/pages', {
-                        params: { per_page: 1 },
-                        headers: { Authorization: `Bearer ${token}` }
-                    }),
+                const [servicesRes, productsRes, leadsRes, visitorStatsRes, loginStatsRes] = await Promise.all([
                     axios.get('/api/v1/services', {
                         params: { per_page: 1 },
                         headers: { Authorization: `Bearer ${token}` }
@@ -532,7 +527,6 @@ export default {
                 ]);
 
                 // Process stats
-                this.stats.pages = pagesRes.data.total || 0;
                 this.stats.services = servicesRes.data.total || 0;
                 this.stats.products = productsRes.data.total || 0;
 

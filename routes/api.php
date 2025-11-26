@@ -4,7 +4,6 @@ use App\Http\Controllers\Api\auth\AuthController;
 use App\Http\Controllers\Api\products\CategoryController;
 use App\Http\Controllers\Api\leads\LeadController;
 use App\Http\Controllers\Api\logs\LoginLogController;
-use App\Http\Controllers\Api\content\PageController;
 use App\Http\Controllers\Api\users\PermissionController;
 use App\Http\Controllers\Api\products\ProductController;
 use App\Http\Controllers\Api\users\RoleController;
@@ -96,10 +95,8 @@ Route::prefix('v1')->group(function () {
         Route::post('/auth/logout', [AuthController::class, 'logout']);
         Route::get('/auth/user', [AuthController::class, 'user']);
 
-        // Pages - requires manage-pages permission
+        // About page management (singleton - only one record) - requires manage-pages permission
         Route::middleware('permission:manage-pages')->group(function () {
-            Route::apiResource('pages', PageController::class);
-            // About page management (singleton - only one record)
             Route::get('about', [AboutController::class, 'index']);
             Route::post('about', [AboutController::class, 'store']);
             Route::put('about', [AboutController::class, 'update']);

@@ -10,14 +10,15 @@ This is a comprehensive business website platform built according to the SRS doc
 - **Authentication**: Laravel Sanctum (API tokens)
 - **Build Tool**: Vite
 - **UI Framework**: Vuetify 3
-- **Additional Libraries**: SweetAlert2, Vue Progress Bar
+- **Charts**: Chart.js with vue-chartjs
+- **Additional Libraries**: SweetAlert2, Vue Progress Bar, Quill (Rich Text Editor)
 
 ## Project Structure
 
 ### Backend (Laravel)
 
 #### Models (`app/Models/`)
-- **Core Models**: Page, Module, Menu, Setting, Lead, User
+- **Core Models**: Module, Menu, Setting, Lead, User
 - **Optional Modules**: Service, Product, Portfolio, BlogPost, Faq
 - **Extended Modules**: Career, JobApplication, Booking, Event, EventRegistration, Branch
 - **Supporting**: Category, Tag, Media
@@ -29,28 +30,29 @@ This is a comprehensive business website platform built according to the SRS doc
 
 **API Controllers** (`app/Http/Controllers/Api/`): Admin panel API endpoints
 - `auth/AuthController.php` - Authentication (login/logout/user)
-- `content/PageController.php` - Pages management
+- `about/AboutController.php` - About page management (singleton)
 - `service/ServiceController.php` - Services management
 - `products/ProductController.php` - Products management
 - `products/CategoryController.php` - Categories management
 - `products/TagController.php` - Tags management
-- `leads/LeadController.php` - Leads management and export
+- `leads/LeadController.php` - Leads management, export, and statistics
 - `NewsletterController.php` - Newsletter subscriptions management
 - `settings/SettingController.php` - Settings management
 - `upload/UploadController.php` - File and image uploads
 - `users/UserController.php` - User management
 - `users/RoleController.php` - Role management
 - `users/PermissionController.php` - Permission management
-- `logs/LoginLogController.php` - Login logs
-- `logs/VisitorLogController.php` - Visitor logs
+- `logs/LoginLogController.php` - Login logs with statistics and time-series data
+- `logs/VisitorLogController.php` - Visitor logs with statistics and time-series data
 
 **Public Controllers** (`app/Http/Controllers/Public/`): Public website endpoints
 - `pages/HomeController.php` - Homepage data
-- `pages/PageController.php` - Public pages
+- `pages/PageController.php` - Public pages (for viewing pages by slug)
 - `pages/ContactController.php` - Contact form submission
 - `NewsletterController.php` - Newsletter subscription (public)
 - `products/ProductController.php` - Public products listing and details
 - `services/ServiceController.php` - Public services listing and details
+- `about/AboutController.php` - Public about page
 
 #### Routes
 - `routes/api.php`: Admin API routes (protected with Sanctum) and public API routes
@@ -75,18 +77,17 @@ This is a comprehensive business website platform built according to the SRS doc
   - Default headers setup
   - Request interceptors (authentication tokens)
   - Response interceptors (error handling, CORS, 401 errors)
+- **`uploads.js`**: Upload URL resolution utilities
 
 #### Plugins (`resources/js/plugins/`)
 - **`vuetify.js`**: Vuetify UI framework configuration
   - Component registration
   - Directive registration
   - Theme configuration
-
 - **`progressBar.js`**: Vue Progress Bar plugin configuration
   - Progress bar options (color, thickness, location)
   - Router helper functions for progress bar access
   - Setup functions for router hooks
-
 - **`sweetalert.js`**: SweetAlert2 plugin configuration
   - Toast notifications setup
   - Global Swal and Toast exposure
@@ -95,19 +96,24 @@ This is a comprehensive business website platform built according to the SRS doc
 #### Components
 
 **Admin Components** (`resources/js/components/admin/`):
-- `AdminLayout.vue` - Admin layout (sidebar, app bar, footer)
-- `AdminDashboard.vue` - Dashboard with statistics
+- `AdminLayout.vue` - Admin layout (sidebar, app bar, footer) with permission-based menu
+- `AdminDashboard.vue` - AI-powered analytics dashboard with Chart.js visualizations
 - `auth/AdminLogin.vue` - Admin login page
-- `content/AdminPages.vue` - Pages management
-- `content/AdminServices.vue` - Services management
+- `about/AdminAbout.vue` - About page management
+- `about/AboutFormDialog.vue` - About page form dialog
+- `service/AdminServices.vue` - Services management
+- `service/ServiceFormDialog.vue` - Service creation/editing form
+- `service/ServiceDetailsDialog.vue` - Service details view
 - `products/AdminProducts.vue` - Products management (11-tab form)
+- `products/ProductFormDialog.vue` - Product creation/editing form (11 tabs)
+- `products/ProductDetailsDialog.vue` - Product details view
 - `products/AdminCategories.vue` - Categories management
 - `products/AdminTags.vue` - Tags management
-- `leads/AdminLeads.vue` - Leads management
+- `leads/AdminLeads.vue` - Leads management with status tracking
 - `newsletters/AdminNewsletters.vue` - Newsletter subscriptions management
 - `users/AdminUsers.vue` - User management
 - `users/AdminRoles.vue` - Role management
-- `users/AdminPermissions.vue` - Permission management
+- `users/AdminPermissions.vue` - Permission management (flat and grouped views)
 - `settings/AdminSettings.vue` - Settings management (main container)
   - `settings/sections/GeneralSettings.vue` - General site settings
   - `settings/sections/HomePageSettings.vue` - Home page settings container with tabs
@@ -125,12 +131,12 @@ This is a comprehensive business website platform built according to the SRS doc
   - `settings/sections/SocialSettings.vue` - Social media links
   - `settings/sections/SEOSettings.vue` - SEO settings
   - `settings/sections/EmailSettings.vue` - Email/SMTP settings
-- `logs/AdminLoginLogs.vue` - Login logs
-- `logs/AdminVisitorLogs.vue` - Visitor logs
+- `logs/AdminLoginLogs.vue` - Login logs with statistics and filtering
+- `logs/AdminVisitorLogs.vue` - Visitor logs with comprehensive analytics
 
 **Public Components** (`resources/js/components/public/`):
 - `PublicLayout.vue` - Public website layout
-- `pages/HomePage.vue` - Homepage component
+- `pages/HomePage.vue` - Homepage component with dynamic sections
 - `pages/AboutPage.vue` - About page
 - `pages/ContactPage.vue` - Contact page
 - `services/ServicesPage.vue` - Services listing
@@ -140,6 +146,15 @@ This is a comprehensive business website platform built according to the SRS doc
 
 #### Mixins (`resources/js/mixins/`)
 - **`adminPaginationMixin.js`**: Shared pagination logic for admin components
+  - Pagination state management
+  - Search functionality
+  - Loading/saving states
+  - Success/Error notification methods
+  - Date formatting utilities
+  - Authentication helpers
+  - API error handling
+  - Sorting functionality
+  - Standard pagination UI components
 
 #### Routes (`resources/js/routes.js`)
 - Public routes configuration
@@ -203,14 +218,38 @@ npm run dev
 - `POST /api/v1/auth/logout` - Logout (requires auth)
 - `GET /api/v1/auth/user` - Get current user (requires auth)
 
-**Protected Routes (require authentication):**
-- `GET /api/v1/pages` - List pages
-- `POST /api/v1/pages` - Create page
-- `GET /api/v1/pages/{id}` - Get page
-- `PUT /api/v1/pages/{id}` - Update page
-- `DELETE /api/v1/pages/{id}` - Delete page
+**About Page Management:**
+- `GET /api/v1/about` - Get about page (requires `manage-pages` permission)
+- `POST /api/v1/about` - Create about page (requires `manage-pages` permission)
+- `PUT /api/v1/about` - Update about page (requires `manage-pages` permission)
 
-- Similar CRUD for services, products, categories, tags, leads, users, roles, permissions
+**Services Management:**
+- `GET /api/v1/services` - List services (with pagination, filtering, sorting, search)
+- `POST /api/v1/services` - Create service (requires `manage-services` permission)
+- `GET /api/v1/services/{id}` - Get service (by ID or slug)
+- `PUT /api/v1/services/{id}` - Update service (requires `manage-services` permission)
+- `DELETE /api/v1/services/{id}` - Delete service (requires `manage-services` permission)
+
+**Product Management:**
+- `GET /api/v1/products` - List products (with pagination, filtering, sorting, search)
+- `POST /api/v1/products` - Create product (requires `manage-products` permission)
+- `GET /api/v1/products/{id}` - Get product (by ID or slug, includes all relationships)
+- `PUT /api/v1/products/{id}` - Update product (requires `manage-products` permission)
+- `DELETE /api/v1/products/{id}` - Delete product (requires `manage-products` permission)
+
+**Category Management:**
+- `GET /api/v1/categories` - List categories (supports filtering by type, parent_id, published)
+- `POST /api/v1/categories` - Create category (requires `manage-products` permission)
+- `GET /api/v1/categories/{id}` - Get category (by ID or slug)
+- `PUT /api/v1/categories/{id}` - Update category (requires `manage-products` permission)
+- `DELETE /api/v1/categories/{id}` - Delete category (requires `manage-products` permission)
+
+**Tag Management:**
+- `GET /api/v1/tags` - List tags (supports filtering by type, search)
+- `POST /api/v1/tags` - Create tag (requires `manage-products` permission)
+- `GET /api/v1/tags/{id}` - Get tag (by ID or slug)
+- `PUT /api/v1/tags/{id}` - Update tag (requires `manage-products` permission)
+- `DELETE /api/v1/tags/{id}` - Delete tag (requires `manage-products` permission)
 
 **File Upload:**
 - `POST /api/v1/upload/image` - Upload single image
@@ -218,126 +257,221 @@ npm run dev
 - `POST /api/v1/upload/file` - Upload file (PDF, DOC, ZIP, etc.)
 - `DELETE /api/v1/upload/image` - Delete image
 
-**Leads Export:**
-- `GET /api/v1/leads/export/csv` - Export leads to CSV
+**Leads Management:**
+- `GET /api/v1/leads` - List leads (with pagination, filtering, sorting, search) (requires `view-leads` permission)
+- `GET /api/v1/leads/statistics` - Get leads statistics with time-series data (requires `view-leads` permission)
+- `GET /api/v1/leads/unread-count` - Get count of unread leads (requires `view-leads` permission)
+- `GET /api/v1/leads/{id}` - Get lead details (requires `view-leads` permission)
+- `POST /api/v1/leads/{id}/mark-as-read` - Mark lead as read (requires `view-leads` permission)
+- `PUT /api/v1/leads/{id}` - Update lead (requires `manage-leads` permission)
+- `DELETE /api/v1/leads/{id}` - Delete lead (requires `manage-leads` permission)
+- `GET /api/v1/leads/export/csv` - Export leads to CSV (requires `export-leads` permission)
 
 **Newsletter Subscriptions:**
-- `GET /api/v1/newsletters` - List newsletter subscriptions
-- `GET /api/v1/newsletters/{id}` - Get subscription details
-- `PUT /api/v1/newsletters/{id}` - Update subscription status
-- `DELETE /api/v1/newsletters/{id}` - Delete subscription
-- `GET /api/v1/newsletters/export/csv` - Export subscriptions to CSV
+- `GET /api/v1/newsletters` - List newsletter subscriptions (requires `view-leads` permission)
+- `GET /api/v1/newsletters/{id}` - Get subscription details (requires `view-leads` permission)
+- `PUT /api/v1/newsletters/{id}` - Update subscription status (requires `manage-leads` permission)
+- `DELETE /api/v1/newsletters/{id}` - Delete subscription (requires `manage-leads` permission)
+- `GET /api/v1/newsletters/export/csv` - Export subscriptions to CSV (requires `manage-leads` permission)
 
-**Logs:**
-- `GET /api/v1/login-logs` - List login logs
-- `GET /api/v1/login-logs/statistics` - Get login statistics
-- `GET /api/v1/visitor-logs` - List visitor logs
-- `GET /api/v1/visitor-logs/statistics` - Get visitor statistics
+**User Management:**
+- `GET /api/v1/users` - List users (requires `manage-users` permission)
+- `POST /api/v1/users` - Create user (requires `manage-users` permission)
+- `GET /api/v1/users/{id}` - Get user (requires `manage-users` permission)
+- `PUT /api/v1/users/{id}` - Update user (requires `manage-users` permission)
+- `DELETE /api/v1/users/{id}` - Delete user (requires `manage-users` permission)
+
+**Role & Permission Management:**
+- `GET /api/v1/roles` - List roles (requires `manage-roles` permission)
+- `POST /api/v1/roles` - Create role (requires `manage-roles` permission)
+- `PUT /api/v1/roles/{id}` - Update role (requires `manage-roles` permission)
+- `PUT /api/v1/roles/{id}/permissions` - Sync role permissions (requires `manage-roles` permission)
+- `DELETE /api/v1/roles/{id}` - Delete role (requires `manage-roles` permission)
+- `GET /api/v1/permissions` - List permissions (requires `manage-roles` permission)
+- `GET /api/v1/permissions/groups` - Get permission groups (requires `manage-roles` permission)
+- `POST /api/v1/permissions` - Create permission (requires `manage-roles` permission)
+- `PUT /api/v1/permissions/{id}` - Update permission (requires `manage-roles` permission)
+- `DELETE /api/v1/permissions/{id}` - Delete permission (requires `manage-roles` permission)
+
+**Logs & Analytics:**
+- `GET /api/v1/login-logs` - List login logs (with pagination, filtering, sorting, search) (requires `view-login-logs` permission)
+- `GET /api/v1/login-logs/statistics` - Get login statistics with time-series trends data (requires `view-login-logs` permission)
+- `GET /api/v1/login-logs/{id}` - Get login log details (requires `view-login-logs` permission)
+- `DELETE /api/v1/login-logs/{id}` - Delete login log (requires `view-login-logs` permission)
+- `GET /api/v1/visitor-logs` - List visitor logs (with pagination, filtering, sorting, search, bot filtering) (requires `view-visitor-logs` permission)
+- `GET /api/v1/visitor-logs/statistics` - Get visitor statistics with time-series trends data (requires `view-visitor-logs` permission)
+- `GET /api/v1/visitor-logs/{id}` - Get visitor log details (requires `view-visitor-logs` permission)
+- `DELETE /api/v1/visitor-logs/{id}` - Delete visitor log (requires `view-visitor-logs` permission)
+- `POST /api/v1/visitor-logs/delete-multiple` - Delete multiple visitor logs (requires `view-visitor-logs` permission)
+
+**Settings:**
+- `GET /api/v1/settings` - Get all settings (requires authentication)
+- `PUT /api/v1/settings` - Update settings (requires `manage-settings` permission)
 
 ### Public API (`/api/openapi/`)
 
-- `GET /api/openapi/home` - Homepage data
-- `GET /api/openapi/pages/{slug}` - Get page by slug
-- `GET /api/openapi/services` - List services
+- `GET /api/openapi/home` - Homepage data (includes home page settings and featured content)
+- `GET /api/openapi/pages/{slug}` - Get page by slug (for public page viewing)
+- `GET /api/openapi/services` - List published services
 - `GET /api/openapi/services/{slug}` - Get service by slug
-- `GET /api/openapi/products` - List products (supports category filter, search, sorting)
+- `GET /api/openapi/products` - List published products (supports category filter, search, sorting)
 - `GET /api/openapi/products/{slug}` - Get product by slug (includes categories, tags, specifications, downloads)
 - `GET /api/openapi/categories` - List categories (supports type filter, pagination)
 - `GET /api/openapi/settings` - Get public settings
-- `POST /api/openapi/contact` - Submit contact form
+- `GET /api/openapi/about` - Get about page
+- `POST /api/openapi/contact` - Submit contact form (creates lead)
 - `POST /api/openapi/newsletter/subscribe` - Subscribe to newsletter
 
 ## Features Implemented
 
-✅ **Core Features:**
-- Pages management
-- Menus management
-- Settings management
-- Leads management
-- Newsletter subscriptions management
-- Module system (enable/disable modules)
-- Role-based access control (RBAC)
-- User management
-- Login and Visitor logs
+### Core Features
 
-✅ **Optional Modules:**
-- Services catalog
-- Products catalog with categories and tags
-- Portfolio/Projects
-- Blog/News
-- FAQ
-- Careers & Job Applications
-- Booking/Appointments
-- Events & Registrations
-- Multi-location/Branches
+#### Authentication & Security
+- **Laravel Sanctum Authentication**: Secure API token-based authentication
+- **Role-Based Access Control (RBAC)**: Complete permission system
+- **User Management**: Full user administration
+- **Permission Management**: Fine-grained permission control
+- **Login Logging**: Comprehensive login attempt tracking
+- **Visitor Logging**: Advanced visitor analytics
 
-✅ **Admin Panel:**
-- Authentication (Sanctum)
-- Dashboard with statistics
-- CRUD operations for content
-- Product management with 11-tab form:
-  - Basic Info, Media, Pricing, Categories & Tags
-  - Specifications, Features, Downloads, FAQs
-  - Warranty & Service, SEO, Settings
-- Category management (hierarchical)
-- Tag management
-- Image and file upload with preview
-- Leads management and export
-- Newsletter subscriptions management and export
-- Role-based permissions system
-- User management
-- Settings management with modular section components:
-  - General settings (site name, tagline, contact info)
-  - Home page settings with tabbed interface and split components:
-    - Hero section settings
-    - Statistics section settings
-    - Trusted By section with dynamic client logo management
-    - Services section with dynamic service management (WHAT WE DO)
-    - Why Choose Us section with features management
-    - Testimonials section settings
-    - Featured Products section settings
-    - CTA section settings
-    - Section visibility toggles
+#### Dashboard & Analytics
+- **AI-Powered Analytics Dashboard**: 
+  - Real-time statistics cards with trend indicators
+  - Interactive Chart.js visualizations:
+    - Visitor trends (line chart with time-series data)
+    - Device distribution (doughnut chart)
+    - Browser distribution (bar chart)
+    - Login activity (pie chart)
+    - Leads by status (bar chart)
+    - Top visited pages (horizontal bar chart)
+  - Time range selection (7d, 30d, 90d, 1y)
+  - AI-powered insights with automated analysis
+  - Recent activity tables
+  - All data fetched from real database with time-series support
+
+#### Services Management
+- Complete CRUD operations
+- Rich text editor for descriptions
+- Image upload with preview
+- SEO optimization
+- Published/Draft status
+- Display order management
+
+#### Products Management
+- **11-Tab Form System**:
+  1. Basic Info - Title, slug, SKU, descriptions
+  2. Media - Thumbnail and gallery images
+  3. Pricing - Price, price range, show/hide toggle
+  4. Categories & Tags - Multi-select with auto-creation
+  5. Specifications - Dynamic key-value pairs
+  6. Features - Key features list
+  7. Downloads - File uploads (PDFs, datasheets)
+  8. FAQs - Question-answer pairs
+  9. Warranty & Service - Warranty information
+  10. SEO - Meta tags and OG image
+  11. Settings - Published, featured, stock, order
+- Product details view
+- Image and file management
+- Comprehensive product information
+
+#### Categories & Tags
+- Hierarchical category structure
+- Category type filtering
+- Tag management with auto-slug generation
+- Published/Draft status
+
+#### Leads Management
+- Lead status tracking (New, Contacted, Qualified, Converted, Lost)
+- Lead type categorization
+- Read/Unread status
+- Lead assignment
+- Notes and comments
+- CSV export
+- Statistics with time-series data
+
+#### Newsletter Management
+- Subscription tracking
+- Status management
+- CSV export
+- Bulk operations
+
+#### About Page Management
+- Singleton about page
+- Company story and mission
+- Team information
+- Company values
+
+#### Settings Management
+- **Modular Settings System**:
+  - General settings
+  - Home page settings (9 separate section components)
   - Contact page settings
-  - Branding settings (logo, favicon, colors)
-  - Social media links
+  - Branding settings
+  - Social media settings
   - SEO settings
   - Email/SMTP settings
-- Login and Visitor logs
-- Modern UI with gradient design
-- Progress bar for route navigation
-- Toast notifications (SweetAlert2)
 
-✅ **Public Website:**
-- Dynamic homepage
-- Page system
-- Services/Products display with filtering and search
-- Product comparison tool (compare up to 3 products side-by-side)
-- Product detail pages with:
-  - Hero section with product overview
-  - Product gallery with image zoom
-  - Key features and technical specifications
-  - Downloadable datasheets and documentation
-  - Customer FAQs section
-  - Warranty & service information
-- Contact forms
-- Newsletter subscription (footer)
-- Responsive design
+#### Logs Management
+- **Login Logs**:
+  - Track all login attempts
+  - Filter by status
+  - Search functionality
+  - Statistics with time-series data
+- **Visitor Logs**:
+  - Comprehensive visitor tracking
+  - Device, browser, OS detection
+  - Bot detection and filtering
+  - Statistics with breakdowns
+  - Top visited pages
+  - Time-series trends data
+  - Bulk delete functionality
 
-✅ **Frontend Architecture:**
-- Modular plugin system (Vuetify, ProgressBar, SweetAlert)
-- Utility functions for axios configuration
-- Organized component structure (admin and public folders organized by feature)
-- Component-based architecture with split settings sections for better maintainability
-  - HomePageSettings split into 9 separate components for each section (Hero, Stats, Trusted By, Services, Why Choose Us, Testimonials, Products, CTA, Visibility)
-  - Each section component manages its own state and logic independently
-  - Improved code organization and maintainability
-- Mixins for shared functionality
-- Centralized CSS variables for theming
-- Responsive design with compact tables
-- Modern, clean UI design for public pages
-- Product comparison functionality
-- Advanced filtering and search capabilities
+### Admin Panel Features
+
+- **Modern UI**: Vuetify 3 with gradient design
+- **Responsive Design**: Works on all screen sizes
+- **Standard Pagination**: Consistent pagination UI across all admin pages
+- **Skeleton Loaders**: Loading states for better UX
+- **Toast Notifications**: SweetAlert2 for user feedback
+- **Progress Bar**: Route navigation progress indicator
+- **Permission-Based Menu**: Sidebar menu items shown based on user permissions
+- **Unread Count Badge**: Real-time unread leads count in sidebar
+
+### Public Website Features
+
+#### Homepage
+- **Dynamic Sections** (all configurable from admin):
+  - Hero section
+  - Statistics section
+  - Trusted By section
+  - Services section
+  - Why Choose Us section
+  - Testimonials section
+  - Featured Products section
+  - CTA section
+
+#### Products Display
+- **Product Listing**:
+  - Category filtering
+  - Real-time search
+  - Multiple sorting options
+  - Product comparison tool (up to 3 products)
+  - Responsive grid layout
+- **Product Detail**:
+  - Image gallery with zoom
+  - Technical specifications
+  - Features list
+  - Downloadable files
+  - FAQs section
+  - Warranty information
+
+#### Services Display
+- Services listing
+- Service detail pages
+
+#### Contact & Communication
+- Contact form
+- Newsletter subscription
 
 ## Frontend File Structure
 
@@ -348,7 +482,8 @@ resources/js/
 ├── routes.js                       # Vue Router configuration
 │
 ├── utils/                          # Utility functions
-│   └── axios.config.js            # Axios HTTP client configuration
+│   ├── axios.config.js            # Axios HTTP client configuration
+│   └── uploads.js                  # Upload URL resolution
 │
 ├── plugins/                        # Vue plugins
 │   ├── vuetify.js                 # Vuetify UI framework setup
@@ -364,17 +499,24 @@ resources/js/
     │
     ├── admin/                      # Admin panel components
     │   ├── AdminLayout.vue        # Admin layout (sidebar, app bar, footer)
-    │   ├── AdminDashboard.vue    # Dashboard
+    │   ├── AdminDashboard.vue     # AI-powered analytics dashboard
     │   │
     │   ├── auth/                   # Authentication
     │   │   └── AdminLogin.vue     # Admin login page
     │   │
-    │   ├── content/                # Content management
-    │   │   ├── AdminPages.vue     # Pages management
-    │   │   └── AdminServices.vue  # Services management
+    │   ├── about/                  # About page management
+    │   │   ├── AdminAbout.vue     # About page management
+    │   │   └── AboutFormDialog.vue # About page form
+    │   │
+    │   ├── service/                # Service management
+    │   │   ├── AdminServices.vue  # Services management
+    │   │   ├── ServiceFormDialog.vue # Service form
+    │   │   └── ServiceDetailsDialog.vue # Service details
     │   │
     │   ├── products/               # Product management
     │   │   ├── AdminProducts.vue  # Products management (11-tab form)
+    │   │   ├── ProductFormDialog.vue # Product form (11 tabs)
+    │   │   ├── ProductDetailsDialog.vue # Product details
     │   │   ├── AdminCategories.vue # Categories management
     │   │   └── AdminTags.vue      # Tags management
     │   │
@@ -382,7 +524,7 @@ resources/js/
     │   │   └── AdminLeads.vue     # Leads management
     │   │
     │   ├── newsletters/            # Newsletter management
-    │   │   └── AdminNewsletters.vue # Newsletter subscriptions management
+    │   │   └── AdminNewsletters.vue # Newsletter subscriptions
     │   │
     │   ├── users/                  # User management
     │   │   ├── AdminUsers.vue     # User management
@@ -392,9 +534,9 @@ resources/js/
     │   ├── settings/              # Settings
     │   │   ├── AdminSettings.vue # Settings management (main container)
     │   │   └── sections/          # Settings section components
-    │   │       ├── GeneralSettings.vue      # General site settings
-    │   │       ├── HomePageSettings.vue     # Home page settings container (with tabs)
-    │   │       ├── home_page/               # Home page section components
+    │   │       ├── GeneralSettings.vue
+    │   │       ├── HomePageSettings.vue
+    │   │       ├── home_page/     # Home page section components
     │   │       │   ├── HeroSectionSettings.vue
     │   │       │   ├── StatsSectionSettings.vue
     │   │       │   ├── TrustedBySectionSettings.vue
@@ -404,11 +546,11 @@ resources/js/
     │   │       │   ├── ProductsSectionSettings.vue
     │   │       │   ├── CTASectionSettings.vue
     │   │       │   └── VisibilitySectionSettings.vue
-    │   │       ├── ContactPageSettings.vue   # Contact page settings
-    │   │       ├── BrandingSettings.vue     # Branding settings
-    │   │       ├── SocialSettings.vue        # Social media links
-    │   │       ├── SEOSettings.vue           # SEO settings
-    │   │       └── EmailSettings.vue        # Email/SMTP settings
+    │   │       ├── ContactPageSettings.vue
+    │   │       ├── BrandingSettings.vue
+    │   │       ├── SocialSettings.vue
+    │   │       ├── SEOSettings.vue
+    │   │       └── EmailSettings.vue
     │   │
     │   └── logs/                   # Logs
     │       ├── AdminLoginLogs.vue # Login logs
@@ -419,10 +561,10 @@ resources/js/
         │
         ├── layout/                 # Layout components
         │   ├── AppBar.vue         # Navigation bar
-        │   ├── Footer.vue         # Footer with newsletter subscription form
+        │   ├── Footer.vue         # Footer
         │   ├── MobileDrawer.vue   # Mobile navigation
-        │   ├── WhatsAppFloat.vue  # WhatsApp floating button
-        │   └── GoToTopButton.vue  # Scroll to top button
+        │   ├── WhatsAppFloat.vue  # WhatsApp button
+        │   └── GoToTopButton.vue  # Scroll to top
         │
         ├── pages/                  # Page components
         │   ├── HomePage.vue       # Homepage
@@ -430,12 +572,12 @@ resources/js/
         │   └── ContactPage.vue    # Contact page
         │
         ├── products/               # Product pages
-        │   ├── ProductsPage.vue   # Products listing with filters, search, comparison
-        │   └── ProductDetailPage.vue # Product detail with gallery, specs, FAQs, warranty
+        │   ├── ProductsPage.vue   # Products listing
+        │   └── ProductDetailPage.vue # Product detail
         │
         └── services/               # Service pages
             ├── ServicesPage.vue   # Services listing
-            └── ServiceDetailPage.vue # Service detail page
+            └── ServiceDetailPage.vue # Service detail
 ```
 
 ## Backend File Structure
@@ -445,16 +587,16 @@ app/Http/Controllers/
 ├── Api/                            # Admin API controllers
 │   ├── auth/
 │   │   └── AuthController.php
-│   ├── content/
-│   │   └── PageController.php
+│   ├── about/
+│   │   └── AboutController.php
 │   ├── service/
 │   │   └── ServiceController.php
 │   ├── leads/
-│   │   └── LeadController.php
+│   │   └── LeadController.php (includes statistics endpoint)
 │   ├── NewsletterController.php
 │   ├── logs/
-│   │   ├── LoginLogController.php
-│   │   └── VisitorLogController.php
+│   │   ├── LoginLogController.php (includes statistics with time-series)
+│   │   └── VisitorLogController.php (includes statistics with time-series)
 │   ├── products/
 │   │   ├── ProductController.php
 │   │   ├── CategoryController.php
@@ -471,8 +613,10 @@ app/Http/Controllers/
 └── Public/                         # Public website controllers
     ├── pages/
     │   ├── HomeController.php
-    │   ├── PageController.php
+    │   ├── PageController.php (for viewing pages by slug)
     │   └── ContactController.php
+    ├── about/
+    │   └── AboutController.php
     ├── NewsletterController.php
     ├── products/
     │   └── ProductController.php
@@ -503,6 +647,42 @@ app/Http/Controllers/
 - Product images: `public/uploads/products/`
 - Files are named with prefix: `{prefix}-{random}.{ext}`
 - Supports single image, multiple images, and general file uploads
+
+## Dashboard Analytics Features
+
+### Statistics Cards
+- **Total Visitors**: Shows total visitor count with trend indicator (percentage change vs last period)
+- **Human Visits**: Displays human visits count with percentage of total
+- **New Leads**: Shows new leads requiring attention with alert indicator
+- **Total Products**: Displays product count with services count
+
+### Chart Visualizations
+- **Visitor Trends**: Line chart showing daily visitor trends (total and human visits) over selected time range
+- **Device Distribution**: Doughnut chart showing breakdown by device type (Desktop, Mobile, Tablet)
+- **Browser Distribution**: Bar chart showing top 5 browsers used by visitors
+- **Login Activity**: Pie chart showing successful vs failed login attempts
+- **Leads by Status**: Bar chart showing distribution of leads by status (New, Contacted, Qualified, Converted, Lost)
+- **Top Visited Pages**: Horizontal bar chart showing top 5 most visited URLs
+
+### Time Range Support
+- **7 Days**: Last week's data
+- **30 Days**: Last month's data
+- **90 Days**: Last quarter's data
+- **1 Year**: Last year's data
+
+### AI-Powered Insights
+- **Automated Analysis**: System analyzes data and provides insights:
+  - **Warnings**: High bot traffic, login failures, new leads requiring attention
+  - **Success Messages**: Strong visitor engagement, good content portfolio
+  - **Information**: Content statistics, system status
+- **Color-Coded Icons**: Different icon types for different insight categories
+- **Actionable Recommendations**: Insights provide actionable information
+
+### Data Sources
+- Real-time data from database
+- Time-series data from controllers
+- Statistics APIs with trend calculations
+- Recent activity from latest records
 
 ## Product Pages Features
 
@@ -591,6 +771,29 @@ app/Http/Controllers/
 - **Product Details View**: Read-only view of all product information
 - **Edit from Details**: Seamless transition from details to edit view
 
+## Admin Panel UI Features
+
+### Standard Pagination
+- **Consistent Design**: All admin pages use the same pagination style
+- **Features**:
+  - Responsive layout (stacks on mobile, side-by-side on desktop)
+  - Page indicator: "(Page X of Y)" when multiple pages exist
+  - Number formatting with `toLocaleString()` for large numbers
+  - Bold formatting for key numbers
+  - `total-visible="7"` to limit visible page buttons for large datasets
+  - `density="comfortable"` for better spacing
+
+### Sidebar Navigation
+- **Organized Structure**:
+  - Overview (Dashboard)
+  - Content Management (About Page, Services, Products)
+  - User Management (Users, Roles & Permissions)
+  - Communication (Leads, Newsletters)
+  - System & Administration (Settings, Logs)
+- **Permission-Based**: Menu items shown based on user permissions
+- **Unread Badge**: Real-time unread leads count in sidebar
+- **Modern Design**: Gradient background with animated shapes
+
 ## Notes
 
 - This is a foundational structure that can be expanded
@@ -601,4 +804,6 @@ app/Http/Controllers/
 - Product pages feature modern, clean design suitable for business/industrial websites
 - Admin and public folders are organized by feature for better maintainability
 - File uploads are stored in public directory for easy access
+- Dashboard includes AI-powered insights and real-time analytics with Chart.js
+- All statistics endpoints support time-series data for trend analysis
 - Additional admin and public components can be added incrementally

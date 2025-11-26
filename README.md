@@ -5,67 +5,242 @@ A comprehensive, generic business website platform built according to SRS specif
 ## 🚀 Features
 
 ### Core Features
-- ✅ Dynamic pages management
-- ✅ Menu/Navigation management
-- ✅ Settings management
-- ✅ Leads/Contact form management
-- ✅ Newsletter subscriptions management
-- ✅ Module system (enable/disable features)
-- ✅ Admin authentication (Laravel Sanctum)
-- ✅ SEO support (meta tags, OG tags)
-- ✅ Role-based access control (RBAC)
-- ✅ User management with permissions
-- ✅ Login & Visitor logs tracking
 
-### Optional Modules
-- ✅ Services catalog with categories
-- ✅ Products catalog with categories, tags, and specifications
-- ✅ Portfolio/Projects
-- ✅ Blog/News
-- ✅ FAQ
-- ✅ Careers & Job Applications
-- ✅ Booking/Appointments
-- ✅ Events & Registrations
-- ✅ Multi-location/Branches
-- ✅ Media library
+#### Authentication & Security
+- **Laravel Sanctum Authentication**: Secure API token-based authentication for admin panel
+- **Role-Based Access Control (RBAC)**: Granular permission system with roles and permissions
+- **User Management**: Complete user administration with role assignment
+- **Permission Management**: Fine-grained permission control for all features
+- **Login Logging**: Track all login attempts (successful and failed) with IP addresses and user agents
+- **Visitor Logging**: Comprehensive visitor tracking with device, browser, OS, and bot detection
 
-### Admin Panel
-- ✅ Dashboard with statistics
-- ✅ Content management (CRUD)
-- ✅ Product management with:
-  - Multi-tab form (Basic Info, Media, Pricing, Categories & Tags, Specifications, Features, Downloads, FAQs, Warranty & Service, SEO, Settings)
+#### Settings Management
+- **General Settings**: Site name, tagline, contact information, address
+- **Home Page Settings**: Modular section management with tabbed interface:
+  - Hero section with customizable title, subtitle, and CTA buttons
+  - Statistics section with up to 4 customizable stat cards
+  - Trusted By section with dynamic client logo management
+  - Services section (WHAT WE DO) with dynamic service cards
+  - Why Choose Us section with features management
+  - Testimonials section with testimonial cards
+  - Featured Products section
+  - CTA (Call-to-Action) section with primary and secondary buttons
+  - Section visibility toggles for each section
+- **Contact Page Settings**: Contact form configuration and page content
+- **Branding Settings**: Logo, favicon, and color scheme customization
+- **Social Media Settings**: Social media links and integration
+- **SEO Settings**: Default meta tags, descriptions, and keywords
+- **Email/SMTP Settings**: Email configuration for notifications
+
+#### Leads & Communication
+- **Lead Management**: Complete lead tracking system with:
+  - Lead status management (New, Contacted, Qualified, Converted, Lost)
+  - Lead type categorization (Contact, Quote, Support)
+  - Read/Unread status tracking
+  - Lead assignment to users
+  - Notes and comments
+  - CSV export functionality
+- **Newsletter Subscriptions**: Newsletter management with:
+  - Subscription status tracking
+  - Email verification
+  - CSV export functionality
+  - Bulk operations
+
+#### About Page Management
+- **Singleton About Page**: Single about page management with:
+  - Company story and description
+  - Mission and vision
+  - Team information
+  - Company values
+
+### Admin Panel Features
+
+#### Dashboard & Analytics
+- **AI-Powered Analytics Dashboard**: Comprehensive dashboard with:
+  - **Statistics Cards**: 
+    - Total Visitors with trend indicators
+    - Human Visits with percentage breakdown
+    - New Leads with attention alerts
+    - Total Products with services count
+  - **Interactive Charts** (Chart.js):
+    - Visitor Trends: Line chart showing total and human visits over time
+    - Device Distribution: Doughnut chart for desktop, mobile, tablet breakdown
+    - Browser Distribution: Bar chart showing top browsers
+    - Login Activity: Pie chart for successful vs failed logins
+    - Leads by Status: Bar chart showing lead status distribution
+    - Top Visited Pages: Horizontal bar chart for most visited URLs
+  - **Time Range Selection**: Filter data by 7 days, 30 days, 90 days, or 1 year
+  - **AI-Powered Insights**: Automated analysis providing:
+    - Warnings for high bot traffic, login failures, new leads requiring attention
+    - Success messages for strong engagement
+    - Information about content portfolio
+  - **Recent Activity**: Latest leads table with unread indicators
+  - **Real-time Data**: All statistics update dynamically from database
+
+#### Services Management
+- **Service CRUD**: Complete service management with:
+  - Title, slug, and descriptions
+  - Icon selection (Material Design Icons)
   - Image upload with preview
-  - File upload for downloads
-  - Category and Tag management
-  - Product details view
-- ✅ Category management (hierarchical)
-- ✅ Tag management
-- ✅ Leads management and export (CSV)
-- ✅ Newsletter subscriptions management and export (CSV)
-- ✅ Settings management
-- ✅ User, Role, and Permission management
-- ✅ Login logs and Visitor logs
-- ✅ Modern UI with Vuetify 3
+  - Price range display
+  - Features and benefits management
+  - SEO optimization
+  - Published/Draft status
+  - Display order management
+- **Service Details View**: Read-only view of complete service information
+- **Rich Text Editor**: WYSIWYG editor for service descriptions
 
-### Public Website
-- ✅ Responsive design (Vuetify 3)
-- ✅ Dynamic homepage
-- ✅ Services/Products display with:
-  - Category filtering
-  - Search functionality
-  - Sorting options
-  - Product comparison tool (compare up to 3 products)
-- ✅ Product detail pages with:
-  - Hero section
-  - Product gallery with zoom
-  - Key features
-  - Technical specifications
-  - Downloadable datasheets
-  - Customer FAQs
-  - Warranty & service information
-- ✅ Contact forms
-- ✅ Newsletter subscription (footer)
-- ✅ SEO optimized
+#### Products Management
+- **Comprehensive Product Management**: 11-tab form system:
+  1. **Basic Info**: Title, slug, SKU, short description, full description
+  2. **Media**: Thumbnail and gallery images with preview and upload
+  3. **Pricing**: Price, price range, show/hide price toggle
+  4. **Categories & Tags**: Multi-select with auto-creation support
+  5. **Specifications**: Dynamic key-value pairs for technical specs
+  6. **Features**: Key features list with descriptions
+  7. **Downloads**: File uploads (PDFs, datasheets, manuals) with preview
+  8. **FAQs**: Question-answer pairs for customer support
+  9. **Warranty & Service**: Warranty information and service details
+  10. **SEO**: Meta title, description, keywords, OG image
+  11. **Settings**: Published status, featured flag, stock management, display order
+- **Product Details View**: Complete read-only view of all product information
+- **Image Management**: 
+  - Thumbnail upload with preview
+  - Gallery images with drag-and-drop reordering
+  - Image deletion
+  - Automatic path normalization
+- **File Management**: 
+  - Downloadable files (PDFs, ZIPs, etc.)
+  - File type detection
+  - File size display
+  - Preview before upload
+
+#### Categories Management
+- **Hierarchical Categories**: 
+  - Parent-child relationships
+  - Category type filtering (product, service, etc.)
+  - Category icons and images
+  - Published/Draft status
+  - Display order
+  - SEO optimization
+
+#### Tags Management
+- **Tag System**: 
+  - Tag creation and management
+  - Tag type filtering
+  - Slug auto-generation
+  - Tag usage tracking
+
+#### User Management
+- **User Administration**:
+  - User creation and editing
+  - Role assignment
+  - Avatar upload
+  - Account status management
+  - Password reset functionality
+
+#### Role & Permission Management
+- **Role Management**:
+  - Role creation with permissions
+  - Permission assignment
+  - System role protection
+  - Permission grouping
+- **Permission Management**:
+  - Permission creation
+  - Slug auto-generation
+  - Permission grouping by feature
+  - Flat and grouped view modes
+
+#### Logs Management
+- **Login Logs**:
+  - Track all login attempts
+  - Filter by status (success/failed)
+  - Search by email, IP, user agent
+  - Statistics dashboard
+  - Time-series data for trends
+- **Visitor Logs**:
+  - Comprehensive visitor tracking
+  - Device type detection (Desktop, Mobile, Tablet)
+  - Browser and OS detection
+  - Bot detection and filtering
+  - IP address tracking
+  - URL tracking
+  - Referer tracking
+  - Statistics with device/browser/OS breakdown
+  - Top visited pages
+  - Time-series data for trends
+  - Bulk delete functionality
+
+### Public Website Features
+
+#### Homepage
+- **Dynamic Homepage**: Fully configurable homepage with:
+  - Hero section with customizable content
+  - Statistics section with animated counters
+  - Trusted By section with client logos
+  - Services showcase section
+  - Why Choose Us section with features
+  - Testimonials carousel
+  - Featured Products section
+  - Call-to-Action section
+  - All sections can be toggled on/off from admin
+
+#### Products Display
+- **Product Listing Page**:
+  - Category-based filtering with icon buttons
+  - Real-time search across titles, descriptions, SKU, and specifications
+  - Multiple sorting options (newest, price, name, featured)
+  - Product cards with images, quick specs, and prices
+  - Featured product badges
+  - **Product Comparison Tool**: Compare up to 3 products side-by-side with:
+    - Price comparison
+    - Key specifications comparison
+    - Technical differences
+    - Recommended use-cases
+    - Quick access to product details
+  - Responsive grid layout
+  - Sticky filter bar on scroll
+
+- **Product Detail Page**:
+  - Hero section with product overview
+  - Product gallery with:
+    - Main image with zoom functionality
+    - Thumbnail navigation
+    - Image zoom dialog for detailed viewing
+  - Key features section with icons
+  - Quick specifications sidebar
+  - Tabbed content:
+    - **Overview**: Detailed description and benefits
+    - **Technical Specs**: Complete specifications table
+    - **Features**: Detailed feature list
+    - **Downloads**: Datasheets, manuals, documentation (PDF, ZIP, etc.)
+    - **FAQs**: Expandable FAQ section
+    - **Warranty & Service**: Warranty coverage and support information
+  - Related products section
+  - Trust badges (Warranty, Delivery, Support)
+
+#### Services Display
+- **Services Listing**: Grid view of all published services
+- **Service Detail Page**: Complete service information with features and benefits
+
+#### Contact & Communication
+- **Contact Form**: 
+  - Name, email, phone, subject, message fields
+  - Automatic lead creation
+  - Email notifications
+- **Newsletter Subscription**: Footer subscription form with email verification
+
+#### SEO & Performance
+- **SEO Optimization**:
+  - Meta tags per page
+  - Open Graph tags
+  - Structured data
+  - Sitemap generation
+- **Performance**:
+  - Image optimization
+  - Lazy loading
+  - Responsive images
+  - Fast page loads
 
 ## 📋 Prerequisites
 
@@ -146,83 +321,107 @@ All admin endpoints require authentication via Bearer token.
 - `POST /api/v1/auth/logout` - Logout
 - `GET /api/v1/auth/user` - Get current user
 
-**Content Management:**
-- `GET /api/v1/pages` - List pages
-- `POST /api/v1/pages` - Create page
-- `GET /api/v1/pages/{id}` - Get page
-- `PUT /api/v1/pages/{id}` - Update page
-- `DELETE /api/v1/pages/{id}` - Delete page
+**About Page Management:**
+- `GET /api/v1/about` - Get about page (requires `manage-pages` permission)
+- `POST /api/v1/about` - Create/update about page (requires `manage-pages` permission)
+- `PUT /api/v1/about` - Update about page (requires `manage-pages` permission)
 
-Similar CRUD for: `services`, `products`, `categories`, `tags`, etc.
+**Services Management:**
+- `GET /api/v1/services` - List services (with pagination, filtering, sorting)
+- `POST /api/v1/services` - Create service (requires `manage-services` permission)
+- `GET /api/v1/services/{id}` - Get service (by ID or slug)
+- `PUT /api/v1/services/{id}` - Update service (requires `manage-services` permission)
+- `DELETE /api/v1/services/{id}` - Delete service (requires `manage-services` permission)
 
 **Product Management:**
-- `GET /api/v1/products` - List products (with pagination, filtering, sorting)
-- `POST /api/v1/products` - Create product
-- `GET /api/v1/products/{id}` - Get product (by ID or slug)
-- `PUT /api/v1/products/{id}` - Update product
-- `DELETE /api/v1/products/{id}` - Delete product
+- `GET /api/v1/products` - List products (with pagination, filtering, sorting, search)
+- `POST /api/v1/products` - Create product (requires `manage-products` permission)
+- `GET /api/v1/products/{id}` - Get product (by ID or slug, includes all relationships)
+- `PUT /api/v1/products/{id}` - Update product (requires `manage-products` permission)
+- `DELETE /api/v1/products/{id}` - Delete product (requires `manage-products` permission)
 
 **Category Management:**
 - `GET /api/v1/categories` - List categories (supports filtering by type, parent_id, published)
-- `POST /api/v1/categories` - Create category
-- `GET /api/v1/categories/{id}` - Get category
-- `PUT /api/v1/categories/{id}` - Update category
-- `DELETE /api/v1/categories/{id}` - Delete category
+- `POST /api/v1/categories` - Create category (requires `manage-products` permission)
+- `GET /api/v1/categories/{id}` - Get category (by ID or slug)
+- `PUT /api/v1/categories/{id}` - Update category (requires `manage-products` permission)
+- `DELETE /api/v1/categories/{id}` - Delete category (requires `manage-products` permission)
 
 **Tag Management:**
 - `GET /api/v1/tags` - List tags (supports filtering by type, search)
-- `POST /api/v1/tags` - Create tag
+- `POST /api/v1/tags` - Create tag (requires `manage-products` permission)
 - `GET /api/v1/tags/{id}` - Get tag (by ID or slug)
-- `PUT /api/v1/tags/{id}` - Update tag
-- `DELETE /api/v1/tags/{id}` - Delete tag
+- `PUT /api/v1/tags/{id}` - Update tag (requires `manage-products` permission)
+- `DELETE /api/v1/tags/{id}` - Delete tag (requires `manage-products` permission)
 
 **File Upload:**
-- `POST /api/v1/upload/image` - Upload single image
-- `POST /api/v1/upload/images` - Upload multiple images
-- `POST /api/v1/upload/file` - Upload file (PDF, DOC, ZIP, etc.)
-- `DELETE /api/v1/upload/image` - Delete image
+- `POST /api/v1/upload/image` - Upload single image (requires authentication)
+- `POST /api/v1/upload/images` - Upload multiple images (requires authentication)
+- `POST /api/v1/upload/file` - Upload file (PDF, DOC, ZIP, etc.) (requires authentication)
+- `DELETE /api/v1/upload/image` - Delete image (requires authentication)
 
-**Leads Export:**
-- `GET /api/v1/leads/export/csv` - Export leads to CSV
+**Leads Management:**
+- `GET /api/v1/leads` - List leads (with pagination, filtering, sorting, search) (requires `view-leads` permission)
+- `GET /api/v1/leads/statistics` - Get leads statistics with time-series data (requires `view-leads` permission)
+- `GET /api/v1/leads/unread-count` - Get count of unread leads (requires `view-leads` permission)
+- `GET /api/v1/leads/{id}` - Get lead details (requires `view-leads` permission)
+- `POST /api/v1/leads/{id}/mark-as-read` - Mark lead as read (requires `view-leads` permission)
+- `PUT /api/v1/leads/{id}` - Update lead (requires `manage-leads` permission)
+- `DELETE /api/v1/leads/{id}` - Delete lead (requires `manage-leads` permission)
+- `GET /api/v1/leads/export/csv` - Export leads to CSV (requires `export-leads` permission)
 
 **Newsletter Subscriptions:**
 - `GET /api/v1/newsletters` - List newsletter subscriptions (requires `view-leads` permission)
-- `GET /api/v1/newsletters/{id}` - Get subscription details
+- `GET /api/v1/newsletters/{id}` - Get subscription details (requires `view-leads` permission)
 - `PUT /api/v1/newsletters/{id}` - Update subscription status (requires `manage-leads` permission)
 - `DELETE /api/v1/newsletters/{id}` - Delete subscription (requires `manage-leads` permission)
 - `GET /api/v1/newsletters/export/csv` - Export subscriptions to CSV (requires `manage-leads` permission)
 
 **User Management:**
-- `GET /api/v1/users` - List users
-- `POST /api/v1/users` - Create user
-- `GET /api/v1/users/{id}` - Get user
-- `PUT /api/v1/users/{id}` - Update user
-- `DELETE /api/v1/users/{id}` - Delete user
+- `GET /api/v1/users` - List users (requires `manage-users` permission)
+- `POST /api/v1/users` - Create user (requires `manage-users` permission)
+- `GET /api/v1/users/{id}` - Get user (requires `manage-users` permission)
+- `PUT /api/v1/users/{id}` - Update user (requires `manage-users` permission)
+- `DELETE /api/v1/users/{id}` - Delete user (requires `manage-users` permission)
 
 **Role & Permission Management:**
-- `GET /api/v1/roles` - List roles
-- `POST /api/v1/roles` - Create role
-- `PUT /api/v1/roles/{id}/permissions` - Sync role permissions
-- `GET /api/v1/permissions` - List permissions
-- `GET /api/v1/permissions/groups` - Get permission groups
+- `GET /api/v1/roles` - List roles (requires `manage-roles` permission)
+- `POST /api/v1/roles` - Create role (requires `manage-roles` permission)
+- `PUT /api/v1/roles/{id}` - Update role (requires `manage-roles` permission)
+- `PUT /api/v1/roles/{id}/permissions` - Sync role permissions (requires `manage-roles` permission)
+- `DELETE /api/v1/roles/{id}` - Delete role (requires `manage-roles` permission)
+- `GET /api/v1/permissions` - List permissions (requires `manage-roles` permission)
+- `GET /api/v1/permissions/groups` - Get permission groups (requires `manage-roles` permission)
+- `POST /api/v1/permissions` - Create permission (requires `manage-roles` permission)
+- `PUT /api/v1/permissions/{id}` - Update permission (requires `manage-roles` permission)
+- `DELETE /api/v1/permissions/{id}` - Delete permission (requires `manage-roles` permission)
 
-**Logs:**
-- `GET /api/v1/login-logs` - List login logs
-- `GET /api/v1/login-logs/statistics` - Get login statistics
-- `GET /api/v1/visitor-logs` - List visitor logs
-- `GET /api/v1/visitor-logs/statistics` - Get visitor statistics
+**Logs & Analytics:**
+- `GET /api/v1/login-logs` - List login logs (with pagination, filtering, sorting) (requires `view-login-logs` permission)
+- `GET /api/v1/login-logs/statistics` - Get login statistics with time-series data (requires `view-login-logs` permission)
+- `GET /api/v1/login-logs/{id}` - Get login log details (requires `view-login-logs` permission)
+- `DELETE /api/v1/login-logs/{id}` - Delete login log (requires `view-login-logs` permission)
+- `GET /api/v1/visitor-logs` - List visitor logs (with pagination, filtering, sorting, search) (requires `view-visitor-logs` permission)
+- `GET /api/v1/visitor-logs/statistics` - Get visitor statistics with time-series data (requires `view-visitor-logs` permission)
+- `GET /api/v1/visitor-logs/{id}` - Get visitor log details (requires `view-visitor-logs` permission)
+- `DELETE /api/v1/visitor-logs/{id}` - Delete visitor log (requires `view-visitor-logs` permission)
+- `POST /api/v1/visitor-logs/delete-multiple` - Delete multiple visitor logs (requires `view-visitor-logs` permission)
+
+**Settings:**
+- `GET /api/v1/settings` - Get all settings (requires authentication)
+- `PUT /api/v1/settings` - Update settings (requires `manage-settings` permission)
 
 ### Public API (`/api/openapi/`)
 
-- `GET /api/openapi/home` - Homepage data
-- `GET /api/openapi/pages/{slug}` - Get page by slug
-- `GET /api/openapi/services` - List services
+- `GET /api/openapi/home` - Homepage data (includes home page settings and featured content)
+- `GET /api/openapi/pages/{slug}` - Get page by slug (for public page viewing)
+- `GET /api/openapi/services` - List published services
 - `GET /api/openapi/services/{slug}` - Get service by slug
-- `GET /api/openapi/products` - List products (supports category filter, search, sorting)
+- `GET /api/openapi/products` - List published products (supports category filter, search, sorting)
 - `GET /api/openapi/products/{slug}` - Get product by slug (includes categories, tags, specifications, downloads)
 - `GET /api/openapi/categories` - List categories (supports type filter, pagination)
 - `GET /api/openapi/settings` - Get public settings
-- `POST /api/openapi/contact` - Submit contact form
+- `POST /api/openapi/contact` - Submit contact form (creates lead)
 - `POST /api/openapi/newsletter/subscribe` - Subscribe to newsletter
 
 ## 🎨 Module Configuration
@@ -260,7 +459,7 @@ app/
 │   ├── Controllers/
 │   │   ├── Api/              # Admin API controllers
 │   │   │   ├── auth/
-│   │   │   ├── content/
+│   │   │   ├── about/
 │   │   │   ├── leads/
 │   │   │   ├── NewsletterController.php
 │   │   │   ├── logs/
@@ -285,7 +484,7 @@ resources/
 │   ├── components/
 │   │   ├── admin/            # Admin panel components
 │   │   │   ├── auth/
-│   │   │   ├── content/
+│   │   │   ├── about/
 │   │   │   ├── leads/
 │   │   │   ├── newsletters/
 │   │   │   ├── logs/
@@ -322,6 +521,8 @@ public/
 - SQL injection protection (Eloquent ORM)
 - Role-based access control (RBAC)
 - Permission-based route protection
+- Bot detection and filtering
+- IP address tracking for security
 
 ## 📝 Notes
 
@@ -331,6 +532,8 @@ public/
 - The platform is designed to be modular and configurable
 - Product management includes comprehensive features for industrial/tech product websites
 - File uploads are stored in `public/uploads/{folder}/` for easy access
+- Dashboard includes AI-powered insights and real-time analytics
+- All charts use Chart.js for modern, interactive visualizations
 
 ## 🛠️ Development
 
