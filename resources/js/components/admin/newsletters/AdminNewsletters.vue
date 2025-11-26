@@ -129,18 +129,29 @@
                 </v-table>
 
                 <!-- Pagination and Records Info -->
-                <div class="d-flex justify-space-between align-center mt-4">
+                <div class="d-flex flex-column flex-md-row justify-space-between align-center align-md-start gap-3 mt-4">
                     <div class="text-caption text-grey">
-                        <span v-if="subscriptions.length > 0">
-                            Showing {{ ((currentPage - 1) * perPage) + 1 }} to {{ Math.min(currentPage * perPage,
-                                pagination.total) }} of {{ pagination.total }} records
+                        <span v-if="subscriptions.length > 0 && pagination.total > 0">
+                            Showing <strong>{{ ((currentPage - 1) * perPage) + 1 }}</strong> to 
+                            <strong>{{ Math.min(currentPage * perPage, pagination.total) }}</strong> of 
+                            <strong>{{ pagination.total.toLocaleString() }}</strong> records
+                            <span v-if="pagination.last_page > 1" class="ml-2">
+                                (Page {{ currentPage }} of {{ pagination.last_page }})
+                            </span>
                         </span>
                         <span v-else>
                             No records found
                         </span>
                     </div>
-                    <v-pagination v-if="pagination.last_page > 1" v-model="currentPage" :length="pagination.last_page"
-                        @update:model-value="loadSubscriptions"></v-pagination>
+                    <div v-if="pagination.last_page > 1" class="d-flex align-center gap-2">
+                        <v-pagination 
+                            v-model="currentPage" 
+                            :length="pagination.last_page"
+                            :total-visible="7"
+                            density="comfortable"
+                            @update:model-value="loadSubscriptions">
+                        </v-pagination>
+                    </div>
                 </div>
             </v-card-text>
         </v-card>
