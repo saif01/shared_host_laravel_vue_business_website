@@ -161,10 +161,8 @@
                     <v-col cols="12" md="6">
                         <v-card class="map-card-modern h-100 rounded-xl overflow-hidden elevation-12 position-relative">
                             <div class="map-overlay"></div>
-                            <iframe
-                                :src="contactInfo.contact_map_url || 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.1422937950147!2d-73.98731968482413!3d40.75889497932681!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25855c6480299%3A0x55194ec5a1ae072e!2sTimes%20Square!5e0!3m2!1sen!2sus!4v1622646639943!5m2!1sen!2sus'"
-                                width="100%" height="100%" style="border:0; min-height: 500px;" allowfullscreen=""
-                                loading="lazy">
+                            <iframe :src="mapUrl" width="100%" height="100%" style="border:0; min-height: 500px;"
+                                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
                             </iframe>
                         </v-card>
                     </v-col>
@@ -238,6 +236,23 @@ export default {
             // Clean phone for tel: link (keep only digits and +)
             const cleaned = phone.replace(/[^\d+]/g, '');
             return `tel:${cleaned}`;
+        },
+        mapUrl() {
+            // Extract URL from iframe HTML if needed, or use the URL directly
+            if (!this.contactInfo.contact_map_url) {
+                return 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.1422937950147!2d-73.98731968482413!3d40.75889497932681!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25855c6480299%3A0x55194ec5a1ae072e!2sTimes%20Square!5e0!3m2!1sen!2sus!4v1622646639943!5m2!1sen!2sus';
+            }
+
+            // If it contains iframe tag, extract the src URL
+            if (this.contactInfo.contact_map_url.includes('<iframe')) {
+                const match = this.contactInfo.contact_map_url.match(/src=["']([^"']+)["']/);
+                if (match && match[1]) {
+                    return match[1];
+                }
+            }
+
+            // Return as is if it's already a URL
+            return this.contactInfo.contact_map_url;
         },
         contactCards() {
             // Normalize and format primary phone
@@ -471,7 +486,35 @@ export default {
                 });
                 // Response is a key-value object, merge it with contactInfo
                 if (response.data) {
-                    this.contactInfo = { ...this.contactInfo, ...response.data };
+                    const data = { ...response.data };
+
+                    // Handle null values - convert to empty strings for consistency
+                    Object.keys(data).forEach(key => {
+                        if (data[key] === null || data[key] === undefined) {
+                            data[key] = '';
+                        }
+                    });
+
+                    // Extract URL from iframe HTML if contact_map_url contains full iframe tag
+                    if (data.contact_map_url && data.contact_map_url.includes('<iframe')) {
+                        const match = data.contact_map_url.match(/src=["']([^"']+)["']/);
+                        if (match && match[1]) {
+                            data.contact_map_url = match[1];
+                        }
+                    }
+
+                    this.contactInfo = { ...this.contactInfo, ...data };
+
+                    // Debug: Log loaded data (remove in production if needed)
+                    console.log('Contact page settings loaded:', {
+                        hero_title: this.contactInfo.contact_hero_title,
+                        hero_subtitle: this.contactInfo.contact_hero_subtitle,
+                        email: this.contactInfo.contact_email,
+                        phone: this.contactInfo.contact_phone,
+                        phone_secondary: this.contactInfo.contact_phone_secondary,
+                        address: this.contactInfo.contact_address,
+                        map_url: this.contactInfo.contact_map_url ? 'Loaded' : 'Not set'
+                    });
                 }
             } catch (error) {
                 console.error('Error loading contact info:', error);
