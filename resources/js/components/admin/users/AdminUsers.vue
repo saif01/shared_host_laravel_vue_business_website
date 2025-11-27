@@ -21,8 +21,9 @@
                             density="compact" clearable @update:model-value="loadUsers"></v-select>
                     </v-col>
                     <v-col cols="12" md="4">
-                        <v-text-field v-model="search" label="Search by name or email" prepend-inner-icon="mdi-magnify"
-                            variant="outlined" density="compact" clearable @input="loadUsers"></v-text-field>
+                        <v-text-field v-model="search" label="Search by name, email, phone, city, or country"
+                            prepend-inner-icon="mdi-magnify" variant="outlined" density="compact" clearable
+                            @input="loadUsers"></v-text-field>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -56,6 +57,8 @@
                                     <v-icon :icon="getSortIcon('email')" size="small" class="ml-1"></v-icon>
                                 </div>
                             </th>
+                            <th>Phone</th>
+                            <th>Location</th>
                             <th>Role</th>
                             <th class="sortable" @click="onSort('created_at')">
                                 <div class="d-flex align-center">
@@ -77,6 +80,12 @@
                             </td>
                             <td>
                                 <v-skeleton-loader type="text" width="200"></v-skeleton-loader>
+                            </td>
+                            <td>
+                                <v-skeleton-loader type="text" width="120"></v-skeleton-loader>
+                            </td>
+                            <td>
+                                <v-skeleton-loader type="text" width="150"></v-skeleton-loader>
                             </td>
                             <td>
                                 <div class="d-flex flex-wrap gap-1">
@@ -111,6 +120,22 @@
                                 </td>
                                 <td>{{ user.email }}</td>
                                 <td>
+                                    <span v-if="user.phone" class="d-flex align-center">
+                                        <v-icon size="small" class="mr-1">mdi-phone</v-icon>
+                                        {{ user.phone }}
+                                    </span>
+                                    <span v-else class="text-caption text-grey">-</span>
+                                </td>
+                                <td>
+                                    <div v-if="user.city || user.country" class="d-flex flex-column">
+                                        <span v-if="user.city" class="text-body-2">{{ user.city }}</span>
+                                        <span v-if="user.country" class="text-caption text-grey">{{ user.country
+                                        }}</span>
+                                        <span v-if="!user.city && !user.country" class="text-caption text-grey">-</span>
+                                    </div>
+                                    <span v-else class="text-caption text-grey">-</span>
+                                </td>
+                                <td>
                                     <div v-if="user.roles && user.roles.length > 0" class="d-flex flex-wrap gap-1">
                                         <v-chip v-for="role in user.roles" :key="role.id"
                                             :color="getRoleColor(role.slug)" size="small">
@@ -128,7 +153,7 @@
                                 </td>
                             </tr>
                             <tr v-if="users.length === 0">
-                                <td colspan="5" class="text-center py-4">No users found</td>
+                                <td colspan="7" class="text-center py-4">No users found</td>
                             </tr>
                         </template>
                     </tbody>
@@ -160,105 +185,174 @@
         </v-card>
 
         <!-- User Dialog -->
-        <v-dialog v-model="dialog" max-width="600" persistent>
+        <v-dialog v-model="dialog" max-width="900" scrollable persistent>
             <v-card>
                 <v-card-title>
                     {{ editingUser ? 'Edit User' : 'Add New User' }}
                 </v-card-title>
-                <v-card-text>
+                <v-card-text class="pa-0">
                     <v-form ref="form" @submit.prevent="saveUser">
-                        <v-text-field v-model="form.name" label="Full Name" :rules="[rules.required]" required
-                            class="mb-4"></v-text-field>
+                        <v-tabs v-model="activeTab" bg-color="grey-lighten-4">
+                            <v-tab value="basic">Basic Information</v-tab>
+                            <v-tab value="profile">Profile Information</v-tab>
+                            <v-tab value="security">Security</v-tab>
+                        </v-tabs>
 
-                        <v-text-field v-model="form.email" label="Email" type="email"
-                            :rules="[rules.required, rules.email]" required class="mb-4"></v-text-field>
+                        <v-window v-model="activeTab">
+                            <!-- Basic Information Tab -->
+                            <v-window-item value="basic">
+                                <div class="pa-6">
+                                    <v-text-field v-model="form.name" label="Full Name" :rules="[rules.required]"
+                                        required class="mb-4"></v-text-field>
 
-                        <v-select v-model="form.role_ids" :items="roles" item-title="label" item-value="value"
-                            label="Roles" :rules="[rules.required]" required multiple chips class="mb-4">
-                            <template v-slot:item="{ props, item }">
-                                <v-list-item v-bind="props">
-                                    <template v-slot:title>
-                                        {{ item.raw.label }}
-                                        <v-chip v-if="item.raw.is_system" size="x-small" color="warning" class="ml-2">
-                                            System
-                                        </v-chip>
-                                    </template>
-                                    <template v-slot:subtitle>
-                                        {{ item.raw.description }}
-                                    </template>
-                                </v-list-item>
-                            </template>
-                            <template v-slot:selection="{ item, index }">
-                                <v-chip v-if="index < 2" size="small" class="mr-1">
-                                    {{ item.raw.label }}
-                                </v-chip>
-                                <span v-if="index === 2" class="text-grey text-caption align-self-center">
-                                    (+{{ form.role_ids.length - 2 }} others)
-                                </span>
-                            </template>
-                        </v-select>
+                                    <v-text-field v-model="form.email" label="Email" type="email"
+                                        :rules="[rules.required, rules.email]" required class="mb-4"></v-text-field>
 
-                        <v-text-field v-model="form.password" label="Password"
-                            :type="showPassword ? 'text' : 'password'"
-                            :rules="editingUser ? [] : [rules.required, rules.minLength]" :required="!editingUser"
-                            hint="Leave blank to keep current password" persistent-hint class="mb-4">
-                            <template v-slot:append-inner>
-                                <v-btn icon variant="text" size="small" @click="showPassword = !showPassword">
-                                    <v-icon>{{ showPassword ? 'mdi-eye-off' : 'mdi-eye' }}</v-icon>
-                                </v-btn>
-                            </template>
-                        </v-text-field>
+                                    <v-select v-model="form.role_ids" :items="roles" item-title="label"
+                                        item-value="value" label="Roles" :rules="[rules.required]" required multiple
+                                        chips class="mb-4">
+                                        <template v-slot:item="{ props, item }">
+                                            <v-list-item v-bind="props">
+                                                <template v-slot:title>
+                                                    {{ item.raw.label }}
+                                                    <v-chip v-if="item.raw.is_system" size="x-small" color="warning"
+                                                        class="ml-2">
+                                                        System
+                                                    </v-chip>
+                                                </template>
+                                                <template v-slot:subtitle>
+                                                    {{ item.raw.description }}
+                                                </template>
+                                            </v-list-item>
+                                        </template>
+                                        <template v-slot:selection="{ item, index }">
+                                            <v-chip v-if="index < 2" size="small" class="mr-1">
+                                                {{ item.raw.label }}
+                                            </v-chip>
+                                            <span v-if="index === 2" class="text-grey text-caption align-self-center">
+                                                (+{{ form.role_ids.length - 2 }} others)
+                                            </span>
+                                        </template>
+                                    </v-select>
 
-                        <v-text-field v-if="!editingUser || form.password" v-model="form.password_confirmation"
-                            label="Confirm Password" :type="showPasswordConfirmation ? 'text' : 'password'" :rules="form.password ? [
-                                () => !!form.password_confirmation || 'Please confirm your password',
-                                () => form.password_confirmation === form.password || 'Passwords do not match'
-                            ] : []" :required="!!form.password" class="mb-4">
-                            <template v-slot:append-inner>
-                                <v-btn icon variant="text" size="small"
-                                    @click="showPasswordConfirmation = !showPasswordConfirmation">
-                                    <v-icon>{{ showPasswordConfirmation ? 'mdi-eye-off' : 'mdi-eye' }}</v-icon>
-                                </v-btn>
-                            </template>
-                        </v-text-field>
+                                    <!-- Avatar Upload Section -->
+                                    <div class="mb-4">
+                                        <div class="text-subtitle-2 font-weight-medium mb-2">Avatar</div>
 
-                        <!-- Avatar Upload Section -->
-                        <div class="mb-4">
-                            <div class="text-subtitle-2 font-weight-medium mb-2">Avatar</div>
+                                        <!-- Avatar Preview -->
+                                        <div v-if="form.avatar" class="mb-3 text-center">
+                                            <v-avatar size="80" class="mb-2">
+                                                <v-img :src="form.avatar ? resolveImageUrl(form.avatar) : ''"
+                                                    alt="Avatar Preview"></v-img>
+                                            </v-avatar>
+                                            <div>
+                                                <v-btn size="small" variant="text" color="error"
+                                                    prepend-icon="mdi-delete" @click="clearAvatar">Remove Avatar</v-btn>
+                                            </div>
+                                        </div>
 
-                            <!-- Avatar Preview -->
-                            <div v-if="form.avatar" class="mb-3 text-center">
-                                <v-avatar size="80" class="mb-2">
-                                    <v-img :src="form.avatar ? resolveImageUrl(form.avatar) : ''"
-                                        alt="Avatar Preview"></v-img>
-                                </v-avatar>
-                                <div>
-                                    <v-btn size="small" variant="text" color="error" prepend-icon="mdi-delete"
-                                        @click="clearAvatar">Remove
-                                        Avatar</v-btn>
+                                        <!-- File Upload -->
+                                        <v-file-input v-model="avatarFile" label="Upload Avatar" variant="outlined"
+                                            density="comfortable" color="primary" accept="image/*"
+                                            prepend-icon="mdi-image"
+                                            hint="Upload an avatar image (JPG, PNG, GIF, WebP - Max 5MB). Recommended size: 200x200px"
+                                            persistent-hint show-size @update:model-value="handleAvatarUpload"
+                                            class="mb-3">
+                                            <template v-slot:append-inner v-if="uploadingAvatar">
+                                                <v-progress-circular indeterminate size="20"
+                                                    color="primary"></v-progress-circular>
+                                            </template>
+                                        </v-file-input>
+
+                                        <!-- Or Enter URL -->
+                                        <v-text-field v-model="form.avatar" label="Or Enter Avatar URL"
+                                            variant="outlined" density="comfortable" color="primary"
+                                            hint="Enter a direct URL to the avatar image" persistent-hint
+                                            prepend-inner-icon="mdi-link">
+                                            <template v-slot:append-inner v-if="form.avatar && !avatarFile">
+                                                <v-btn icon="mdi-open-in-new" variant="text" size="small"
+                                                    @click="window.open(resolveImageUrl(form.avatar), '_blank')"></v-btn>
+                                            </template>
+                                        </v-text-field>
+                                    </div>
                                 </div>
-                            </div>
+                            </v-window-item>
 
-                            <!-- File Upload -->
-                            <v-file-input v-model="avatarFile" label="Upload Avatar" variant="outlined"
-                                density="comfortable" color="primary" accept="image/*" prepend-icon="mdi-image"
-                                hint="Upload an avatar image (JPG, PNG, GIF, WebP - Max 5MB). Recommended size: 200x200px"
-                                persistent-hint show-size @update:model-value="handleAvatarUpload" class="mb-3">
-                                <template v-slot:append-inner v-if="uploadingAvatar">
-                                    <v-progress-circular indeterminate size="20" color="primary"></v-progress-circular>
-                                </template>
-                            </v-file-input>
+                            <!-- Profile Information Tab -->
+                            <v-window-item value="profile">
+                                <div class="pa-6">
+                                    <v-row>
+                                        <v-col cols="12" md="6">
+                                            <v-text-field v-model="form.phone" label="Phone Number" variant="outlined"
+                                                prepend-inner-icon="mdi-phone" hint="e.g., +8801707080401"
+                                                persistent-hint></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="6">
+                                            <v-text-field v-model="form.date_of_birth" label="Date of Birth" type="date"
+                                                variant="outlined" prepend-inner-icon="mdi-calendar"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="6">
+                                            <v-select v-model="form.gender" :items="genderOptions" label="Gender"
+                                                variant="outlined" prepend-inner-icon="mdi-gender-male-female"
+                                                clearable></v-select>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-textarea v-model="form.address" label="Address" variant="outlined"
+                                                rows="2" prepend-inner-icon="mdi-map-marker" hint="Street address"
+                                                persistent-hint></v-textarea>
+                                        </v-col>
+                                        <v-col cols="12" md="4">
+                                            <v-text-field v-model="form.city" label="City" variant="outlined"
+                                                prepend-inner-icon="mdi-city"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="4">
+                                            <v-text-field v-model="form.state" label="State/Province" variant="outlined"
+                                                prepend-inner-icon="mdi-map"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="4">
+                                            <v-text-field v-model="form.country" label="Country" variant="outlined"
+                                                prepend-inner-icon="mdi-earth"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="6">
+                                            <v-text-field v-model="form.postal_code" label="Postal Code"
+                                                variant="outlined" prepend-inner-icon="mdi-mailbox"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-textarea v-model="form.bio" label="Bio/Description" variant="outlined"
+                                                rows="4" prepend-inner-icon="mdi-text"
+                                                hint="Brief description about the user" persistent-hint
+                                                :counter="1000"></v-textarea>
+                                        </v-col>
+                                    </v-row>
+                                </div>
+                            </v-window-item>
 
-                            <!-- Or Enter URL -->
-                            <v-text-field v-model="form.avatar" label="Or Enter Avatar URL" variant="outlined"
-                                density="comfortable" color="primary" hint="Enter a direct URL to the avatar image"
-                                persistent-hint prepend-inner-icon="mdi-link">
-                                <template v-slot:append-inner v-if="form.avatar && !avatarFile">
-                                    <v-btn icon="mdi-open-in-new" variant="text" size="small"
-                                        @click="window.open(resolveImageUrl(form.avatar), '_blank')"></v-btn>
-                                </template>
-                            </v-text-field>
-                        </div>
+                            <!-- Security Tab -->
+                            <v-window-item value="security">
+                                <div class="pa-6">
+                                    <v-text-field v-model="form.password" label="Password"
+                                        :type="showPassword ? 'text' : 'password'"
+                                        :rules="editingUser ? [] : [rules.required, rules.minLength]"
+                                        :required="!editingUser" hint="Leave blank to keep current password"
+                                        persistent-hint class="mb-4" prepend-inner-icon="mdi-lock">
+                                        <template v-slot:append-inner>
+                                            <v-btn icon variant="text" size="small"
+                                                @click="showPassword = !showPassword">
+                                                <v-icon>{{ showPassword ? 'mdi-eye-off' : 'mdi-eye' }}</v-icon>
+                                            </v-btn>
+                                        </template>
+                                    </v-text-field>
+
+                                    <v-text-field v-if="!editingUser || form.password"
+                                        v-model="form.password_confirmation" label="Confirm Password"
+                                        :type="showPasswordConfirmation ? 'text' : 'password'" :rules="form.password ? [
+                                            () => !!form.password_confirmation || 'Please confirm your password',
+                                            () => form.password_confirmation === form.password || 'Passwords do not match'
+                                        ] : []" :required="!!form.password"
+                                        prepend-inner-icon="mdi-lock-check"></v-text-field>
+                                </div>
+                            </v-window-item>
+                        </v-window>
                     </v-form>
                 </v-card-text>
                 <v-card-actions>
@@ -294,8 +388,23 @@ export default {
                 role_ids: [],
                 password: '',
                 password_confirmation: '',
-                avatar: ''
+                avatar: '',
+                phone: '',
+                date_of_birth: '',
+                gender: null,
+                address: '',
+                city: '',
+                state: '',
+                country: '',
+                postal_code: '',
+                bio: ''
             },
+            activeTab: 'basic',
+            genderOptions: [
+                { title: 'Male', value: 'male' },
+                { title: 'Female', value: 'female' },
+                { title: 'Other', value: 'other' }
+            ],
             rules: {
                 required: value => {
                     if (Array.isArray(value)) {
@@ -382,6 +491,7 @@ export default {
         },
         openDialog(user) {
             this.avatarFile = null; // Reset avatar file when opening dialog
+            this.activeTab = 'basic'; // Reset to first tab
             if (user) {
                 this.editingUser = user;
                 // Extract role IDs from user.roles array
@@ -390,12 +500,21 @@ export default {
                 // Backend returns full URLs, but we need normalized paths for storage
                 const avatarPath = this.normalizeImageInput(user.avatar || '');
                 this.form = {
-                    name: user.name,
-                    email: user.email,
+                    name: user.name || '',
+                    email: user.email || '',
                     role_ids: roleIds,
                     password: '',
                     password_confirmation: '',
-                    avatar: avatarPath
+                    avatar: avatarPath,
+                    phone: user.phone || '',
+                    date_of_birth: user.date_of_birth || '',
+                    gender: user.gender || null,
+                    address: user.address || '',
+                    city: user.city || '',
+                    state: user.state || '',
+                    country: user.country || '',
+                    postal_code: user.postal_code || '',
+                    bio: user.bio || ''
                 };
             } else {
                 this.editingUser = null;
@@ -407,7 +526,16 @@ export default {
                     role_ids: defaultRoleId ? [defaultRoleId] : [],
                     password: '',
                     password_confirmation: '',
-                    avatar: ''
+                    avatar: '',
+                    phone: '',
+                    date_of_birth: '',
+                    gender: null,
+                    address: '',
+                    city: '',
+                    state: '',
+                    country: '',
+                    postal_code: '',
+                    bio: ''
                 };
             }
             this.dialog = true;
@@ -415,6 +543,7 @@ export default {
         closeDialog() {
             this.dialog = false;
             this.editingUser = null;
+            this.activeTab = 'basic';
             const defaultRoleId = this.roles.length > 0 ? this.roles[0].value : null;
             this.form = {
                 name: '',
@@ -422,7 +551,16 @@ export default {
                 role_ids: defaultRoleId ? [defaultRoleId] : [],
                 password: '',
                 password_confirmation: '',
-                avatar: ''
+                avatar: '',
+                phone: '',
+                date_of_birth: '',
+                gender: null,
+                address: '',
+                city: '',
+                state: '',
+                country: '',
+                postal_code: '',
+                bio: ''
             };
             this.showPassword = false;
             this.showPasswordConfirmation = false;

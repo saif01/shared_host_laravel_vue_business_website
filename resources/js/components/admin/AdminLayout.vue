@@ -8,10 +8,36 @@
                 <div class="shape shape-3"></div>
             </div>
 
-            <v-list-item v-if="currentUser" class="user-profile-header"
-                :prepend-avatar="resolvedBrandingLogo || resolvedUserAvatar || '/assets/logo/logo.png'"
-                :title="siteName || 'Admin Panel'"
-                :subtitle="userRoles && userRoles.length > 0 ? userRoles.map(r => r.name).join(', ') : 'No roles assigned'">
+            <v-list-item v-if="currentUser" class="user-profile-header">
+                <template v-slot:prepend>
+                    <v-avatar size="48" class="mr-3">
+                        <v-img v-if="resolvedUserAvatar" :src="resolvedUserAvatar" :alt="currentUser.name"
+                            cover></v-img>
+                        <v-img v-else :src="resolvedBrandingLogo || '/assets/logo/logo.png'" alt="Logo" cover></v-img>
+                    </v-avatar>
+                </template>
+                <v-list-item-title class="text-h6 font-weight-bold">{{ currentUser.name || siteName || 'Admin Panel'
+                }}</v-list-item-title>
+                <v-list-item-subtitle>
+                    <div v-if="userRoles && userRoles.length > 0" class="mt-1">
+                        <v-chip size="x-small" color="primary" class="mr-1 mb-1" v-for="role in userRoles"
+                            :key="role.id">
+                            {{ role.name }}
+                        </v-chip>
+                    </div>
+                    <div v-if="currentUser.email" class="text-caption mt-1">
+                        <v-icon size="x-small" class="mr-1">mdi-email</v-icon>{{ currentUser.email }}
+                    </div>
+                    <div v-if="currentUser.phone" class="text-caption mt-1">
+                        <v-icon size="x-small" class="mr-1">mdi-phone</v-icon>{{ currentUser.phone }}
+                    </div>
+                    <div v-if="currentUser.city || currentUser.country" class="text-caption mt-1">
+                        <v-icon size="x-small" class="mr-1">mdi-map-marker</v-icon>
+                        <span v-if="currentUser.city">{{ currentUser.city }}</span>
+                        <span v-if="currentUser.city && currentUser.country">, </span>
+                        <span v-if="currentUser.country">{{ currentUser.country }}</span>
+                    </div>
+                </v-list-item-subtitle>
             </v-list-item>
 
             <v-divider class="my-0 divider-glow"></v-divider>
@@ -159,10 +185,48 @@
                     <v-list>
                         <v-list-item>
                             <template v-slot:prepend>
-                                <v-icon>mdi-account</v-icon>
+                                <v-avatar size="40" class="mr-3">
+                                    <v-img v-if="resolvedUserAvatar" :src="resolvedUserAvatar" :alt="currentUser.name"
+                                        cover></v-img>
+                                    <span v-else class="text-white">{{ currentUser.name.charAt(0).toUpperCase()
+                                    }}</span>
+                                </v-avatar>
                             </template>
-                            <v-list-item-title>{{ currentUser.name }}</v-list-item-title>
+                            <v-list-item-title class="font-weight-bold">{{ currentUser.name }}</v-list-item-title>
+                            <v-list-item-subtitle v-if="currentUser.email">{{ currentUser.email
+                            }}</v-list-item-subtitle>
                         </v-list-item>
+                        <v-divider class="my-2"></v-divider>
+                        <v-list-item v-if="currentUser.phone">
+                            <template v-slot:prepend>
+                                <v-icon>mdi-phone</v-icon>
+                            </template>
+                            <v-list-item-title>{{ currentUser.phone }}</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item v-if="currentUser.city || currentUser.country">
+                            <template v-slot:prepend>
+                                <v-icon>mdi-map-marker</v-icon>
+                            </template>
+                            <v-list-item-title>
+                                <span v-if="currentUser.city">{{ currentUser.city }}</span>
+                                <span v-if="currentUser.city && currentUser.country">, </span>
+                                <span v-if="currentUser.country">{{ currentUser.country }}</span>
+                            </v-list-item-title>
+                        </v-list-item>
+                        <v-list-item v-if="userRoles && userRoles.length > 0">
+                            <template v-slot:prepend>
+                                <v-icon>mdi-shield-account</v-icon>
+                            </template>
+                            <v-list-item-title>Roles</v-list-item-title>
+                            <v-list-item-subtitle>
+                                <div class="d-flex flex-wrap gap-1 mt-1">
+                                    <v-chip v-for="role in userRoles" :key="role.id" size="x-small" color="primary">
+                                        {{ role.name }}
+                                    </v-chip>
+                                </div>
+                            </v-list-item-subtitle>
+                        </v-list-item>
+                        <v-divider class="my-2"></v-divider>
                         <v-list-item link router @click="logout()">
                             <template v-slot:prepend>
                                 <v-icon>mdi-logout</v-icon>

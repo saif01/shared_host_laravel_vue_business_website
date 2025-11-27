@@ -31,12 +31,15 @@ class UserController extends Controller
             }
         }
 
-        // Search by name or email
+        // Search by name, email, phone, city, or country
         if ($request->has('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%")
+                  ->orWhere('city', 'like', "%{$search}%")
+                  ->orWhere('country', 'like', "%{$search}%");
             });
         }
 
@@ -44,7 +47,7 @@ class UserController extends Controller
         $sortBy = $request->get('sort_by', 'name');
         $sortDirection = $request->get('sort_direction', 'asc');
         
-        $allowedSortFields = ['id', 'name', 'email', 'created_at', 'updated_at'];
+        $allowedSortFields = ['id', 'name', 'email', 'phone', 'city', 'country', 'created_at', 'updated_at'];
         if (!in_array($sortBy, $allowedSortFields)) {
             $sortBy = 'name';
         }
