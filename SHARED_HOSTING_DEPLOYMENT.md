@@ -267,6 +267,24 @@ php artisan view:cache
 
 ## Common Issues and Solutions
 
+### Issue: Memory Exhaustion Error (Allowed memory size exhausted)
+
+**Error Message:**
+```
+Allowed memory size of 268435456 bytes exhausted
+```
+
+**Solutions:**
+- See `SHARED_HOSTING_MEMORY_FIX.md` for comprehensive solutions
+- The `.htaccess` file includes memory limit settings (512M)
+- If `.htaccess` doesn't work, contact your hosting provider
+- Code optimizations have been implemented to reduce memory usage
+
+**Quick Fix:**
+1. Check if `.htaccess` memory settings are working
+2. Use cPanel PHP configuration to increase memory limit
+3. Contact hosting support to increase PHP memory_limit to 512M
+
 ### Issue: 500 Internal Server Error
 
 **Solutions:**

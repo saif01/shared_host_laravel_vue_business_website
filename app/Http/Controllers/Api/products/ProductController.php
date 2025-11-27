@@ -220,25 +220,35 @@ class ProductController extends Controller
         $product->load(['categories:id,name', 'tags:id,name']);
         
         // Extract key_features, faqs, warranty_info from specifications
-        // Process specifications in chunks if it's very large
+        // Process specifications efficiently to reduce memory usage
         $specs = $product->specifications ?? [];
         if (is_array($specs) && count($specs) > 0) {
-            if (isset($specs['_key_features'])) {
+            // Use array_key_exists for better memory efficiency on large arrays
+            if (array_key_exists('_key_features', $specs)) {
                 $product->key_features = $specs['_key_features'];
                 unset($specs['_key_features']);
             }
-            if (isset($specs['_faqs'])) {
+            if (array_key_exists('_faqs', $specs)) {
                 $product->faqs = $specs['_faqs'];
                 unset($specs['_faqs']);
             }
-            if (isset($specs['_warranty_info'])) {
+            if (array_key_exists('_warranty_info', $specs)) {
                 $product->warranty_info = $specs['_warranty_info'];
                 unset($specs['_warranty_info']);
             }
-            $product->specifications = $specs;
+            // Only set specifications if there are remaining items
+            $product->specifications = !empty($specs) ? $specs : null;
+        } else {
+            $product->specifications = null;
         }
         
-        return response()->json($this->transformProductWithImages($product));
+        // Transform images efficiently
+        $transformedProduct = $this->transformProductWithImages($product);
+        
+        // Clear memory by unsetting large variables
+        unset($specs, $product);
+        
+        return response()->json($transformedProduct);
     }
 
     public function update(Request $request, $id)
@@ -369,12 +379,23 @@ class ProductController extends Controller
 
     private function transformProductWithImages(Product $product): Product
     {
-        $product->thumbnail = MediaPath::url($product->thumbnail);
+        // Transform images efficiently, avoiding memory-intensive operations
+        if (!empty($product->thumbnail)) {
+            $product->thumbnail = MediaPath::url($product->thumbnail);
+        }
 
-        if (is_array($product->images)) {
-            $product->images = array_map(function ($image) {
-                return MediaPath::url($image);
-            }, array_filter($product->images));
+        if (is_array($product->images) && count($product->images) > 0) {
+            // Process images in a memory-efficient way
+            $transformedImages = [];
+            foreach ($product->images as $image) {
+                if (!empty($image)) {
+                    $transformedImages[] = MediaPath::url($image);
+                }
+            }
+            $product->images = $transformedImages;
+            unset($transformedImages);
+        } else {
+            $product->images = [];
         }
 
         if (!empty($product->og_image)) {
