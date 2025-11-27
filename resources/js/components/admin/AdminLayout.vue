@@ -11,33 +11,11 @@
             <v-list-item v-if="currentUser" class="user-profile-header">
                 <template v-slot:prepend>
                     <v-avatar size="48" class="mr-3">
-                        <v-img v-if="resolvedUserAvatar" :src="resolvedUserAvatar" :alt="currentUser.name"
-                            cover></v-img>
-                        <v-img v-else :src="resolvedBrandingLogo || '/assets/logo/logo.png'" alt="Logo" cover></v-img>
+                        <v-img :src="resolvedBrandingLogo || '/assets/logo/logo.png'" alt="Logo" cover></v-img>
                     </v-avatar>
                 </template>
-                <v-list-item-title class="text-h6 font-weight-bold">{{ currentUser.name || siteName || 'Admin Panel'
-                }}</v-list-item-title>
-                <v-list-item-subtitle>
-                    <div v-if="userRoles && userRoles.length > 0" class="mt-1">
-                        <v-chip size="x-small" color="primary" class="mr-1 mb-1" v-for="role in userRoles"
-                            :key="role.id">
-                            {{ role.name }}
-                        </v-chip>
-                    </div>
-                    <div v-if="currentUser.email" class="text-caption mt-1">
-                        <v-icon size="x-small" class="mr-1">mdi-email</v-icon>{{ currentUser.email }}
-                    </div>
-                    <div v-if="currentUser.phone" class="text-caption mt-1">
-                        <v-icon size="x-small" class="mr-1">mdi-phone</v-icon>{{ currentUser.phone }}
-                    </div>
-                    <div v-if="currentUser.city || currentUser.country" class="text-caption mt-1">
-                        <v-icon size="x-small" class="mr-1">mdi-map-marker</v-icon>
-                        <span v-if="currentUser.city">{{ currentUser.city }}</span>
-                        <span v-if="currentUser.city && currentUser.country">, </span>
-                        <span v-if="currentUser.country">{{ currentUser.country }}</span>
-                    </div>
-                </v-list-item-subtitle>
+                <v-list-item-title class="text-h6 font-weight-bold">{{ siteName || 'Admin Panel' }}</v-list-item-title>
+
             </v-list-item>
 
             <v-divider class="my-0 divider-glow"></v-divider>
@@ -183,48 +161,14 @@
                         </v-avatar>
                     </template>
                     <v-list>
-                        <v-list-item>
+                        <v-list-item @click="showProfileDialog" style="cursor: pointer;">
                             <template v-slot:prepend>
-                                <v-avatar size="40" class="mr-3">
-                                    <v-img v-if="resolvedUserAvatar" :src="resolvedUserAvatar" :alt="currentUser.name"
-                                        cover></v-img>
-                                    <span v-else class="text-white">{{ currentUser.name.charAt(0).toUpperCase()
-                                    }}</span>
-                                </v-avatar>
+                                <v-icon>mdi-account</v-icon>
                             </template>
-                            <v-list-item-title class="font-weight-bold">{{ currentUser.name }}</v-list-item-title>
-                            <v-list-item-subtitle v-if="currentUser.email">{{ currentUser.email
-                            }}</v-list-item-subtitle>
-                        </v-list-item>
-                        <v-divider class="my-2"></v-divider>
-                        <v-list-item v-if="currentUser.phone">
-                            <template v-slot:prepend>
-                                <v-icon>mdi-phone</v-icon>
+                            <v-list-item-title>{{ currentUser.name }}</v-list-item-title>
+                            <template v-slot:append>
+                                <v-icon size="small">mdi-chevron-right</v-icon>
                             </template>
-                            <v-list-item-title>{{ currentUser.phone }}</v-list-item-title>
-                        </v-list-item>
-                        <v-list-item v-if="currentUser.city || currentUser.country">
-                            <template v-slot:prepend>
-                                <v-icon>mdi-map-marker</v-icon>
-                            </template>
-                            <v-list-item-title>
-                                <span v-if="currentUser.city">{{ currentUser.city }}</span>
-                                <span v-if="currentUser.city && currentUser.country">, </span>
-                                <span v-if="currentUser.country">{{ currentUser.country }}</span>
-                            </v-list-item-title>
-                        </v-list-item>
-                        <v-list-item v-if="userRoles && userRoles.length > 0">
-                            <template v-slot:prepend>
-                                <v-icon>mdi-shield-account</v-icon>
-                            </template>
-                            <v-list-item-title>Roles</v-list-item-title>
-                            <v-list-item-subtitle>
-                                <div class="d-flex flex-wrap gap-1 mt-1">
-                                    <v-chip v-for="role in userRoles" :key="role.id" size="x-small" color="primary">
-                                        {{ role.name }}
-                                    </v-chip>
-                                </div>
-                            </v-list-item-subtitle>
                         </v-list-item>
                         <v-divider class="my-2"></v-divider>
                         <v-list-item link router @click="logout()">
@@ -248,7 +192,8 @@
             <div class="footer-content">
                 <div class="footer-brand">
                     <div class="logo-wrapper">
-                        <img src="/assets/logo/logo.png" alt="cpb-it" height="24" class="footer-logo" />
+                        <img :src="resolvedBrandingLogo || '/assets/logo/logo.png'" alt="cpb-it" height="24"
+                            class="footer-logo" />
                     </div>
                     <div class="brand-text">
                         <span class="brand-name">Powered By CPB-IT</span>
@@ -264,6 +209,8 @@
             </div>
         </v-footer>
 
+        <!-- User Profile Dialog -->
+        <UserProfileDialog v-model="profileDialogVisible" :user="currentUser" />
     </div>
 </template>
 
@@ -271,8 +218,12 @@
 import moment from 'moment';
 import { useAuthStore } from '../../stores/auth';
 import { resolveUploadUrl } from '../../utils/uploads';
+import UserProfileDialog from './users/UserProfileDialog.vue';
 
 export default {
+    components: {
+        UserProfileDialog
+    },
     data() {
         return {
             drawer: true, // Sidebar drawer state (open/closed)
@@ -286,6 +237,7 @@ export default {
             unreadCountInterval: null, // Interval for polling unread count
             brandingLogo: null, // Logo from branding settings (normalized path)
             siteName: null, // Site name from general settings
+            profileDialogVisible: false, // User profile dialog visibility
         };
     },
     computed: {
@@ -508,6 +460,12 @@ export default {
         },
         resolveImageUrl(imageValue) {
             return resolveUploadUrl(imageValue);
+        },
+        /**
+         * Show user profile dialog
+         */
+        showProfileDialog() {
+            this.profileDialogVisible = true;
         }
     },
     /**
