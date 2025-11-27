@@ -122,6 +122,9 @@ export function setupAxios() {
     configureHeaders();
     setupRequestInterceptors();
     setupResponseInterceptors();
+    
+    // Make axios globally available on window
+    window.axios = axios;
 }
 
 export default axios;

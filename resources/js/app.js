@@ -5,6 +5,7 @@ import router from './routes';
 
 // Utilities and Plugins
 import { setupAxios } from './utils/axios.config';
+import axios from './utils/axios.config';
 import { createVuetifyInstance } from './plugins/vuetify';
 import VueProgressBar, { progressBarOptions, setupProgressBarHelper } from './plugins/progressBar';
 import VueSweetalert2, { setupSweetAlert } from './plugins/sweetalert';
@@ -26,6 +27,9 @@ const pinia = createPinia();
 
 // Create Vue app instance
 const app = createApp(App);
+
+// Make axios globally available as $axios
+app.config.globalProperties.$axios = axios;
 
 // Register plugins
 app.use(pinia);

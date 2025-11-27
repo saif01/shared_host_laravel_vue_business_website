@@ -37,7 +37,8 @@
                 <span class="text-caption text-grey">
                     Total Records: <strong>{{ pagination.total || 0 }}</strong>
                     <span v-if="roles.length > 0">
-                        | Showing {{ ((currentPage - 1) * perPage) + 1 }} to {{ Math.min(currentPage * perPage, pagination.total) }} of {{ pagination.total }}
+                        | Showing {{ ((currentPage - 1) * perPage) + 1 }} to {{ Math.min(currentPage * perPage,
+                            pagination.total) }} of {{ pagination.total }}
                     </span>
                 </span>
             </v-card-title>
@@ -109,11 +110,12 @@
                 </v-table>
 
                 <!-- Pagination and Records Info -->
-                <div class="d-flex flex-column flex-md-row justify-space-between align-center align-md-start gap-3 mt-4">
+                <div
+                    class="d-flex flex-column flex-md-row justify-space-between align-center align-md-start gap-3 mt-4">
                     <div class="text-caption text-grey">
                         <span v-if="roles.length > 0 && pagination.total > 0">
-                            Showing <strong>{{ ((currentPage - 1) * perPage) + 1 }}</strong> to 
-                            <strong>{{ Math.min(currentPage * perPage, pagination.total) }}</strong> of 
+                            Showing <strong>{{ ((currentPage - 1) * perPage) + 1 }}</strong> to
+                            <strong>{{ Math.min(currentPage * perPage, pagination.total) }}</strong> of
                             <strong>{{ pagination.total.toLocaleString() }}</strong> records
                             <span v-if="pagination.last_page > 1" class="ml-2">
                                 (Page {{ currentPage }} of {{ pagination.last_page }})
@@ -124,12 +126,8 @@
                         </span>
                     </div>
                     <div v-if="pagination.last_page > 1" class="d-flex align-center gap-2">
-                        <v-pagination 
-                            v-model="currentPage" 
-                            :length="pagination.last_page"
-                            :total-visible="7"
-                            density="comfortable"
-                            @update:model-value="loadRoles">
+                        <v-pagination v-model="currentPage" :length="pagination.last_page" :total-visible="7"
+                            density="comfortable" @update:model-value="loadRoles">
                         </v-pagination>
                     </div>
                 </div>
@@ -331,7 +329,6 @@
  * - Real-time permission filtering
  */
 
-import axios from 'axios';
 import adminPaginationMixin from '../../../mixins/adminPaginationMixin';
 
 export default {
@@ -497,7 +494,7 @@ export default {
                     params.active = this.activeFilter;
                 }
 
-                const response = await axios.get('/api/v1/roles', {
+                const response = await this.$axios.get('/api/v1/roles', {
                     params,
                     headers: this.getAuthHeaders()
                 });
@@ -549,7 +546,7 @@ export default {
             try {
                 // Request grouped permissions to get ALL permissions (no pagination)
                 // The grouped=true parameter ensures we get all permissions, not just first 10
-                const response = await axios.get('/api/v1/permissions', {
+                const response = await this.$axios.get('/api/v1/permissions', {
                     params: {
                         grouped: true  // This ensures we get all permissions without pagination
                     },
@@ -644,7 +641,7 @@ export default {
                 } else {
                     // Try to fetch role with permissions if not included
                     try {
-                        const response = await axios.get(`/api/v1/roles/${role.id}`, {
+                        const response = await this.$axios.get(`/api/v1/roles/${role.id}`, {
                             headers: this.getAuthHeaders()
                         });
                         if (response.data && response.data.permissions) {
@@ -797,7 +794,7 @@ export default {
                     data.permissions = this.form.permissions;
                 }
 
-                await axios[method](url, data, {
+                await this.$axios[method](url, data, {
                     headers: this.getAuthHeaders()
                 });
 
@@ -853,7 +850,7 @@ export default {
             }
 
             try {
-                await axios.delete(`/api/v1/roles/${role.id}`, {
+                await this.$axios.delete(`/api/v1/roles/${role.id}`, {
                     headers: this.getAuthHeaders()
                 });
 
@@ -971,7 +968,7 @@ export default {
         async savePermissions() {
             this.savingPermissions = true;
             try {
-                await axios.put(`/api/v1/roles/${this.selectedRole.id}/permissions`, {
+                await this.$axios.put(`/api/v1/roles/${this.selectedRole.id}/permissions`, {
                     permissions: this.selectedPermissions
                 }, {
                     headers: this.getAuthHeaders()
