@@ -15,6 +15,12 @@ class UserController extends Controller
     {
         $query = User::with('roles');
 
+        // Filter by active status if provided
+        if ($request->has('is_active')) {
+            $isActive = filter_var($request->is_active, FILTER_VALIDATE_BOOLEAN);
+            $query->where('is_active', $isActive);
+        }
+
         // Filter by role if provided (by role ID or slug)
         if ($request->has('role')) {
             $roleFilter = $request->role;
@@ -47,7 +53,7 @@ class UserController extends Controller
         $sortBy = $request->get('sort_by', 'name');
         $sortDirection = $request->get('sort_direction', 'asc');
         
-        $allowedSortFields = ['id', 'name', 'email', 'phone', 'city', 'country', 'created_at', 'updated_at'];
+        $allowedSortFields = ['id', 'name', 'email', 'phone', 'city', 'country', 'is_active', 'created_at', 'updated_at'];
         if (!in_array($sortBy, $allowedSortFields)) {
             $sortBy = 'name';
         }
@@ -85,6 +91,7 @@ class UserController extends Controller
             'country' => 'nullable|string|max:100',
             'postal_code' => 'nullable|string|max:20',
             'bio' => 'nullable|string|max:1000',
+            'is_active' => 'nullable|boolean',
         ]);
 
         if (!empty($validated['avatar'])) {
@@ -96,6 +103,11 @@ class UserController extends Controller
         // Extract role_ids before creating user
         $roleIds = $validated['role_ids'];
         unset($validated['role_ids']);
+
+        // Set is_active default to true if not provided
+        if (!isset($validated['is_active'])) {
+            $validated['is_active'] = true;
+        }
 
         $user = User::create($validated);
         
@@ -140,6 +152,7 @@ class UserController extends Controller
             'country' => 'nullable|string|max:100',
             'postal_code' => 'nullable|string|max:20',
             'bio' => 'nullable|string|max:1000',
+            'is_active' => 'nullable|boolean',
         ]);
 
         // Only hash password if it's being updated
@@ -201,6 +214,40 @@ class UserController extends Controller
         $user->delete();
         
         return response()->json(['message' => 'User deleted successfully']);
+    }
+
+    public function toggleActive(User $user)
+    {
+        // Prevent deactivating yourself
+        if ($user->id === auth()->id()) {
+            return response()->json(['message' => 'You cannot deactivate your own account'], 403);
+        }
+
+        // Prevent deactivating the last active admin
+        $isAdmin = $user->roles()->where('slug', 'administrator')->exists();
+        
+        if ($isAdmin && $user->is_active) {
+            // Count other active admins
+            $activeAdminCount = User::whereHas('roles', function ($q) {
+                $q->where('slug', 'administrator');
+            })->where('id', '!=', $user->id)
+              ->where('is_active', true)
+              ->count();
+            
+            // If this user is the only active admin, prevent deactivation
+            if ($activeAdminCount === 0) {
+                return response()->json(['message' => 'Cannot deactivate the last active admin user'], 403);
+            }
+        }
+
+        $user->is_active = !$user->is_active;
+        $user->save();
+        
+        $status = $user->is_active ? 'activated' : 'deactivated';
+        return response()->json([
+            'message' => "User {$status} successfully",
+            'user' => $this->transformUserAvatar($user->load('roles'))
+        ]);
     }
 
     public function roles()

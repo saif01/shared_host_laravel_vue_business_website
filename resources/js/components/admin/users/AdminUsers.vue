@@ -16,11 +16,15 @@
                             prepend-inner-icon="mdi-format-list-numbered" variant="outlined" density="compact"
                             @update:model-value="onPerPageChange"></v-select>
                     </v-col>
-                    <v-col cols="12" md="4">
+                    <v-col cols="12" md="3">
                         <v-select v-model="roleFilter" :items="roleOptions" label="Filter by Role" variant="outlined"
                             density="compact" clearable @update:model-value="loadUsers"></v-select>
                     </v-col>
-                    <v-col cols="12" md="4">
+                    <v-col cols="12" md="3">
+                        <v-select v-model="activeFilter" :items="activeFilterOptions" label="Filter by Status"
+                            variant="outlined" density="compact" clearable @update:model-value="loadUsers"></v-select>
+                    </v-col>
+                    <v-col cols="12" md="6">
                         <v-text-field v-model="search" label="Search by name, email, phone, city, or country"
                             prepend-inner-icon="mdi-magnify" variant="outlined" density="compact" clearable
                             @input="loadUsers"></v-text-field>
@@ -60,6 +64,12 @@
                             <th>Phone</th>
                             <th>Location</th>
                             <th>Role</th>
+                            <th class="sortable" @click="onSort('is_active')">
+                                <div class="d-flex align-center">
+                                    Status
+                                    <v-icon :icon="getSortIcon('is_active')" size="small" class="ml-1"></v-icon>
+                                </div>
+                            </th>
                             <th class="sortable" @click="onSort('created_at')">
                                 <div class="d-flex align-center">
                                     Created
@@ -95,10 +105,15 @@
                                 </div>
                             </td>
                             <td>
+                                <v-skeleton-loader type="chip" width="80" height="24"></v-skeleton-loader>
+                            </td>
+                            <td>
                                 <v-skeleton-loader type="text" width="120"></v-skeleton-loader>
                             </td>
                             <td>
                                 <div class="d-flex">
+                                    <v-skeleton-loader type="button" width="32" height="32"
+                                        class="mr-1"></v-skeleton-loader>
                                     <v-skeleton-loader type="button" width="32" height="32"
                                         class="mr-1"></v-skeleton-loader>
                                     <v-skeleton-loader type="button" width="32" height="32"></v-skeleton-loader>
@@ -144,19 +159,29 @@
                                     </div>
                                     <span v-else class="text-caption text-grey">No roles</span>
                                 </td>
+                                <td>
+                                    <v-chip :color="user.is_active ? 'success' : 'error'" size="small">
+                                        {{ user.is_active ? 'Active' : 'Inactive' }}
+                                    </v-chip>
+                                </td>
                                 <td>{{ formatDate(user.created_at) }}</td>
                                 <td>
                                     <v-btn size="small" icon="mdi-eye" @click="viewUserProfile(user)" variant="text"
                                         color="info" :title="'View Profile'"></v-btn>
                                     <v-btn size="small" icon="mdi-pencil" @click="openDialog(user)" variant="text"
                                         :title="'Edit User'"></v-btn>
+                                    <v-btn size="small" :icon="user.is_active ? 'mdi-account-off' : 'mdi-account-check'"
+                                        @click="toggleUserActive(user)" variant="text"
+                                        :color="user.is_active ? 'warning' : 'success'"
+                                        :disabled="user.id === currentUserId"
+                                        :title="user.is_active ? 'Deactivate User' : 'Activate User'"></v-btn>
                                     <v-btn size="small" icon="mdi-delete" @click="deleteUser(user)" variant="text"
                                         color="error" :disabled="user.id === currentUserId"
                                         :title="'Delete User'"></v-btn>
                                 </td>
                             </tr>
                             <tr v-if="users.length === 0">
-                                <td colspan="7" class="text-center py-4">No users found</td>
+                                <td colspan="8" class="text-center py-4">No users found</td>
                             </tr>
                         </template>
                     </tbody>
@@ -237,6 +262,10 @@
                                             </span>
                                         </template>
                                     </v-select>
+
+                                    <v-switch v-model="form.is_active" label="Active User" color="success"
+                                        hint="Inactive users cannot log in to the system" persistent-hint
+                                        class="mb-4"></v-switch>
 
                                     <!-- Avatar Upload Section -->
                                     <div class="mb-4">
@@ -378,6 +407,11 @@ export default {
             roles: [],
             roleFilter: null,
             roleOptions: [],
+            activeFilter: null,
+            activeFilterOptions: [
+                { title: 'Active', value: true },
+                { title: 'Inactive', value: false }
+            ],
             dialog: false,
             editingUser: null,
             saving: false,
@@ -446,6 +480,9 @@ export default {
                 if (this.roleFilter) {
                     params.role = this.roleFilter;
                 }
+                if (this.activeFilter !== null) {
+                    params.is_active = this.activeFilter;
+                }
 
                 const response = await this.$axios.get('/api/v1/users', {
                     params,
@@ -507,6 +544,7 @@ export default {
                     password: '',
                     password_confirmation: '',
                     avatar: avatarPath,
+                    is_active: user.is_active !== undefined ? user.is_active : true,
                     phone: user.phone || '',
                     date_of_birth: user.date_of_birth || '',
                     gender: user.gender || null,
@@ -528,6 +566,7 @@ export default {
                     password: '',
                     password_confirmation: '',
                     avatar: '',
+                    is_active: true,
                     phone: '',
                     date_of_birth: '',
                     gender: null,
@@ -553,6 +592,7 @@ export default {
                 password: '',
                 password_confirmation: '',
                 avatar: '',
+                is_active: true,
                 phone: '',
                 date_of_birth: '',
                 gender: null,
@@ -690,6 +730,9 @@ export default {
 
                 data.avatar = this.normalizeImageInput(data.avatar);
 
+                // Ensure is_active is a boolean
+                data.is_active = Boolean(this.form.is_active);
+
                 // Remove legacy role field if it exists
                 delete data.role;
 
@@ -731,7 +774,20 @@ export default {
                 return;
             }
 
-            if (!confirm(`Are you sure you want to delete ${user.name}?`)) {
+            // Use SweetAlert for confirmation
+            const result = await window.Swal.fire({
+                title: 'Delete User?',
+                html: `Are you sure you want to delete <strong>${user.name}</strong>?<br><br>This action cannot be undone.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true
+            });
+
+            if (!result.isConfirmed) {
                 return;
             }
 
@@ -795,6 +851,51 @@ export default {
                 this.selectedUser = user;
                 this.profileDialogVisible = true;
                 this.handleApiError(error, 'Failed to load user profile details');
+            }
+        },
+        /**
+         * Toggle user active status
+         */
+        async toggleUserActive(user) {
+            if (user.id === this.currentUserId) {
+                this.showError('You cannot change your own account status');
+                return;
+            }
+
+            const action = user.is_active ? 'deactivate' : 'activate';
+            const actionTitle = user.is_active ? 'Deactivate User?' : 'Activate User?';
+            const actionIcon = user.is_active ? 'warning' : 'question';
+            const actionMessage = user.is_active
+                ? `Are you sure you want to deactivate <strong>${user.name}</strong>?<br><br>They will not be able to log in to the system.`
+                : `Are you sure you want to activate <strong>${user.name}</strong>?<br><br>They will be able to log in to the system.`;
+
+            // Use SweetAlert for confirmation
+            const result = await window.Swal.fire({
+                title: actionTitle,
+                html: actionMessage,
+                icon: actionIcon,
+                showCancelButton: true,
+                confirmButtonColor: user.is_active ? '#f59e0b' : '#10b981',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: `Yes, ${action} it!`,
+                cancelButtonText: 'Cancel',
+                reverseButtons: true
+            });
+
+            if (!result.isConfirmed) {
+                return;
+            }
+
+            try {
+                const token = localStorage.getItem('admin_token');
+                const response = await this.$axios.put(`/api/v1/users/${user.id}/toggle-active`, {}, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                this.showSuccess(response.data.message || `User ${action}d successfully`);
+                await this.loadUsers();
+            } catch (error) {
+                this.handleApiError(error, `Error ${action}ing user`);
             }
         }
     }

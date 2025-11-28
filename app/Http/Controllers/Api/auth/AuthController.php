@@ -29,6 +29,16 @@ class AuthController extends Controller
             ]);
         }
 
+        // Check if user is active
+        if (!$user->is_active) {
+            // Log failed login due to inactive account
+            $this->logLoginAttempt($request, $user, false, 'account_inactive');
+            
+            throw ValidationException::withMessages([
+                'email' => ['Your account has been deactivated. Please contact an administrator.'],
+            ]);
+        }
+
         // Log successful login
         $this->logLoginAttempt($request, $user, true);
 

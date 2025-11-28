@@ -196,6 +196,7 @@ Route::prefix('v1')->group(function () {
         // Users & Roles - requires manage-users permission
         Route::middleware('permission:manage-users')->group(function () {
             Route::get('users/roles', [UserController::class, 'roles']);
+            Route::put('users/{user}/toggle-active', [UserController::class, 'toggleActive']);
             Route::apiResource('users', UserController::class);
         });
 
