@@ -13,8 +13,9 @@
 
                     <!-- Logo Preview -->
                     <div v-if="settings.logo.value" class="mb-4 text-center">
-                        <v-img :src="resolveImageUrl(settings.logo.value)" alt="Logo Preview" max-height="120" max-width="300" contain
-                            class="mx-auto mb-2" style="border: 1px solid rgba(0,0,0,0.1); border-radius: 4px;">
+                        <v-img :src="resolveImageUrl(settings.logo.value)" alt="Logo Preview" max-height="120"
+                            max-width="300" contain class="mx-auto mb-2"
+                            style="border: 1px solid rgba(0,0,0,0.1); border-radius: 4px;">
                         </v-img>
                         <v-btn size="small" variant="text" color="error" prepend-icon="mdi-delete"
                             @click="clearLogo">Remove Logo</v-btn>
@@ -29,16 +30,6 @@
                             <v-progress-circular indeterminate size="20" color="primary"></v-progress-circular>
                         </template>
                     </v-file-input>
-
-                    <!-- Or Enter URL -->
-                    <v-text-field v-model="settings.logo.value" label="Or Enter Logo URL" variant="outlined"
-                        density="comfortable" color="primary" hint="Enter a direct URL to the logo image"
-                        persistent-hint prepend-inner-icon="mdi-link">
-                        <template v-slot:append-inner v-if="settings.logo.value && !logoFile">
-                            <v-btn icon="mdi-open-in-new" variant="text" size="small"
-                                @click="window.open(resolveImageUrl(settings.logo.value), '_blank')"></v-btn>
-                        </template>
-                    </v-text-field>
                 </v-card>
             </v-col>
 
@@ -49,8 +40,9 @@
 
                     <!-- Favicon Preview -->
                     <div v-if="settings.favicon.value" class="mb-4 text-center">
-                        <v-img :src="resolveImageUrl(settings.favicon.value)" alt="Favicon Preview" max-height="64" max-width="64"
-                            contain class="mx-auto mb-2" style="border: 1px solid rgba(0,0,0,0.1); border-radius: 4px;">
+                        <v-img :src="resolveImageUrl(settings.favicon.value)" alt="Favicon Preview" max-height="64"
+                            max-width="64" contain class="mx-auto mb-2"
+                            style="border: 1px solid rgba(0,0,0,0.1); border-radius: 4px;">
                         </v-img>
                         <v-btn size="small" variant="text" color="error" prepend-icon="mdi-delete"
                             @click="clearFavicon">Remove
@@ -66,16 +58,6 @@
                             <v-progress-circular indeterminate size="20" color="primary"></v-progress-circular>
                         </template>
                     </v-file-input>
-
-                    <!-- Or Enter URL -->
-                    <v-text-field v-model="settings.favicon.value" label="Or Enter Favicon URL" variant="outlined"
-                        density="comfortable" color="primary" hint="Enter a direct URL to the favicon image"
-                        persistent-hint prepend-inner-icon="mdi-link">
-                        <template v-slot:append-inner v-if="settings.favicon.value && !faviconFile">
-                            <v-btn icon="mdi-open-in-new" variant="text" size="small"
-                                @click="window.open(resolveImageUrl(settings.favicon.value), '_blank')"></v-btn>
-                        </template>
-                    </v-text-field>
                 </v-card>
             </v-col>
 

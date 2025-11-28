@@ -459,7 +459,7 @@ export default {
         },
         async loadTags() {
             try {
-                const response = await this.$axios.get('/api/v1/tags?type=post', {
+                let response = await this.$axios.get('/api/v1/tags?type=post', {
                     headers: this.getAuthHeaders()
                 }).catch(() => null);
 
