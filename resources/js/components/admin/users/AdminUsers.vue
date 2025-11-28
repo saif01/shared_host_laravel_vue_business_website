@@ -266,17 +266,6 @@
                                                     color="primary"></v-progress-circular>
                                             </template>
                                         </v-file-input>
-
-                                        <!-- Or Enter URL -->
-                                        <v-text-field v-model="form.avatar" label="Or Enter Avatar URL"
-                                            variant="outlined" density="comfortable" color="primary"
-                                            hint="Enter a direct URL to the avatar image" persistent-hint
-                                            prepend-inner-icon="mdi-link">
-                                            <template v-slot:append-inner v-if="form.avatar && !avatarFile">
-                                                <v-btn icon="mdi-open-in-new" variant="text" size="small"
-                                                    @click="window.open(resolveImageUrl(form.avatar), '_blank')"></v-btn>
-                                            </template>
-                                        </v-text-field>
                                     </div>
                                 </div>
                             </v-window-item>

@@ -154,11 +154,6 @@
                                             </v-card-text>
                                         </v-card>
                                     </div>
-
-                                    <v-text-field v-model="localForm.thumbnail" label="Or Enter Image URL"
-                                        variant="outlined" prepend-inner-icon="mdi-link"
-                                        hint="Alternative: Paste image URL" class="mt-2"
-                                        @update:model-value="$emit('update:form', localForm)"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
                                     <div class="text-subtitle-1 font-weight-bold mb-2">Product Images (Gallery)
@@ -395,13 +390,6 @@
                                                 </div>
                                             </v-card>
                                         </div>
-
-                                        <v-divider class="my-3"></v-divider>
-                                        <div class="text-subtitle-2 text-medium-emphasis mb-2">Or Enter File URL
-                                        </div>
-                                        <v-text-field v-model="download.url" label="File URL" variant="outlined"
-                                            placeholder="https://..." :disabled="!!download.file"
-                                            @update:model-value="updateDownloadsList"></v-text-field>
                                     </v-col>
                                 </v-row>
                             </div>

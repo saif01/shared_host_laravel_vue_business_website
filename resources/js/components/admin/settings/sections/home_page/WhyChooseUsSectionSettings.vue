@@ -52,16 +52,6 @@
                     <v-progress-circular indeterminate size="20" color="primary"></v-progress-circular>
                 </template>
             </v-file-input>
-
-            <!-- Or Enter URL -->
-            <v-text-field v-model="settings.why_choose_us_image.value" label="Or Enter Image URL" variant="outlined"
-                density="comfortable" color="primary" hint="Enter a direct URL to the image" persistent-hint
-                prepend-inner-icon="mdi-link">
-                <template v-slot:append-inner v-if="imageUrl && !imageFile">
-                    <v-btn icon="mdi-open-in-new" variant="text" size="small"
-                        @click="window.open(imageUrl, '_blank')"></v-btn>
-                </template>
-            </v-text-field>
         </v-col>
         <v-col cols="12">
             <v-divider class="my-4"></v-divider>

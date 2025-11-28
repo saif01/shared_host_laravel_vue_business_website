@@ -76,15 +76,6 @@
                                     <v-progress-circular indeterminate size="20" color="primary"></v-progress-circular>
                                 </template>
                             </v-file-input>
-                            <!-- Or Enter URL -->
-                            <v-text-field v-model="testimonial.avatar" label="Or Enter Avatar URL" variant="outlined"
-                                density="comfortable" color="primary" hint="Enter a direct URL to the avatar image"
-                                persistent-hint prepend-inner-icon="mdi-link" @input="updateTestimonials">
-                                <template v-slot:append-inner v-if="testimonial.avatar && !testimonial.file">
-                                    <v-btn icon="mdi-open-in-new" variant="text" size="small"
-                                        @click="window.open(resolveImageUrl(testimonial.avatar), '_blank')"></v-btn>
-                                </template>
-                            </v-text-field>
                         </v-col>
                     </v-row>
                 </v-card-text>

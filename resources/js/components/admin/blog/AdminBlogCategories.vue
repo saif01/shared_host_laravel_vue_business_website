@@ -247,12 +247,6 @@
                                                 class="text-caption text-medium-emphasis mt-2">
                                                 No image selected. Upload an image to display with this category.
                                             </div>
-
-                                            <!-- Alternative: Direct URL input -->
-                                            <v-text-field v-model="form.image" label="Or enter image URL directly"
-                                                variant="outlined" density="compact" prepend-inner-icon="mdi-link"
-                                                hint="Enter a direct image URL" class="mt-2" clearable>
-                                            </v-text-field>
                                         </div>
                                     </div>
                                 </v-card>

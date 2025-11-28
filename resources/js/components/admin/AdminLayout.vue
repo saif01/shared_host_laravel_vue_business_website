@@ -1191,6 +1191,7 @@ export default {
     display: block;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
     transition: all 0.3s ease;
+    border-radius: 50%;
 }
 
 .logo-wrapper:hover .footer-logo {

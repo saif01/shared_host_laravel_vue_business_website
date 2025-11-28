@@ -51,16 +51,6 @@
                                     <v-progress-circular indeterminate size="20" color="primary"></v-progress-circular>
                                 </template>
                             </v-file-input>
-
-                            <!-- Or Enter URL -->
-                            <v-text-field v-model="client.logo" label="Or Enter Logo URL" variant="outlined"
-                                density="comfortable" color="primary" hint="Enter a direct URL to the logo image"
-                                persistent-hint prepend-inner-icon="mdi-link" @input="updateTrustedByClients">
-                                <template v-slot:append-inner v-if="client.logo && !client.file">
-                                    <v-btn icon="mdi-open-in-new" variant="text" size="small"
-                                        @click="window.open(resolveImageUrl(client.logo), '_blank')"></v-btn>
-                                </template>
-                            </v-text-field>
                         </v-card-text>
                     </v-card>
                 </v-col>
