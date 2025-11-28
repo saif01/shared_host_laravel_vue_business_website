@@ -217,29 +217,6 @@
                                             </v-card>
                                         </div>
                                     </div>
-
-                                    <v-divider class="my-4"></v-divider>
-
-                                    <!-- Add Image URLs -->
-                                    <div class="text-subtitle-2 text-medium-emphasis mb-2">Or Add Image URLs</div>
-                                    <div v-for="(img, index) in localImageUrlInputs" :key="`url-${index}`" class="mb-3">
-                                        <v-text-field v-model="localImageUrlInputs[index]"
-                                            :label="`Image URL ${index + 1}`" variant="outlined"
-                                            prepend-inner-icon="mdi-link" placeholder="https://example.com/image.jpg"
-                                            @update:model-value="handleImageUrlChange(index, $event)">
-                                            <template v-slot:append>
-                                                <v-btn icon="mdi-delete" size="small" variant="text" color="error"
-                                                    @click="$emit('remove-image-url', index)"></v-btn>
-                                            </template>
-                                        </v-text-field>
-                                        <div v-if="localImageUrlInputs[index]" class="mt-2">
-                                            <v-img :src="resolveImageUrl(localImageUrlInputs[index])" max-height="150"
-                                                contain class="rounded elevation-1"></v-img>
-                                        </div>
-                                    </div>
-                                    <v-btn color="primary" variant="outlined" prepend-icon="mdi-plus"
-                                        @click="$emit('add-image-url')">Add Image
-                                        URL</v-btn>
                                 </v-col>
                             </v-row>
                         </v-window-item>
@@ -712,7 +689,6 @@ export default {
             localFormTab: this.formTab,
             localThumbnailFile: this.thumbnailFile,
             localGalleryFiles: this.galleryFiles,
-            localImageUrlInputs: [...this.imageUrlInputs],
             localDownloadsList: []
         };
     },
@@ -723,13 +699,6 @@ export default {
             },
             deep: true,
             immediate: false
-        },
-        imageUrlInputs: {
-            handler(newVal) {
-                this.localImageUrlInputs = Array.isArray(newVal) ? [...newVal] : [];
-            },
-            deep: true,
-            immediate: true
         },
         formTab(newVal) {
             this.localFormTab = newVal;
@@ -785,10 +754,6 @@ export default {
         handleGalleryChange(files) {
             this.$emit('update:gallery-files', files);
             this.$emit('preview-gallery-images', files);
-        },
-        handleImageUrlChange(index, value) {
-            this.localImageUrlInputs.splice(index, 1, value);
-            this.$emit('update:image-url-inputs', [...this.localImageUrlInputs]);
         },
         updateFormTab(value) {
             this.localFormTab = value;
