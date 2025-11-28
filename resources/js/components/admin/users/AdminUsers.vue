@@ -11,16 +11,16 @@
         <v-card class="mb-4">
             <v-card-text>
                 <v-row>
-                    <v-col cols="12" md="4">
+                    <v-col cols="12" md="2">
                         <v-select v-model="perPage" :items="perPageOptions" label="Items per page"
                             prepend-inner-icon="mdi-format-list-numbered" variant="outlined" density="compact"
                             @update:model-value="onPerPageChange"></v-select>
                     </v-col>
-                    <v-col cols="12" md="3">
+                    <v-col cols="12" md="2">
                         <v-select v-model="roleFilter" :items="roleOptions" label="Filter by Role" variant="outlined"
                             density="compact" clearable @update:model-value="loadUsers"></v-select>
                     </v-col>
-                    <v-col cols="12" md="3">
+                    <v-col cols="12" md="2">
                         <v-select v-model="activeFilter" :items="activeFilterOptions" label="Filter by Status"
                             variant="outlined" density="compact" clearable @update:model-value="loadUsers"></v-select>
                     </v-col>
@@ -128,7 +128,7 @@
                                         <v-avatar size="32" color="primary">
                                             <v-img v-if="user.avatar" :src="user.avatar" :alt="user.name"></v-img>
                                             <span v-else class="text-white">{{ user.name.charAt(0).toUpperCase()
-                                                }}</span>
+                                            }}</span>
                                         </v-avatar>
                                         {{ user.name }}
                                     </div>
@@ -145,7 +145,7 @@
                                     <div v-if="user.city || user.country" class="d-flex flex-column">
                                         <span v-if="user.city" class="text-body-2">{{ user.city }}</span>
                                         <span v-if="user.country" class="text-caption text-grey">{{ user.country
-                                        }}</span>
+                                            }}</span>
                                         <span v-if="!user.city && !user.country" class="text-caption text-grey">-</span>
                                     </div>
                                     <span v-else class="text-caption text-grey">-</span>
