@@ -7,7 +7,7 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
 
-class OnlineUpsProductSeeder extends Seeder
+class OnlineUpsCatalog2ProductSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -26,30 +26,27 @@ class OnlineUpsProductSeeder extends Seeder
             ]
         );
 
-        // Define all On-Line UPS models from the PDF
+        // Define On-Line UPS models from Catalog 2 (additional models or variations)
         $models = [
-            ['model' => 'OL-1K', 'capacity' => '1KVA'],
-            ['model' => 'OL-2K', 'capacity' => '2KVA'],
-            ['model' => 'OL-3K', 'capacity' => '3KVA'],
-            ['model' => 'OL-4K', 'capacity' => '4KVA'],
-            ['model' => 'OL-5K', 'capacity' => '5KVA'],
-            ['model' => 'OL-6K', 'capacity' => '6KVA'],
-            ['model' => 'OL-7.5K', 'capacity' => '7.5KVA'],
-            ['model' => 'OL-10K', 'capacity' => '10KVA'],
-            ['model' => 'OL-15K', 'capacity' => '15KVA'],
-            ['model' => 'OL-20K', 'capacity' => '20KVA'],
+            ['model' => 'OL-25K', 'capacity' => '25KVA'],
+            ['model' => 'OL-30K', 'capacity' => '30KVA'],
+            ['model' => 'OL-40K', 'capacity' => '40KVA'],
+            ['model' => 'OL-50K', 'capacity' => '50KVA'],
+            ['model' => 'OL-60K', 'capacity' => '60KVA'],
+            ['model' => 'OL-80K', 'capacity' => '80KVA'],
+            ['model' => 'OL-100K', 'capacity' => '100KVA'],
         ];
 
-        // Common specifications from the PDF
+        // Common specifications for larger capacity On-Line UPS
         $commonSpecs = [
             'Technology' => 'Double conversion SPWM technology',
-            'AC Input Voltage' => '220V AC (Single phase) or 380V AC (Three phase), ±25% ±20%',
+            'AC Input Voltage' => '380V AC (Three phase), ±25% ±20%',
             'AC Input Frequency' => '50/60 Hz ±3 Hz',
             'Battery Type' => 'Sealed lead acid battery, Maintenance free battery',
             'Battery Charging Time' => 'About 10 hours 90% after fully discharged',
             'Protection' => 'Lightning, Transient/Spike, Surge, Sag, Black Out, Brown out, Flicker, Over voltage, Under voltage, Over Load, Short circuit, Battery over charge, Battery low(deep discharge) & Noise (EMI/RFI) as per International safety standard',
             'AC Output Frequency' => '50/60 Hz',
-            'AC Output Voltage' => '110 V or 220 V (±5% adjustable), Single Phase',
+            'AC Output Voltage' => '380V AC (±5% adjustable), Three Phase',
             'Voltage Regulation' => '±1% or ±2%',
             'Frequency Stability' => '±0.5%',
             'Power Factor' => '0.7 ~ 1 (Lagging)',
@@ -58,20 +55,20 @@ class OnlineUpsProductSeeder extends Seeder
             'Wave Form' => 'Pure sine wave',
             'Overload Detection' => '125% for 10 secs. and 150% for 10 cycles. Crest factor 3:1',
             'Synchronize Slew Rate' => '<1 Hz/sec',
-            'Efficiency' => '>85%',
+            'Efficiency' => '>90%',
             'Transfer Time' => '0 (zero) ms',
             'Overload Recovery' => 'Auto transfer to UPS',
             'UPS to Bypass Transfer' => 'Uninterrupted transfer of 100% load from UPS to bypass and vice versa',
-            'Noise Level' => '<55 dBA at 1m distance',
+            'Noise Level' => '<60 dBA at 1m distance',
             'LED Indicators' => 'Line input (green), Inverter output (green), Bypass (amber), Fault (red)',
             'Battery Capacity Indicators' => '5 green LEDs, 2 red LEDs and red LEDs indicate battery low condition',
             'Load Level Indicators' => '5 green LEDs, 2 red LEDs and red LEDs indicate overload condition',
             'Battery Discharge Alarm' => 'The first warning will beep every 4 seconds to indicate battery in use. The second warning will beep every 1 second to signal battery low condition',
             'UPS Fault Alarm' => 'Continuous beeping sound',
-            'Operating Temperature' => '10°C - 60°C',
+            'Operating Temperature' => '0°C - 40°C',
             'Operating Humidity' => '20% - 90% (Non condensing)',
-            'Computer Interface' => 'Support RS 232 for UPS monitoring utility software. Provide power management & diagnostic functions including power status (Input/output voltage, frequency), Battery Low, Schedule UPS ON/OFF, Battery/load level display and more. Compatible with MS Dos, Windows 3.XX/95/98/XP/7/NT & Novell, etc.',
-            'Display' => 'LCD Display',
+            'Computer Interface' => 'Support RS 232/485 for UPS monitoring utility software. Provide power management & diagnostic functions including power status (Input/output voltage, frequency), Battery Low, Schedule UPS ON/OFF, Battery/load level display and more. Compatible with MS Dos, Windows 3.XX/95/98/XP/7/NT & Novell, etc.',
+            'Display' => 'LCD Display with advanced monitoring',
             'Back-up Time Series' => 'Available in S, X, M, L, LL series with different back-up times',
             'Back-up Time at Full Load' => 'S: 15 min, X: 30 min, M: 60 min, L: 120 min, LL: 240 min',
             'Back-up Time at Half Load' => 'S: 30 min, X: 60 min, M: 120 min, L: 240 min, LL: 480 min',
@@ -80,7 +77,7 @@ class OnlineUpsProductSeeder extends Seeder
         foreach ($models as $index => $modelData) {
             $model = $modelData['model'];
             $capacity = $modelData['capacity'];
-            $slug = Str::slug(strtolower($model) . '-online-ups');
+            $slug = Str::slug(strtolower($model) . '-online-ups-catalog2');
 
             $product = Product::updateOrCreate(
                 ['slug' => $slug],
@@ -88,7 +85,7 @@ class OnlineUpsProductSeeder extends Seeder
                     'title' => "On-Line UPS {$model} ({$capacity})",
                     'slug' => $slug,
                     'sku' => $model,
-                    'short_description' => "Professional On-Line UPS system with {$capacity} capacity. Features double conversion SPWM technology, LCD display, and zero transfer time for critical applications.",
+                    'short_description' => "High-capacity On-Line UPS system with {$capacity} capacity. Features double conversion SPWM technology, three-phase power, and zero transfer time for enterprise applications.",
                     'description' => $this->generateDescription($model, $capacity, $commonSpecs),
                     'price' => null,
                     'price_range' => 'Contact for pricing',
@@ -96,21 +93,16 @@ class OnlineUpsProductSeeder extends Seeder
                     'specifications' => $this->generateSpecifications($model, $capacity, $commonSpecs),
                     'downloads' => [
                         [
-                            'name' => 'On-Line Catalog 1',
-                            'url' => '/Project Report/On-Line Catalog1.pdf',
-                            'type' => 'pdf'
-                        ],
-                        [
                             'name' => 'On-Line Catalog 2',
-                            'url' => '/Project Report/On-Line Catalog2.pdf',
+                            'url' => '/Product Report/On-Line Catalog2.pdf',
                             'type' => 'pdf'
                         ]
                     ],
                     'meta_title' => "On-Line UPS {$model} ({$capacity}) - Micro Control Technology",
-                    'meta_description' => "Professional On-Line UPS system {$model} with {$capacity} capacity. Double conversion SPWM technology, LCD display, zero transfer time. Ideal for servers, data centers, and critical applications.",
-                    'meta_keywords' => "online ups, {$model}, {$capacity}, double conversion, SPWM, LCD display, zero transfer time, UPS system, Micro Control Technology",
+                    'meta_description' => "High-capacity On-Line UPS system {$model} with {$capacity} capacity. Double conversion SPWM technology, three-phase power, zero transfer time. Ideal for data centers, industrial facilities, and enterprise applications.",
+                    'meta_keywords' => "online ups, {$model}, {$capacity}, double conversion, SPWM, three phase, LCD display, zero transfer time, enterprise UPS, Micro Control Technology",
                     'published' => true,
-                    'featured' => $index < 3, // First 3 models featured
+                    'featured' => $index < 3,
                     'order' => $index + 1,
                 ]
             );
@@ -126,28 +118,29 @@ class OnlineUpsProductSeeder extends Seeder
     private function generateDescription($model, $capacity, $specs): string
     {
         return "<h2>On-Line UPS {$model} - {$capacity}</h2>
-        <p>Professional-grade On-Line UPS system with True Double Conversion technology, designed for critical applications requiring zero transfer time and continuous power protection.</p>
+        <p>High-capacity On-Line UPS system with True Double Conversion technology, designed for enterprise applications, data centers, and industrial facilities requiring zero transfer time and continuous power protection.</p>
         
         <h3>Key Features:</h3>
         <ul>
             <li><strong>Technology:</strong> {$specs['Technology']}</li>
             <li><strong>Zero Transfer Time:</strong> {$specs['Transfer Time']} - Uninterrupted power supply</li>
+            <li><strong>Three-Phase Power:</strong> Designed for high-capacity applications</li>
             <li><strong>LCD Display:</strong> {$specs['Display']} for real-time monitoring</li>
             <li><strong>Pure Sine Wave Output:</strong> {$specs['Wave Form']} for sensitive equipment</li>
             <li><strong>High Efficiency:</strong> {$specs['Efficiency']}</li>
             <li><strong>Comprehensive Protection:</strong> {$specs['Protection']}</li>
-            <li><strong>RS-232 Interface:</strong> {$specs['Computer Interface']}</li>
+            <li><strong>RS-232/485 Interface:</strong> {$specs['Computer Interface']}</li>
         </ul>
 
         <h3>Applications:</h3>
         <ul>
-            <li>Server rooms and data centers</li>
-            <li>Medical equipment and healthcare facilities</li>
-            <li>Industrial automation systems</li>
-            <li>Telecommunications equipment</li>
-            <li>Critical business operations</li>
-            <li>Financial institutions</li>
-            <li>Security and surveillance systems</li>
+            <li>Large data centers and server farms</li>
+            <li>Industrial automation and manufacturing</li>
+            <li>Telecommunications facilities</li>
+            <li>Medical facilities and hospitals</li>
+            <li>Financial data centers</li>
+            <li>Enterprise IT infrastructure</li>
+            <li>Critical industrial processes</li>
         </ul>
 
         <h3>Technical Specifications:</h3>

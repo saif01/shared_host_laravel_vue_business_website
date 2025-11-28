@@ -19,7 +19,12 @@ class DatabaseSeeder extends Seeder
             AdminUserSeeder::class,
             DemoDataSeeder::class,
             AboutSeeder::class,
-            OnlineUpsProductSeeder::class,
+            UpsOfflineProductSeeder::class,
+            OnlineUpsCatalog1ProductSeeder::class,
+            OnlineUpsCatalog2ProductSeeder::class,
+            IpsCatalogProductSeeder::class,
+            Stabilizer1ProductSeeder::class,
+            Stabilizer2ProductSeeder::class,
         ]);
     }
 }
