@@ -11,7 +11,7 @@
             <v-list-item v-if="currentUser" class="user-profile-header">
                 <template v-slot:prepend>
                     <v-avatar size="48" class="mr-3">
-                        <v-img :src="resolvedBrandingLogo || '/assets/logo/logo.png'" alt="Logo" cover></v-img>
+                        <v-img :src="resolvedBrandingLogo || '/assets/logo/default.png'" alt="Logo" cover></v-img>
                     </v-avatar>
                 </template>
                 <v-tooltip location="right" :text="siteName || 'Admin Panel'">
@@ -197,7 +197,7 @@
                     <template v-slot:activator="{ props }">
                         <v-avatar v-bind="props" size="42" class="fill-image mr-2" :title="currentUser.name">
                             <v-img cover v-if="currentUser.avatar" :src="resolvedUserAvatar" :alt="currentUser.name" />
-                            <v-img cover v-else src="/assets/logo/logo.png" alt="image" />
+                            <v-img cover v-else src="/assets/logo/default.png" alt="image" />
                         </v-avatar>
                     </template>
                     <v-list>
@@ -232,7 +232,7 @@
             <div class="footer-content">
                 <div class="footer-brand">
                     <div class="logo-wrapper">
-                        <img :src="resolvedBrandingLogo || '/assets/logo/logo.png'" alt="MCT-IT" height="24"
+                        <img :src="resolvedBrandingLogo || '/assets/logo/default.png'" alt="MCT-IT" height="24"
                             class="footer-logo" />
                     </div>
                     <div class="brand-text">

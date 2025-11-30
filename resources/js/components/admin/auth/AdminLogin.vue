@@ -16,7 +16,7 @@
                             <v-col cols="12" md="6"
                                 class="d-none d-md-flex flex-column align-center justify-center branding-section pa-8">
                                 <div class="brand-logo mb-6">
-                                    <v-img :src="logoUrl || '/assets/logo/logo.png'" alt="Logo" width="120"
+                                    <v-img :src="logoUrl || '/assets/logo/default.png'" alt="Logo" width="120"
                                         class="drop-shadow rounded-logo" cover></v-img>
                                 </div>
                                 <h2 class="text-white text-h4 font-weight-bold mb-2 text-center">Welcome Back!</h2>
@@ -28,7 +28,7 @@
                             <!-- Right Side: Login Form -->
                             <v-col cols="12" md="6" class="form-section pa-8 bg-white">
                                 <div class="d-flex d-md-none justify-center mb-6">
-                                    <v-img :src="logoUrl || '/assets/logo/logo.png'" alt="Logo" width="80"
+                                    <v-img :src="logoUrl || '/assets/logo/default.png'" alt="Logo" width="80"
                                         class="rounded-logo" cover></v-img>
                                 </div>
 
