@@ -11,7 +11,7 @@
                 </v-chip>
 
                 <v-img :src="productImage" :alt="product.title" height="100%" cover
-                    class="product-img transition-transform" :class="{ 'scale-110': isHovering }" />
+                    class="product-img transition-transform" :class="{ 'scale-110': isHovering || isDefaultImage }" />
 
                 <!-- Quick Actions Overlay -->
                 <div class="actions-overlay d-flex align-center justify-center gap-2">
@@ -164,6 +164,10 @@ const productImage = computed(() => {
     }
 
     return imageUrl || '/assets/img/default.jpg';
+});
+
+const isDefaultImage = computed(() => {
+    return productImage.value === '/assets/img/default.jpg';
 });
 
 const categoryName = computed(() => {

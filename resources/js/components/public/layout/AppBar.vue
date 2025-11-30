@@ -4,17 +4,16 @@
         <div class="d-flex align-center w-100 position-relative z-index-2">
             <!-- Logo Area -->
             <router-link to="/" class="text-decoration-none d-flex align-center mr-8 logo-group">
-                <div class="logo-box mr-3 elevation-4" v-if="logo">
-                    <v-img :src="logo" alt="Logo" cover class="logo-image rounded-logo"></v-img>
+                <div class="logo-box mr-3 elevation-4">
+                    <v-img :src="logo || '/assets/logo/default.png'" alt="Logo" cover
+                        class="logo-image rounded-logo"></v-img>
                 </div>
-                <div class="logo-box mr-3 elevation-4" v-else>
-                    <v-icon icon="mdi-flash" color="amber-accent-4" size="28" class="logo-icon"></v-icon>
-                </div>
+
                 <div class="d-flex flex-column">
                     <span class="text-h6 font-weight-black text-grey-darken-4 lh-1 tracking-tight logo-text">{{
                         siteName.toUpperCase() }}</span>
                     <span class="text-caption font-weight-bold text-primary tracking-widest">{{ siteTagline
-                    }}</span>
+                        }}</span>
                 </div>
             </router-link>
 
