@@ -27,6 +27,7 @@ use App\Http\Controllers\Api\about\AboutController;
 use App\Http\Controllers\Api\blog\BlogController;
 use App\Http\Controllers\Api\career\CareerController;
 use App\Http\Controllers\Api\career\JobApplicationController;
+use App\Http\Controllers\Api\announcements\AnnouncementController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('test', function () {
@@ -137,6 +138,12 @@ Route::prefix('v1')->group(function () {
         Route::middleware('permission:manage-blog')->group(function () {
             Route::apiResource('blog-posts', BlogController::class);
             Route::apiResource('blog-categories', \App\Http\Controllers\Api\blog\BlogCategoryController::class);
+        });
+
+        // Announcements - requires manage-announcements permission
+        Route::middleware('permission:manage-announcements')->group(function () {
+            Route::put('announcements/{id}/toggle-status', [AnnouncementController::class, 'toggleStatus']);
+            Route::apiResource('announcements', AnnouncementController::class);
         });
 
         // Careers - requires manage-careers permission

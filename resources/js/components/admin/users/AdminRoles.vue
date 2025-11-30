@@ -875,6 +875,10 @@ export default {
             // Handle both object format {id: 1, name: '...'} and ID format
             this.selectedPermissions = role.permissions ? role.permissions.map(p => p.id || p) : [];
             this.permissionDialog = true;
+            // Reload permissions to ensure we have the latest list including any new permissions
+            this.loadingPermissions = true;
+            await this.loadPermissions();
+            this.loadingPermissions = false;
         },
 
         /**

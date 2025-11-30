@@ -187,6 +187,12 @@ const routes = [
                 meta: { title: 'Blog Categories Management', permissions: ['manage-blog'] }
             },
             {
+                path: 'announcements',
+                component: () => import('./components/admin/announcements/AdminAnnouncements.vue'),
+                name: 'AdminAnnouncements',
+                meta: { title: 'Announcements Management', permissions: ['manage-announcements'] }
+            },
+            {
                 path: 'careers',
                 component: () => import('./components/admin/career/AdminCareers.vue'),
                 name: 'AdminCareers',

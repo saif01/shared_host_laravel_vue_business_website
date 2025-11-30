@@ -20,6 +20,7 @@ class RolePermissionSeeder extends Seeder
             ['name' => 'Manage Services', 'slug' => 'manage-services', 'group' => 'content', 'description' => 'Create, edit, delete services'],
             ['name' => 'Manage Products', 'slug' => 'manage-products', 'group' => 'content', 'description' => 'Create, edit, delete products, categories, and tags'],
             ['name' => 'Manage Blog Posts', 'slug' => 'manage-blog', 'group' => 'content', 'description' => 'Create, edit, delete blog posts and blog categories'],
+            ['name' => 'Manage Announcements', 'slug' => 'manage-announcements', 'group' => 'content', 'description' => 'Create, edit, delete announcements (company news, offers, events, holidays, alerts)'],
             ['name' => 'Manage Media', 'slug' => 'manage-media', 'group' => 'content', 'description' => 'Upload and manage media files'],
             
             // User & Role Permissions
@@ -78,6 +79,7 @@ class RolePermissionSeeder extends Seeder
                     'manage-services',
                     'manage-products',
                     'manage-blog',
+                    'manage-announcements',
                     'manage-media',
                 ],
             ],
@@ -91,6 +93,7 @@ class RolePermissionSeeder extends Seeder
                 'permissions' => [
                     'access-dashboard',
                     'manage-blog',
+                    'manage-announcements',
                     'manage-media',
                     'view-leads',
                     'manage-leads',

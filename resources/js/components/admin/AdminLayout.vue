@@ -52,6 +52,10 @@
                     title="About Page" :to="{ name: 'AdminAbout' }" value="About" exact>
                 </v-list-item>
 
+                <v-list-item v-if="hasPermission('manage-announcements')" link router prepend-icon="mdi-bullhorn"
+                    title="Announcements" :to="{ name: 'AdminAnnouncements' }" value="Announcements" exact>
+                </v-list-item>
+
                 <v-list-group v-if="hasPermission('manage-blog')" value="blog" prepend-icon="mdi-post" no-action>
                     <template v-slot:activator="{ props }">
                         <v-list-item v-bind="props" title="Blog"></v-list-item>
