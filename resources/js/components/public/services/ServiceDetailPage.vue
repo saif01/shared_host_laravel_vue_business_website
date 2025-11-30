@@ -50,8 +50,8 @@
                     <v-col cols="12" md="8">
                         <div class="text-body-1 text-grey-darken-3 lh-relaxed mb-8">
                             <!-- Service Image -->
-                            <div v-if="service.image" class="mb-8">
-                                <v-img :src="resolveImageUrl(service.image)" max-width="100%" height="400" cover
+                            <div class="mb-8">
+                                <v-img :src="service.image ? resolveImageUrl(service.image) : '/assets/img/default.jpg'" max-width="100%" height="400" cover
                                     class="rounded-xl elevation-4"></v-img>
                             </div>
                             

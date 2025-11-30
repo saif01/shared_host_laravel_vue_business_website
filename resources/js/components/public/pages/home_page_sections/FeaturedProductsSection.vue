@@ -97,7 +97,7 @@ export default {
         getProductImage(product) {
             if (product.thumbnail) return resolveUploadUrl(product.thumbnail);
             if (product.images && product.images.length > 0) return resolveUploadUrl(product.images[0]);
-            return 'https://via.placeholder.com/400x300?text=Product';
+            return '/assets/img/default.jpg';
         }
     }
 };

@@ -18,12 +18,11 @@
         <div v-else-if="post">
             <!-- Hero Section -->
             <section 
-                v-if="post.featured_image" 
                 class="blog-hero position-relative d-flex align-end overflow-hidden"
                 style="min-height: 500px;"
             >
                 <v-img 
-                    :src="post.featured_image" 
+                    :src="post.featured_image || '/assets/img/default.jpg'" 
                     cover 
                     class="position-absolute top-0 left-0 w-100 h-100"
                 >

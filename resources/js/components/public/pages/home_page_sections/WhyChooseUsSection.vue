@@ -26,7 +26,7 @@
                     <div class="image-composition position-relative">
                         <div class="composition-bg rounded-xl bg-grey-lighten-3"></div>
                         <v-img
-                            :src="imageUrl ? resolveImageUrl(imageUrl) : 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'"
+                            :src="imageUrl ? resolveImageUrl(imageUrl) : '/assets/img/default.jpg'"
                             class="rounded-xl elevation-10 position-relative z-index-2 composition-img"
                             :cover="true" height="100%" width="100%">
                             <template v-slot:placeholder>

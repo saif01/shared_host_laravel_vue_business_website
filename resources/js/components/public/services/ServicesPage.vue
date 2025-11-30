@@ -66,7 +66,7 @@
                                     <!-- Service Image or Icon -->
                                     <div
                                         class="service-icon-side bg-primary-darken-1 d-flex align-center justify-center pa-6 position-relative overflow-hidden">
-                                        <v-img v-if="service.image" :src="resolveImageUrl(service.image)" cover
+                                        <v-img :src="service.image ? resolveImageUrl(service.image) : '/assets/img/default.jpg'" cover
                                             class="service-image position-absolute w-100 h-100">
                                             <template v-slot:placeholder>
                                                 <div class="d-flex align-center justify-center fill-height">
@@ -75,8 +75,6 @@
                                                 </div>
                                             </template>
                                         </v-img>
-                                        <v-icon v-else :icon="service.icon || getServiceIcon(i)" size="48"
-                                            color="amber-accent-4"></v-icon>
                                     </div>
                                     <div class="pa-8 flex-grow-1 bg-white">
                                         <h3 class="text-h5 font-weight-bold mb-3 text-grey-darken-3">{{ service.title }}

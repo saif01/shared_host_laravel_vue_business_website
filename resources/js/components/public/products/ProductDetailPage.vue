@@ -583,7 +583,7 @@ export default {
             if (this.product.thumbnail) {
                 return [this.product.thumbnail];
             }
-            return ['https://via.placeholder.com/600x600?text=Product'];
+            return ['/assets/img/default.jpg'];
         },
         keyFeatures() {
             if (this.product.key_features && Array.isArray(this.product.key_features)) {
@@ -806,7 +806,7 @@ export default {
         getProductImage(product) {
             if (product.thumbnail) return resolveUploadUrl(product.thumbnail);
             if (product.images && product.images.length > 0) return resolveUploadUrl(product.images[0]);
-            return 'https://via.placeholder.com/300x300?text=Product';
+            return '/assets/img/default.jpg';
         },
         getFileIcon(type) {
             const iconMap = {

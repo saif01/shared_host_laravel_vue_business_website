@@ -179,7 +179,7 @@ defineEmits(['update:modelValue', 'remove-product', 'clear-all']);
 const getProductImage = (product) => {
     if (product.thumbnail) return product.thumbnail;
     if (product.images && product.images.length > 0) return product.images[0];
-    return 'https://via.placeholder.com/400x300?text=Product';
+    return '/assets/img/default.jpg';
 };
 
 const getCategoryName = (product) => {

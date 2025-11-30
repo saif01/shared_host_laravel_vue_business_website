@@ -96,9 +96,10 @@ export default {
         },
         resolvedImageUrl() {
             if (!this.currentAnnouncement || !this.currentAnnouncement.image) {
-                return null;
+                return '/assets/img/default.jpg';
             }
-            return this.getImageUrl(this.currentAnnouncement.image);
+            const imageUrl = this.getImageUrl(this.currentAnnouncement.image);
+            return imageUrl || '/assets/img/default.jpg';
         },
         resolvedVideoUrl() {
             if (!this.currentAnnouncement || !this.currentAnnouncement.video) {

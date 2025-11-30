@@ -75,10 +75,10 @@
                                 </div>
                             </div>
                         </v-col>
-                        <v-col v-if="aboutData.story.image" cols="12" md="6">
+                        <v-col cols="12" md="6">
                             <div class="position-relative pl-md-8">
                                 <div class="image-border-effect"></div>
-                                <v-img :src="resolveImageUrl(aboutData.story.image)"
+                                <v-img :src="aboutData.story.image ? resolveImageUrl(aboutData.story.image) : '/assets/img/default.jpg'"
                                     class="rounded-xl elevation-10 position-relative z-index-2" cover
                                     height="500"></v-img>
                             </div>
@@ -134,7 +134,7 @@
                                 <div
                                     class="team-img-wrapper mb-6 mx-auto rounded-circle overflow-hidden elevation-6 position-relative">
                                     <v-img
-                                        :src="member.image ? resolveImageUrl(member.image) : 'https://i.pravatar.cc/300?img=' + i"
+                                        :src="member.image ? resolveImageUrl(member.image) : '/assets/img/default.jpg'"
                                         cover height="100%"></v-img>
                                     <div v-if="member.linkedin || member.twitter"
                                         class="team-socials d-flex align-center justify-center gap-2">

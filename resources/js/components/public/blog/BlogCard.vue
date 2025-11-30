@@ -13,7 +13,7 @@
                 style="height: 240px; overflow: hidden;"
             >
                 <v-img 
-                    :src="post.featured_image" 
+                    :src="post.featured_image || '/assets/img/default.jpg'" 
                     :alt="post.title" 
                     height="100%" 
                     cover

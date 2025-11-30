@@ -68,7 +68,7 @@ export default {
             return [...this.safeClients, ...this.safeClients];
         },
         defaultLogo() {
-            return 'https://via.placeholder.com/200x80?text=Client';
+            return '/assets/img/default.jpg';
         }
     },
     methods: {

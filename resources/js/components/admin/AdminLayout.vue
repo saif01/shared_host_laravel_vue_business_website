@@ -18,7 +18,7 @@
                     <template v-slot:activator="{ props }">
                         <v-list-item-title v-bind="props" class="text-body-2 font-weight-bold site-name-text">{{
                             siteName || 'Admin Panel'
-                        }}</v-list-item-title>
+                            }}</v-list-item-title>
                     </template>
                 </v-tooltip>
 

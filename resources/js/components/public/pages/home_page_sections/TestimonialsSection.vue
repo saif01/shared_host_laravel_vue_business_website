@@ -36,7 +36,7 @@
                                 <div class="d-flex flex-column align-center position-relative z-index-2">
                                     <div class="avatar-glow mb-8">
                                         <v-avatar size="90" class="elevation-4 border-2-white">
-                                            <v-img :src="testimonial.avatar ? resolveImageUrl(testimonial.avatar) : ''" cover></v-img>
+                                            <v-img :src="testimonial.avatar ? resolveImageUrl(testimonial.avatar) : '/assets/img/default.jpg'" cover></v-img>
                                         </v-avatar>
                                     </div>
 

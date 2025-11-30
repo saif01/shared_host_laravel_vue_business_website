@@ -163,7 +163,7 @@ const productImage = computed(() => {
         }
     }
 
-    return imageUrl || 'https://via.placeholder.com/400x300?text=Product';
+    return imageUrl || '/assets/img/default.jpg';
 });
 
 const categoryName = computed(() => {
