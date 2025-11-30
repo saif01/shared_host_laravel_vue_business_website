@@ -63,8 +63,9 @@
                                             variant="outlined" hint="Type of employment" persistent-hint clearable></v-select>
                                     </v-col>
                                     <v-col cols="12" md="6">
-                                        <v-text-field v-model="form.deadline" label="Application Deadline" type="date"
-                                            variant="outlined" hint="Deadline for applications" persistent-hint></v-text-field>
+                                        <DatePicker v-model="form.deadline" label="Application Deadline"
+                                            hint="Deadline for applications" persistent-hint title="Select deadline"
+                                            prepend-icon="mdi-calendar-range"></DatePicker>
                                     </v-col>
                                     <v-col cols="12" md="6">
                                         <v-switch v-model="form.published" label="Published" color="success"
@@ -124,11 +125,13 @@
 <script>
 import adminPaginationMixin from '../../../mixins/adminPaginationMixin';
 import RichTextEditor from '../../common/RichTextEditor.vue';
+import DatePicker from '../../common/DatePicker.vue';
 
 export default {
     name: 'CareerFormDialog',
     components: {
-        RichTextEditor
+        RichTextEditor,
+        DatePicker
     },
     mixins: [adminPaginationMixin],
     props: {
