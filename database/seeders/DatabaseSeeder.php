@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             AdminUserSeeder::class,
             DemoDataSeeder::class,
             AboutSeeder::class,
+            AnnouncementSeeder::class,
             UpsOfflineProductSeeder::class,
             OnlineUpsCatalog1ProductSeeder::class,
             OnlineUpsCatalog2ProductSeeder::class,
