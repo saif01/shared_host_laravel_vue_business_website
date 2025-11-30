@@ -18,7 +18,7 @@
                     <template v-slot:activator="{ props }">
                         <v-list-item-title v-bind="props" class="text-body-2 font-weight-bold site-name-text">{{
                             siteName || 'Admin Panel'
-                            }}</v-list-item-title>
+                        }}</v-list-item-title>
                     </template>
                 </v-tooltip>
 
@@ -30,15 +30,9 @@
                 <!-- ============================================ -->
                 <!-- GROUP 1: OVERVIEW -->
                 <!-- ============================================ -->
-                <v-list-group v-if="hasPermission('access-dashboard')" value="overview"
-                    prepend-icon="mdi-view-dashboard" no-action>
-                    <template v-slot:activator="{ props }">
-                        <v-list-item v-bind="props" title="Overview"></v-list-item>
-                    </template>
-                    <v-list-item prepend-icon="mdi-view-dashboard" title="Dashboard" :to="{ name: 'AdminDashboard' }"
-                        value="Dashboard" exact>
-                    </v-list-item>
-                </v-list-group>
+                <v-list-item prepend-icon="mdi-view-dashboard" title="Dashboard" :to="{ name: 'AdminDashboard' }"
+                    value="Dashboard" exact>
+                </v-list-item>
 
                 <!-- ============================================ -->
                 <!-- GROUP 2: CONTENT MANAGEMENT -->
