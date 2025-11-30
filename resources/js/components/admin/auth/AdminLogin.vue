@@ -16,8 +16,8 @@
                             <v-col cols="12" md="6"
                                 class="d-none d-md-flex flex-column align-center justify-center branding-section pa-8">
                                 <div class="brand-logo mb-6">
-                                    <v-img :src="logoUrl" alt="Logo" width="120" class="drop-shadow rounded-logo"
-                                        cover></v-img>
+                                    <v-img :src="logoUrl || '/assets/logo/logo.png'" alt="Logo" width="120"
+                                        class="drop-shadow rounded-logo" cover></v-img>
                                 </div>
                                 <h2 class="text-white text-h4 font-weight-bold mb-2 text-center">Welcome Back!</h2>
                                 <p class="text-white text-body-1 text-center opacity-80">
@@ -28,7 +28,8 @@
                             <!-- Right Side: Login Form -->
                             <v-col cols="12" md="6" class="form-section pa-8 bg-white">
                                 <div class="d-flex d-md-none justify-center mb-6">
-                                    <v-img :src="logoUrl" alt="Logo" width="80" class="rounded-logo" cover></v-img>
+                                    <v-img :src="logoUrl || '/assets/logo/logo.png'" alt="Logo" width="80"
+                                        class="rounded-logo" cover></v-img>
                                 </div>
 
                                 <h3 class="text-h5 font-weight-bold text-primary mb-1 text-center text-md-left">Admin
@@ -60,7 +61,8 @@
                                     <v-menu open-on-hover location="top">
                                         <template v-slot:activator="{ props }">
                                             <p class="text-caption text-grey" v-bind="props" style="cursor: pointer;">
-                                                Protected by <span class="font-weight-bold text-primary">MCT-IT Security</span>
+                                                Protected by <span class="font-weight-bold text-primary">MCT-IT
+                                                    Security</span>
                                                 <v-icon size="x-small" class="ml-1">mdi-information-outline</v-icon>
                                             </p>
                                         </template>
@@ -74,7 +76,8 @@
                                                 <div class="powered-by-info">
                                                     <div class="info-item mb-3">
                                                         <div class="info-label">
-                                                            <v-icon size="small" class="mr-1">mdi-account-circle</v-icon>
+                                                            <v-icon size="small"
+                                                                class="mr-1">mdi-account-circle</v-icon>
                                                             Author & Credit
                                                         </div>
                                                         <div class="info-value">MCT-IT Development Team</div>

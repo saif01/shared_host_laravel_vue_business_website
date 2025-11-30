@@ -14,7 +14,13 @@
                         <v-img :src="resolvedBrandingLogo || '/assets/logo/logo.png'" alt="Logo" cover></v-img>
                     </v-avatar>
                 </template>
-                <v-list-item-title class="text-h6 font-weight-bold">{{ siteName || 'Admin Panel' }}</v-list-item-title>
+                <v-tooltip location="right" :text="siteName || 'Admin Panel'">
+                    <template v-slot:activator="{ props }">
+                        <v-list-item-title v-bind="props" class="text-body-2 font-weight-bold site-name-text">{{
+                            siteName || 'Admin Panel'
+                        }}</v-list-item-title>
+                    </template>
+                </v-tooltip>
 
             </v-list-item>
 
@@ -1064,6 +1070,16 @@ export default {
 
 .user-profile-header :deep(.v-avatar) {
     animation: avatarFloat 3s ease-in-out infinite;
+}
+
+.site-name-text {
+    font-size: 0.875rem !important;
+    line-height: 1.25rem !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    cursor: pointer;
 }
 
 @keyframes avatarFloat {
