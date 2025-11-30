@@ -21,7 +21,8 @@
                             :to="`/products/${product.slug}`">
                             <div class="img-wrapper overflow-hidden position-relative" style="height: 260px;">
                                 <v-img :src="getProductImage(product)" height="100%" cover
-                                    class="product-img transition-transform" :class="{ 'scale-110': isHovering }">
+                                    class="product-img transition-transform"
+                                    :class="{ 'scale-110': isHovering || isDefaultImage(product) }">
                                     <template v-slot:placeholder>
                                         <div class="d-flex align-center justify-center fill-height bg-grey-lighten-3">
                                             <v-progress-circular indeterminate color="primary"></v-progress-circular>
@@ -98,6 +99,9 @@ export default {
             if (product.thumbnail) return resolveUploadUrl(product.thumbnail);
             if (product.images && product.images.length > 0) return resolveUploadUrl(product.images[0]);
             return '/assets/img/default.jpg';
+        },
+        isDefaultImage(product) {
+            return this.getProductImage(product) === '/assets/img/default.jpg';
         }
     }
 };
