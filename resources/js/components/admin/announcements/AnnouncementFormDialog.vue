@@ -33,9 +33,10 @@
                             <div class="pa-6">
                                 <v-row>
                                     <v-col cols="12">
-                                        <v-text-field v-model="form.title" label="Announcement Title *" variant="outlined"
-                                            :rules="[v => !!v || 'Title is required']" hint="Enter the announcement title"
-                                            @blur="generateSlug" persistent-hint></v-text-field>
+                                        <v-text-field v-model="form.title" label="Announcement Title *"
+                                            variant="outlined" :rules="[v => !!v || 'Title is required']"
+                                            hint="Enter the announcement title" @blur="generateSlug"
+                                            persistent-hint></v-text-field>
                                     </v-col>
                                     <v-col cols="12" md="6">
                                         <v-text-field v-model="form.slug" label="Slug *" variant="outlined"
@@ -48,16 +49,15 @@
                                         </v-text-field>
                                     </v-col>
                                     <v-col cols="12" md="6">
-                                        <v-select v-model="form.type" :items="typeOptions" label="Type *" variant="outlined"
-                                            :rules="[v => !!v || 'Type is required']" hint="Announcement category"
-                                            persistent-hint></v-select>
+                                        <v-select v-model="form.type" :items="typeOptions" label="Type *"
+                                            variant="outlined" :rules="[v => !!v || 'Type is required']"
+                                            hint="Announcement category" persistent-hint></v-select>
                                     </v-col>
                                     <v-col cols="12" md="6">
-                                        <v-select v-model="form.display_type" :items="displayTypeOptions" 
+                                        <v-select v-model="form.display_type" :items="displayTypeOptions"
                                             label="Display Type *" variant="outlined"
-                                            :rules="[v => !!v || 'Display type is required']" 
-                                            hint="How the announcement will be displayed"
-                                            persistent-hint></v-select>
+                                            :rules="[v => !!v || 'Display type is required']"
+                                            hint="How the announcement will be displayed" persistent-hint></v-select>
                                     </v-col>
                                     <v-col cols="12" md="6">
                                         <v-text-field v-model="form.priority" label="Priority" type="number"
@@ -66,8 +66,7 @@
                                     </v-col>
                                     <v-col cols="12">
                                         <v-textarea v-model="form.short_description" label="Short Description"
-                                            variant="outlined" rows="3"
-                                            hint="Brief description shown in listings"
+                                            variant="outlined" rows="3" hint="Brief description shown in listings"
                                             persistent-hint></v-textarea>
                                     </v-col>
                                 </v-row>
@@ -99,15 +98,24 @@
                                                     Remove Image
                                                 </v-btn>
                                             </div>
-                                            <v-file-input v-model="imageFile" accept="image/*"
-                                                label="Select Image" variant="outlined"
-                                                prepend-inner-icon="mdi-image" show-size clearable
+                                            <v-file-input v-model="imageFile" accept="image/*" label="Select Image"
+                                                variant="outlined" prepend-inner-icon="mdi-image" show-size clearable
                                                 @update:model-value="handleImageSelect">
                                                 <template v-slot:append>
                                                     <v-progress-circular v-if="uploadingImage" indeterminate
                                                         color="primary" size="24"></v-progress-circular>
                                                 </template>
                                             </v-file-input>
+                                            <v-alert v-if="imageFile && imageFile.size > 5242880" type="warning"
+                                                variant="tonal" density="compact" class="mt-2">
+                                                File size is larger than 5MB. Please choose a smaller image.
+                                            </v-alert>
+                                            <v-alert v-if="imageError" type="error" variant="tonal" density="compact"
+                                                class="mt-2" closable @click:close="imageError = null">
+                                                <div class="text-body-2">
+                                                    <strong>Upload Error:</strong> {{ imageError }}
+                                                </div>
+                                            </v-alert>
                                         </v-card>
                                     </v-col>
                                     <v-col cols="12" md="6">
@@ -120,8 +128,9 @@
                                         <h3 class="text-h6 font-weight-bold mb-4">External Link</h3>
                                     </v-col>
                                     <v-col cols="12" md="10">
-                                        <v-text-field v-model="form.external_link" label="External Link URL" variant="outlined"
-                                            hint="Optional link to external page" persistent-hint type="url"></v-text-field>
+                                        <v-text-field v-model="form.external_link" label="External Link URL"
+                                            variant="outlined" hint="Optional link to external page" persistent-hint
+                                            type="url"></v-text-field>
                                     </v-col>
                                     <v-col cols="12" md="2">
                                         <v-switch v-model="form.open_in_new_tab" label="Open in new tab" color="primary"
@@ -139,14 +148,14 @@
                                         <h3 class="text-h6 font-weight-bold mb-4">Schedule</h3>
                                     </v-col>
                                     <v-col cols="12" md="6">
-                                        <v-text-field v-model="form.start_date" label="Start Date & Time" variant="outlined"
-                                            type="datetime-local" hint="When announcement becomes active"
-                                            persistent-hint></v-text-field>
+                                        <v-text-field v-model="form.start_date" label="Start Date & Time"
+                                            variant="outlined" type="datetime-local"
+                                            hint="When announcement becomes active" persistent-hint></v-text-field>
                                     </v-col>
                                     <v-col cols="12" md="6">
                                         <v-text-field v-model="form.end_date" label="End Date & Time" variant="outlined"
-                                            type="datetime-local" hint="When announcement expires"
-                                            persistent-hint :min="form.start_date"></v-text-field>
+                                            type="datetime-local" hint="When announcement expires" persistent-hint
+                                            :min="form.start_date"></v-text-field>
                                     </v-col>
                                     <v-col cols="12">
                                         <v-divider class="my-4"></v-divider>
@@ -154,8 +163,7 @@
                                     </v-col>
                                     <v-col cols="12" md="6">
                                         <v-switch v-model="form.is_active" label="Active" color="success"
-                                            hint="Make this announcement active"
-                                            persistent-hint></v-switch>
+                                            hint="Make this announcement active" persistent-hint></v-switch>
                                     </v-col>
                                     <v-col cols="12" md="6">
                                         <v-text-field v-model="form.language" label="Language" variant="outlined"
@@ -183,15 +191,14 @@
                                     </v-col>
                                     <v-col cols="12">
                                         <v-text-field v-model="form.meta_keywords" label="Meta Keywords"
-                                            variant="outlined"
-                                            hint="Comma-separated keywords for SEO"
+                                            variant="outlined" hint="Comma-separated keywords for SEO"
                                             persistent-hint></v-text-field>
                                     </v-col>
                                     <v-col cols="12">
                                         <v-label class="mb-2">Open Graph Image</v-label>
                                         <v-card variant="outlined" class="pa-4">
                                             <div v-if="ogImagePreview || form.og_image" class="mb-4">
-                                                    <v-img :src="ogImagePreview || resolveImageUrl(form.og_image)"
+                                                <v-img :src="ogImagePreview || resolveImageUrl(form.og_image)"
                                                     max-width="300" max-height="300" class="rounded elevation-2"
                                                     cover></v-img>
                                                 <v-btn color="error" size="small" variant="text" class="mt-2"
@@ -208,6 +215,16 @@
                                                         color="primary" size="24"></v-progress-circular>
                                                 </template>
                                             </v-file-input>
+                                            <v-alert v-if="ogImageFile && ogImageFile.size > 5242880" type="warning"
+                                                variant="tonal" density="compact" class="mt-2">
+                                                File size is larger than 5MB. Please choose a smaller image.
+                                            </v-alert>
+                                            <v-alert v-if="ogImageError" type="error" variant="tonal" density="compact"
+                                                class="mt-2" closable @click:close="ogImageError = null">
+                                                <div class="text-body-2">
+                                                    <strong>Upload Error:</strong> {{ ogImageError }}
+                                                </div>
+                                            </v-alert>
                                         </v-card>
                                     </v-col>
                                 </v-row>
@@ -236,7 +253,7 @@
 <script>
 import adminPaginationMixin from '../../../mixins/adminPaginationMixin';
 import RichTextEditor from '../../common/RichTextEditor.vue';
-import { resolveUploadUrl } from '../../../utils/uploads';
+import { normalizeUploadPath, resolveUploadUrl } from '../../../utils/uploads';
 
 export default {
     name: 'AnnouncementFormDialog',
@@ -326,6 +343,9 @@ export default {
         }
     },
     methods: {
+        normalizeImageInput(imageValue) {
+            return normalizeUploadPath(imageValue);
+        },
         resolveImageUrl(value) {
             return resolveUploadUrl(value);
         },
@@ -367,6 +387,11 @@ export default {
                 });
 
                 const announcement = response.data;
+
+                // Normalize image paths
+                const normalizedImage = this.normalizeImageInput(announcement.image || '');
+                const normalizedOgImage = this.normalizeImageInput(announcement.og_image || '');
+
                 this.form = {
                     title: announcement.title || '',
                     slug: announcement.slug || '',
@@ -374,7 +399,7 @@ export default {
                     short_description: announcement.short_description || '',
                     type: announcement.type || 'company_news',
                     display_type: announcement.display_type || 'slider_banner',
-                    image: announcement.image || '',
+                    image: normalizedImage,
                     video: announcement.video || '',
                     external_link: announcement.external_link || '',
                     open_in_new_tab: announcement.open_in_new_tab || false,
@@ -386,8 +411,12 @@ export default {
                     meta_title: announcement.meta_title || '',
                     meta_description: announcement.meta_description || '',
                     meta_keywords: announcement.meta_keywords || '',
-                    og_image: announcement.og_image || ''
+                    og_image: normalizedOgImage
                 };
+
+                // Set preview images
+                this.imagePreview = announcement.image ? this.resolveImageUrl(announcement.image || normalizedImage) : null;
+                this.ogImagePreview = announcement.og_image ? this.resolveImageUrl(announcement.og_image || normalizedOgImage) : null;
             } catch (error) {
                 this.handleApiError(error, 'Failed to load announcement data');
                 this.closeDialog();
@@ -412,109 +441,197 @@ export default {
                     .replace(/^-+|-+$/g, '');
             }
         },
-        async handleImageSelect(file) {
-            if (!file || !file[0]) {
-                this.imageFile = null;
-                this.imagePreview = null;
-                return;
-            }
-
-            this.imageFile = file[0];
+        handleImageSelect(file) {
+            // Clear previous error
             this.imageError = null;
 
-            // Create preview
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                this.imagePreview = e.target.result;
-            };
-            reader.readAsDataURL(this.imageFile);
+            if (file) {
+                const selectedFile = Array.isArray(file) ? file[0] : file;
 
-            // Upload image
-            await this.uploadImage();
+                if (selectedFile && selectedFile.size > 5242880) {
+                    this.imageError = 'Image file size must be less than 5MB';
+                    this.imageFile = null;
+                    return;
+                }
+
+                if (selectedFile && !selectedFile.type.startsWith('image/')) {
+                    this.imageError = 'Please select a valid image file (jpeg, jpg, png, gif, webp)';
+                    this.imageFile = null;
+                    return;
+                }
+
+                this.imageFile = selectedFile;
+
+                if (selectedFile) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        this.imagePreview = e.target.result;
+                    };
+                    reader.onerror = () => {
+                        this.showError('Failed to read image file');
+                        this.imageFile = null;
+                        this.imagePreview = null;
+                    };
+                    reader.readAsDataURL(selectedFile);
+                } else {
+                    this.imagePreview = null;
+                }
+            } else {
+                this.imageFile = null;
+                if (!this.form.image) {
+                    this.imagePreview = null;
+                } else {
+                    // Update preview when image URL is directly entered (if no file is selected)
+                    this.imagePreview = this.resolveImageUrl(this.form.image);
+                }
+            }
         },
         async uploadImage() {
-            if (!this.imageFile) return;
+            if (!this.imageFile) return null;
 
+            const fileToUpload = Array.isArray(this.imageFile) ? this.imageFile[0] : this.imageFile;
+            if (!fileToUpload) return null;
+
+            this.uploadingImage = true;
             try {
-                this.uploadingImage = true;
-                this.imageError = null;
-
                 const formData = new FormData();
-                formData.append('file', this.imageFile);
+                formData.append('image', fileToUpload);
                 formData.append('folder', 'announcements');
+                if (this.form.title) {
+                    formData.append('prefix', this.form.title);
+                }
 
-                const response = await this.$axios.post('/api/v1/upload', formData, {
+                const response = await this.$axios.post('/api/v1/upload/image', formData, {
                     headers: {
                         ...this.getAuthHeaders(),
                         'Content-Type': 'multipart/form-data'
                     }
                 });
 
-                this.form.image = response.data.path || response.data.url;
-                this.imageFile = null;
+                if (response.data.success) {
+                    const uploadedPath = this.normalizeImageInput(response.data.path || response.data.url);
+                    this.form.image = uploadedPath;
+                    this.imagePreview = this.resolveImageUrl(response.data.url || uploadedPath);
+                    this.imageFile = null;
+                    this.imageError = null;
+                    return uploadedPath;
+                } else {
+                    throw new Error(response.data.message || 'Failed to upload image');
+                }
             } catch (error) {
-                this.handleApiError(error, 'Failed to upload image');
-                this.imageError = error.response?.data?.message || 'Upload failed';
+                let errorMessage = 'Failed to upload image';
+                if (error.response?.data?.message) {
+                    errorMessage = error.response.data.message;
+                }
+                this.imageError = errorMessage;
+                throw new Error(errorMessage);
             } finally {
                 this.uploadingImage = false;
             }
         },
         removeImage() {
-            this.form.image = '';
-            this.imagePreview = null;
-            this.imageFile = null;
-        },
-        async handleOgImageSelect(file) {
-            if (!file || !file[0]) {
-                this.ogImageFile = null;
-                this.ogImagePreview = null;
-                return;
+            if (confirm('Are you sure you want to remove this image?')) {
+                this.imagePreview = null;
+                this.imageFile = null;
+                this.form.image = '';
+                this.imageError = null;
             }
-
-            this.ogImageFile = file[0];
+        },
+        handleOgImageSelect(file) {
+            // Clear previous error
             this.ogImageError = null;
 
-            // Create preview
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                this.ogImagePreview = e.target.result;
-            };
-            reader.readAsDataURL(this.ogImageFile);
+            if (file) {
+                const selectedFile = Array.isArray(file) ? file[0] : file;
 
-            // Upload image
-            await this.uploadOgImage();
+                if (selectedFile && selectedFile.size > 5242880) {
+                    this.ogImageError = 'OG image file size must be less than 5MB';
+                    this.ogImageFile = null;
+                    return;
+                }
+
+                if (selectedFile && !selectedFile.type.startsWith('image/')) {
+                    this.ogImageError = 'Please select a valid image file (jpeg, jpg, png, gif, webp)';
+                    this.ogImageFile = null;
+                    return;
+                }
+
+                this.ogImageFile = selectedFile;
+
+                if (selectedFile) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        this.ogImagePreview = e.target.result;
+                    };
+                    reader.onerror = () => {
+                        this.showError('Failed to read image file');
+                        this.ogImageFile = null;
+                        this.ogImagePreview = null;
+                    };
+                    reader.readAsDataURL(selectedFile);
+                } else {
+                    this.ogImagePreview = null;
+                }
+            } else {
+                this.ogImageFile = null;
+                if (!this.form.og_image) {
+                    this.ogImagePreview = null;
+                } else {
+                    // Update preview when OG image URL is directly entered (if no file is selected)
+                    this.ogImagePreview = this.resolveImageUrl(this.form.og_image);
+                }
+            }
         },
         async uploadOgImage() {
-            if (!this.ogImageFile) return;
+            if (!this.ogImageFile) return null;
 
+            const fileToUpload = Array.isArray(this.ogImageFile) ? this.ogImageFile[0] : this.ogImageFile;
+            if (!fileToUpload) return null;
+
+            this.uploadingOgImage = true;
             try {
-                this.uploadingOgImage = true;
-                this.ogImageError = null;
-
                 const formData = new FormData();
-                formData.append('file', this.ogImageFile);
+                formData.append('image', fileToUpload);
                 formData.append('folder', 'announcements');
+                if (this.form.title) {
+                    formData.append('prefix', this.form.title);
+                }
 
-                const response = await this.$axios.post('/api/v1/upload', formData, {
+                const response = await this.$axios.post('/api/v1/upload/image', formData, {
                     headers: {
                         ...this.getAuthHeaders(),
                         'Content-Type': 'multipart/form-data'
                     }
                 });
 
-                this.form.og_image = response.data.path || response.data.url;
-                this.ogImageFile = null;
+                if (response.data.success) {
+                    const uploadedPath = this.normalizeImageInput(response.data.path || response.data.url);
+                    this.form.og_image = uploadedPath;
+                    this.ogImagePreview = this.resolveImageUrl(response.data.url || uploadedPath);
+                    this.ogImageFile = null;
+                    this.ogImageError = null;
+                    return uploadedPath;
+                } else {
+                    throw new Error(response.data.message || 'Failed to upload OG image');
+                }
             } catch (error) {
-                this.handleApiError(error, 'Failed to upload OG image');
-                this.ogImageError = error.response?.data?.message || 'Upload failed';
+                let errorMessage = 'Failed to upload OG image';
+                if (error.response?.data?.message) {
+                    errorMessage = error.response.data.message;
+                }
+                this.ogImageError = errorMessage;
+                throw new Error(errorMessage);
             } finally {
                 this.uploadingOgImage = false;
             }
         },
         removeOgImage() {
-            this.form.og_image = '';
-            this.ogImagePreview = null;
-            this.ogImageFile = null;
+            if (confirm('Are you sure you want to remove the Open Graph image?')) {
+                this.ogImagePreview = null;
+                this.ogImageFile = null;
+                this.form.og_image = '';
+                this.ogImageError = null;
+            }
         },
         async saveAnnouncement() {
             const { valid } = await this.$refs.formRef.validate();
@@ -523,11 +640,40 @@ export default {
                 return;
             }
 
+            this.saving = true;
+
             try {
-                this.saving = true;
+                // Upload images if files are selected
+                if (this.imageFile) {
+                    try {
+                        await this.uploadImage();
+                    } catch (error) {
+                        this.showError(error.message || 'Failed to upload image');
+                        this.saving = false;
+                        return;
+                    }
+                }
+
+                if (this.ogImageFile) {
+                    try {
+                        await this.uploadOgImage();
+                    } catch (error) {
+                        this.showError(error.message || 'Failed to upload OG image');
+                        this.saving = false;
+                        return;
+                    }
+                }
 
                 const payload = { ...this.form };
-                
+
+                // Normalize image paths before sending
+                if (payload.image) {
+                    payload.image = this.normalizeImageInput(payload.image);
+                }
+                if (payload.og_image) {
+                    payload.og_image = this.normalizeImageInput(payload.og_image);
+                }
+
                 // Convert datetime-local format to ISO string for API
                 if (payload.start_date) {
                     payload.start_date = new Date(payload.start_date).toISOString();
@@ -565,4 +711,3 @@ export default {
     }
 };
 </script>
-
