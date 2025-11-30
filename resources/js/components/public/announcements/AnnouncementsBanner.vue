@@ -1,9 +1,12 @@
 <template>
-    <v-dialog v-model="dialogOpen" :max-width="dialogMaxWidth" persistent scrollable class="announcement-dialog">
-        <v-card v-if="currentAnnouncement" class="announcement-dialog-card">
-            <v-card-title class="d-flex align-center pa-4" :class="`bg-${getAlertColor(currentAnnouncement.type)}`">
+    <v-dialog v-model="dialogOpen" :max-width="dialogMaxWidth" persistent scrollable
+        :class="['announcement-dialog', { 'announcement-dialog--fullscreen': isMobile }]" :fullscreen="isMobile">
+        <v-card v-if="currentAnnouncement" class="announcement-dialog-card"
+            :class="{ 'announcement-dialog-card--mobile': isMobile }">
+            <v-card-title class="d-flex align-center pa-4 announcement-title"
+                :class="`bg-${getAlertColor(currentAnnouncement.type)}`">
                 <v-icon class="mr-2" color="white">{{ getAnnouncementIcon(currentAnnouncement.type) }}</v-icon>
-                <span class="text-white font-weight-bold">{{ currentAnnouncement.title }}</span>
+                <span class="text-white font-weight-bold announcement-title-text">{{ currentAnnouncement.title }}</span>
                 <v-spacer></v-spacer>
                 <v-chip v-if="announcements.length > 1" size="small" variant="flat" color="white" class="mr-2">
                     {{ currentAnnouncementIndex + 1 }} / {{ announcements.length }}
@@ -48,23 +51,23 @@
 
             <v-divider></v-divider>
 
-            <v-card-actions class="pa-4">
+            <v-card-actions class="pa-4 announcement-actions" :class="{ 'announcement-actions--stacked': isMobile }">
                 <v-checkbox v-model="dontShowAgain" label="Don't show again" density="compact" hide-details
-                    class="mr-auto"></v-checkbox>
-                <v-spacer></v-spacer>
+                    class="mr-auto announcement-checkbox"></v-checkbox>
                 <v-btn v-if="announcements.length > 1 && currentAnnouncementIndex < announcements.length - 1"
-                    variant="text" @click="nextAnnouncement">
+                    variant="text" class="announcement-action-btn" @click="nextAnnouncement">
                     Next
                     <v-icon right>mdi-arrow-right</v-icon>
                 </v-btn>
-                <v-btn variant="text" @click="closeDialog">{{ announcements.length > 1 && currentAnnouncementIndex <
-                    announcements.length - 1 ? 'Skip All' : 'Close' }}</v-btn>
-                        <v-btn v-if="currentAnnouncement.external_link" :href="currentAnnouncement.external_link"
-                            :target="currentAnnouncement.open_in_new_tab ? '_blank' : '_self'" color="primary"
-                            variant="flat" @click="closeDialog">
-                            Learn More
-                            <v-icon right>mdi-arrow-right</v-icon>
-                        </v-btn>
+                <v-btn variant="text" class="announcement-action-btn" @click="closeDialog">
+                    {{ announcements.length > 1 && currentAnnouncementIndex < announcements.length - 1 ? 'Skip All' : 'Close' }}
+                </v-btn>
+                <v-btn v-if="currentAnnouncement.external_link" :href="currentAnnouncement.external_link"
+                    :target="currentAnnouncement.open_in_new_tab ? '_blank' : '_self'" color="primary" variant="flat"
+                    class="announcement-action-btn" @click="closeDialog">
+                    Learn More
+                    <v-icon right>mdi-arrow-right</v-icon>
+                </v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -88,6 +91,9 @@ export default {
         };
     },
     computed: {
+        isMobile() {
+            return this.windowWidth < 600;
+        },
         currentAnnouncement() {
             if (this.announcements.length > 0 && this.currentAnnouncementIndex < this.announcements.length) {
                 return this.announcements[this.currentAnnouncementIndex];
@@ -379,6 +385,22 @@ export default {
     flex-direction: column;
 }
 
+.announcement-dialog-card--mobile {
+    max-height: 100vh;
+    border-radius: 0;
+}
+
+.announcement-title {
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.announcement-title-text {
+    flex: 1 1 auto;
+    min-width: 0;
+    word-break: break-word;
+}
+
 .announcement-content {
     flex: 1;
     overflow-y: auto;
@@ -413,6 +435,24 @@ export default {
     height: 0;
     overflow: hidden;
     border-radius: 8px;
+}
+
+.announcement-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.announcement-actions--stacked {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.announcement-actions--stacked .announcement-action-btn,
+.announcement-actions--stacked .announcement-checkbox {
+    width: 100%;
+    margin: 0;
 }
 
 .youtube-iframe {
@@ -465,6 +505,11 @@ export default {
         max-height: 95vh;
     }
 
+    .announcement-dialog-card--mobile {
+        max-height: 100vh;
+        border-radius: 0;
+    }
+
     .announcement-content {
         padding: 16px !important;
     }
@@ -506,6 +551,18 @@ export default {
 
 :deep(.v-dialog > .v-card) {
     overflow: hidden;
+}
+
+.announcement-dialog--fullscreen :deep(.v-overlay__content) {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    margin: 0 !important;
+}
+
+.announcement-dialog--fullscreen :deep(.v-dialog) {
+    margin: 0;
 }
 
 /* Small device adjustments */
