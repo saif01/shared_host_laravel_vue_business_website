@@ -100,8 +100,50 @@
 
             <div
                 class="d-flex flex-column flex-md-row justify-space-between align-center text-caption text-grey-darken-1">
-                <div class="mb-4 mb-md-0">
-                    © {{ new Date().getFullYear() }} {{ siteName }}. All rights reserved.
+                <div class="mb-4 mb-md-0 d-flex flex-column flex-md-row align-center gap-2 gap-md-4">
+                    <div>
+                        © {{ new Date().getFullYear() }} {{ siteName }}. All rights reserved.
+                    </div>
+                    <v-menu open-on-hover location="top">
+                        <template v-slot:activator="{ props }">
+                            <span class="powered-by-text-footer" v-bind="props" style="cursor: pointer;">
+                                Powered By MCT-IT
+                                <v-icon size="x-small" class="ml-1">mdi-information-outline</v-icon>
+                            </span>
+                        </template>
+                        <v-card class="powered-by-card" min-width="280">
+                            <v-card-title class="text-h6 pb-2">
+                                <v-icon class="mr-2">mdi-code-tags</v-icon>
+                                Powered By MCT-IT
+                            </v-card-title>
+                            <v-divider></v-divider>
+                            <v-card-text class="pt-3">
+                                <div class="powered-by-info">
+                                    <div class="info-item mb-3">
+                                        <div class="info-label">
+                                            <v-icon size="small" class="mr-1">mdi-account-circle</v-icon>
+                                            Author & Credit
+                                        </div>
+                                        <div class="info-value">MCT-IT Development Team</div>
+                                    </div>
+                                    <div class="info-item mb-3">
+                                        <div class="info-label">
+                                            <v-icon size="small" class="mr-1">mdi-cog</v-icon>
+                                            Managed By
+                                        </div>
+                                        <div class="info-value">MCT-IT Solutions</div>
+                                    </div>
+                                    <div class="info-item mb-2">
+                                        <div class="info-label">
+                                            <v-icon size="small" class="mr-1">mdi-tag</v-icon>
+                                            Version
+                                        </div>
+                                        <div class="info-value">v1.0</div>
+                                    </div>
+                                </div>
+                            </v-card-text>
+                        </v-card>
+                    </v-menu>
                 </div>
                 <div class="d-flex gap-6">
                     <a href="#" class="footer-link-sm">Privacy Policy</a>
@@ -359,5 +401,50 @@ export default {
         margin-top: 24px !important;
         margin-bottom: 24px !important;
     }
+}
+
+.powered-by-text-footer {
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.powered-by-text-footer:hover {
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.powered-by-card {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2) !important;
+    border-radius: 12px !important;
+}
+
+.powered-by-info {
+    font-size: 13px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-label {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: #6366f1;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    color: #334155;
+    font-weight: 500;
+    padding-left: 20px;
 }
 </style>

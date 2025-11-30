@@ -226,11 +226,50 @@
             <div class="footer-content">
                 <div class="footer-brand">
                     <div class="logo-wrapper">
-                        <img :src="resolvedBrandingLogo || '/assets/logo/logo.png'" alt="cpb-it" height="24"
+                        <img :src="resolvedBrandingLogo || '/assets/logo/logo.png'" alt="MCT-IT" height="24"
                             class="footer-logo" />
                     </div>
                     <div class="brand-text">
-                        <span class="brand-name">Powered By CPB-IT</span>
+                        <v-menu open-on-hover location="top">
+                            <template v-slot:activator="{ props }">
+                                <span class="brand-name powered-by-text" v-bind="props">
+                                    Powered By MCT-IT
+                                    <v-icon size="small" class="ml-1">mdi-information-outline</v-icon>
+                                </span>
+                            </template>
+                            <v-card class="powered-by-card" min-width="280">
+                                <v-card-title class="text-h6 pb-2">
+                                    <v-icon class="mr-2">mdi-code-tags</v-icon>
+                                    Powered By MCT-IT
+                                </v-card-title>
+                                <v-divider></v-divider>
+                                <v-card-text class="pt-3">
+                                    <div class="powered-by-info">
+                                        <div class="info-item mb-3">
+                                            <div class="info-label">
+                                                <v-icon size="small" class="mr-1">mdi-account-circle</v-icon>
+                                                Author & Credit
+                                            </div>
+                                            <div class="info-value">MCT-IT Development Team</div>
+                                        </div>
+                                        <div class="info-item mb-3">
+                                            <div class="info-label">
+                                                <v-icon size="small" class="mr-1">mdi-cog</v-icon>
+                                                Managed By
+                                            </div>
+                                            <div class="info-value">MCT-IT Solutions</div>
+                                        </div>
+                                        <div class="info-item mb-2">
+                                            <div class="info-label">
+                                                <v-icon size="small" class="mr-1">mdi-tag</v-icon>
+                                                Version
+                                            </div>
+                                            <div class="info-value">v1.0</div>
+                                        </div>
+                                    </div>
+                                </v-card-text>
+                            </v-card>
+                        </v-menu>
                     </div>
                 </div>
 
@@ -1260,6 +1299,51 @@ export default {
     font-weight: 600;
     letter-spacing: 0.3px;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.powered-by-text {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    padding: 4px 8px;
+    border-radius: 8px;
+}
+
+.powered-by-text:hover {
+    background: var(--admin-overlay-light);
+    transform: translateY(-1px);
+}
+
+.powered-by-card {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2) !important;
+    border-radius: 12px !important;
+}
+
+.powered-by-info {
+    font-size: 13px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-label {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: #6366f1;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    color: #334155;
+    font-weight: 500;
+    padding-left: 20px;
 }
 
 .footer-divider {

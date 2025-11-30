@@ -57,9 +57,46 @@
                                 </v-form>
 
                                 <div class="text-center mt-4">
-                                    <p class="text-caption text-grey">
-                                        Protected by <span class="font-weight-bold text-primary">CPB-IT Security</span>
-                                    </p>
+                                    <v-menu open-on-hover location="top">
+                                        <template v-slot:activator="{ props }">
+                                            <p class="text-caption text-grey" v-bind="props" style="cursor: pointer;">
+                                                Protected by <span class="font-weight-bold text-primary">MCT-IT Security</span>
+                                                <v-icon size="x-small" class="ml-1">mdi-information-outline</v-icon>
+                                            </p>
+                                        </template>
+                                        <v-card class="powered-by-card" min-width="280">
+                                            <v-card-title class="text-h6 pb-2">
+                                                <v-icon class="mr-2">mdi-shield-check</v-icon>
+                                                Powered By MCT-IT
+                                            </v-card-title>
+                                            <v-divider></v-divider>
+                                            <v-card-text class="pt-3">
+                                                <div class="powered-by-info">
+                                                    <div class="info-item mb-3">
+                                                        <div class="info-label">
+                                                            <v-icon size="small" class="mr-1">mdi-account-circle</v-icon>
+                                                            Author & Credit
+                                                        </div>
+                                                        <div class="info-value">MCT-IT Development Team</div>
+                                                    </div>
+                                                    <div class="info-item mb-3">
+                                                        <div class="info-label">
+                                                            <v-icon size="small" class="mr-1">mdi-cog</v-icon>
+                                                            Managed By
+                                                        </div>
+                                                        <div class="info-value">MCT-IT Solutions</div>
+                                                    </div>
+                                                    <div class="info-item mb-2">
+                                                        <div class="info-label">
+                                                            <v-icon size="small" class="mr-1">mdi-tag</v-icon>
+                                                            Version
+                                                        </div>
+                                                        <div class="info-value">v1.0</div>
+                                                    </div>
+                                                </div>
+                                            </v-card-text>
+                                        </v-card>
+                                    </v-menu>
                                 </div>
                             </v-col>
                         </v-row>
@@ -290,5 +327,36 @@ export default {
 
 :deep(.v-label) {
     font-size: 0.9rem;
+}
+
+.powered-by-card {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2) !important;
+    border-radius: 12px !important;
+}
+
+.powered-by-info {
+    font-size: 13px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-label {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: #6366f1;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    color: #334155;
+    font-weight: 500;
+    padding-left: 20px;
 }
 </style>
