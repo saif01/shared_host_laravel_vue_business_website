@@ -1,4 +1,5 @@
 import { ref, computed } from 'vue';
+import { formatProductPrice } from '../utils/formatters';
 
 /**
  * Composable for managing products data and operations
@@ -14,7 +15,7 @@ export function useProducts() {
     const fetchProducts = async () => {
         loading.value = true;
         error.value = null;
-        
+
         try {
             const response = await window.axios.get('/api/openapi/products');
             products.value = Array.isArray(response.data) ? response.data : [];
@@ -60,9 +61,7 @@ export function useProducts() {
      * Format product price
      */
     const formatPrice = (product) => {
-        if (product?.price_range) return product.price_range;
-        if (product?.price) return `$${parseFloat(product.price).toFixed(2)}`;
-        return 'Contact for Price';
+        return formatProductPrice(product, 'Contact for Price');
     };
 
     /**
@@ -98,9 +97,9 @@ export function useProducts() {
             featured: i % 3 === 0,
             rating: (4 + Math.random()).toFixed(1),
             categories: [
-                { 
-                    id: i % 2 === 0 ? 'ups' : 'batteries', 
-                    name: i % 2 === 0 ? 'UPS Systems' : 'Batteries' 
+                {
+                    id: i % 2 === 0 ? 'ups' : 'batteries',
+                    name: i % 2 === 0 ? 'UPS Systems' : 'Batteries'
                 }
             ],
             specifications: {
