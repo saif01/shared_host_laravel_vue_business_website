@@ -9,14 +9,13 @@
                 <!-- Column 1: About -->
                 <v-col cols="12" md="4" class="mb-10 mb-md-0 pr-md-12">
                     <div class="d-flex align-center mb-6">
-                        <div class="logo-box-light mr-3 elevation-10" v-if="logo">
-                            <v-img :src="logo" alt="Logo" cover class="footer-logo-image rounded-logo"></v-img>
+                        <div class="logo-box-light mr-3 elevation-10">
+                            <v-img :src="logo || '/assets/logo/default.png'" alt="Logo" cover
+                                class="footer-logo-image rounded-logo"></v-img>
                         </div>
-                        <div class="logo-box-light mr-3 elevation-10" v-else>
-                            <v-icon icon="mdi-flash" color="amber-accent-4" size="24"></v-icon>
-                        </div>
+
                         <span class="text-h5 font-weight-black text-white tracking-tight">{{ siteName.toUpperCase()
-                        }}</span>
+                            }}</span>
                     </div>
                     <p class="text-body-2 text-grey-lighten-1 mb-8 lh-relaxed opacity-80">
                         {{ footerDescription }}
