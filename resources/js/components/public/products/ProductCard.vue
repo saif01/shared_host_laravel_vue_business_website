@@ -71,14 +71,17 @@
                 </div>
 
                 <div class="d-flex align-center justify-space-between mt-4">
-                    <div>
+                    <div v-if="hasPrice">
                         <span v-if="product.oldPrice"
                             class="text-caption text-medium-emphasis text-decoration-line-through mr-2">
-                            ${{ product.oldPrice }}
+                            Tk {{ formatNumber(product.oldPrice) }}
                         </span>
                         <span class="text-h6 font-weight-black text-primary">
                             {{ formattedPrice }}
                         </span>
+                    </div>
+                    <div v-else class="text-h6 font-weight-bold text-primary">
+                        {{ formattedPrice }}
                     </div>
                     <v-btn variant="text" color="primary" class="px-0 font-weight-bold text-capitalize"
                         :to="`/products/${product.slug}`">
@@ -177,9 +180,28 @@ const categoryName = computed(() => {
     return 'Uncategorized';
 });
 
+const formatNumber = (value) => {
+    if (!value || value === 0 || value === '0') return null;
+    const num = parseFloat(value);
+    if (isNaN(num) || num === 0) return null;
+    return num.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+};
+
+const hasPrice = computed(() => {
+    return !!(props.product.price || props.product.price_range);
+});
+
 const formattedPrice = computed(() => {
-    if (props.product.price_range) return props.product.price_range;
-    if (props.product.price) return `$${parseFloat(props.product.price).toFixed(2)}`;
+    if (props.product.price_range) {
+        // If price_range contains currency symbols, replace them with Tk
+        return props.product.price_range.replace(/\$/g, 'Tk ');
+    }
+    if (props.product.price) {
+        const formatted = formatNumber(props.product.price);
+        if (formatted) {
+            return `Tk ${formatted}`;
+        }
+    }
     return 'Contact for Price';
 });
 
