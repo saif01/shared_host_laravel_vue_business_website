@@ -26,7 +26,7 @@
                                 class="text-body-1 text-md-h6 text-lg-h5 font-weight-light mb-6 mb-md-8 opacity-90 mw-600 lh-relaxed">
                                 {{ heroSubtitle }}
                             </p>
-                            <div class="d-flex flex-column flex-sm-row gap-3 gap-md-4 flex-wrap">
+                            <div class="hero-actions d-flex flex-column flex-sm-row gap-3 gap-md-4 flex-wrap">
                                 <v-btn size="large" color="amber-accent-4" variant="flat" rounded="pill"
                                     class="px-6 px-md-8 text-black font-weight-bold elevation-4 hover-scale hero-btn"
                                     :to="{ name: 'Contact' }">
@@ -98,6 +98,8 @@ export default {
     display: flex;
     align-items: center;
     position: relative;
+    padding-top: 96px;
+    padding-bottom: 120px;
 }
 
 .animated-gradient-bg {
@@ -168,11 +170,17 @@ export default {
 
 .hero-content {
     width: 100%;
+    max-width: 680px;
 }
 
 .hero-btn {
     min-width: 140px;
     white-space: nowrap;
+}
+
+.hero-actions {
+    width: 100%;
+    max-width: 520px;
 }
 
 @keyframes floatShape {
@@ -270,8 +278,13 @@ export default {
 @media (max-width: 960px) {
     .hero-section {
         min-height: auto;
-        padding-top: 60px;
-        padding-bottom: 60px;
+        padding-top: 72px;
+        padding-bottom: 96px;
+    }
+
+    .hero-content {
+        margin: 0 auto;
+        text-align: center;
     }
 
     .hero-shapes .shape {
@@ -310,6 +323,14 @@ export default {
         width: 120px;
     }
 
+    .hero-actions {
+        justify-content: center;
+    }
+
+    .hero-btn {
+        min-width: 0;
+    }
+
     .mw-600 {
         max-width: 100% !important;
     }
@@ -318,13 +339,13 @@ export default {
 @media (max-width: 600px) {
     .hero-section {
         min-height: auto;
-        padding-top: 40px;
-        padding-bottom: 40px;
+        padding-top: 56px;
+        padding-bottom: 80px;
     }
 
     .hero-shapes .shape {
-        filter: blur(40px);
-        opacity: 0.3;
+        filter: blur(30px);
+        opacity: 0.22;
     }
 
     .shape-1 {
@@ -364,20 +385,28 @@ export default {
 
     .hero-content {
         padding: 0 8px;
+        text-align: center;
     }
 
     .glass-pill {
         padding: 6px 12px !important;
         font-size: 0.7rem !important;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .hero-btn {
         width: 100%;
         min-width: auto;
+        justify-content: center;
     }
 
     .text-shadow-sm {
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .hero-actions {
+        align-items: stretch;
     }
 }
 </style>

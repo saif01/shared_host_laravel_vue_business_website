@@ -78,7 +78,8 @@
                         <v-col cols="12" md="6">
                             <div class="position-relative pl-md-8">
                                 <div class="image-border-effect"></div>
-                                <v-img :src="aboutData.story.image ? resolveImageUrl(aboutData.story.image) : '/assets/img/default.jpg'"
+                                <v-img
+                                    :src="aboutData.story.image ? resolveImageUrl(aboutData.story.image) : '/assets/img/default.jpg'"
                                     class="rounded-xl elevation-10 position-relative z-index-2" cover
                                     height="500"></v-img>
                             </div>
@@ -217,7 +218,7 @@ export default {
             this.updateMetaTag('property', 'og:description', description);
             this.updateMetaTag('property', 'og:type', 'website');
             this.updateMetaTag('property', 'og:url', `${baseUrl}${this.$route.fullPath}`);
-            
+
             if (this.aboutData?.og_image) {
                 this.updateMetaTag('property', 'og:image', this.resolveImageUrl(this.aboutData.og_image));
             }
@@ -226,7 +227,7 @@ export default {
             this.updateMetaTag('name', 'twitter:card', 'summary_large_image');
             this.updateMetaTag('name', 'twitter:title', title);
             this.updateMetaTag('name', 'twitter:description', description);
-            
+
             if (this.aboutData?.og_image) {
                 this.updateMetaTag('name', 'twitter:image', this.resolveImageUrl(this.aboutData.og_image));
             }
@@ -271,6 +272,36 @@ export default {
 
 /* Responsive Styles */
 @media (max-width: 960px) {
+    .page-hero {
+        min-height: 400px !important;
+        padding: 48px 16px !important;
+    }
+
+    .page-hero h1 {
+        font-size: 2rem !important;
+        line-height: 1.2 !important;
+        margin-bottom: 16px !important;
+    }
+
+    .page-hero p {
+        font-size: 1.1rem !important;
+        line-height: 1.5 !important;
+    }
+
+    .glass-pill {
+        padding: 10px 20px !important;
+        margin-bottom: 24px !important;
+    }
+
+    .glass-pill span {
+        font-size: 0.75rem !important;
+    }
+
+    .gradient-orb {
+        width: 200px !important;
+        height: 200px !important;
+    }
+
     .image-border-effect {
         display: none;
     }
@@ -295,6 +326,56 @@ export default {
 }
 
 @media (max-width: 600px) {
+    .page-hero {
+        min-height: 350px !important;
+        padding: 32px 12px !important;
+    }
+
+    .page-hero h1 {
+        font-size: 1.75rem !important;
+        line-height: 1.3 !important;
+        margin-bottom: 12px !important;
+    }
+
+    .page-hero p {
+        font-size: 1rem !important;
+        line-height: 1.4 !important;
+        padding: 0 8px !important;
+    }
+
+    .glass-pill {
+        padding: 8px 16px !important;
+        margin-bottom: 20px !important;
+    }
+
+    .glass-pill .v-icon {
+        font-size: 16px !important;
+    }
+
+    .glass-pill span {
+        font-size: 0.7rem !important;
+    }
+
+    .gradient-orb {
+        width: 150px !important;
+        height: 150px !important;
+    }
+
+    .orb-1 {
+        top: -75px !important;
+        left: -75px !important;
+    }
+
+    .orb-2 {
+        bottom: -75px !important;
+        right: -75px !important;
+    }
+
+    .orb-3 {
+        top: 50% !important;
+        right: -75px !important;
+    }
+
     .value-card {
         padding: 24px !important;
         margin-bottom: 16px;
