@@ -144,7 +144,7 @@
                                             class="text-caption text-grey">-</span>
                                     </div>
                                 </td>
-                                <td>{{ product.price ? '$' + product.price : (product.price_range || '-') }}</td>
+                                <td>{{ formatProductPrice(product) }}</td>
                                 <td>
                                     <v-chip :color="product.published ? 'success' : 'error'" size="small">
                                         {{ product.published ? 'Published' : 'Draft' }}
@@ -224,6 +224,7 @@
 <script>
 import adminPaginationMixin from '../../../mixins/adminPaginationMixin';
 import { normalizeUploadPath, resolveUploadUrl } from '../../../utils/uploads';
+import { formatProductPrice } from '../../../utils/formatters';
 import ProductDetailsDialog from './ProductDetailsDialog.vue';
 import ProductFormDialog from './ProductFormDialog.vue';
 
@@ -1315,6 +1316,9 @@ export default {
         },
         resolveImageUrl(imageValue) {
             return resolveUploadUrl(imageValue);
+        },
+        formatProductPrice(product) {
+            return formatProductPrice(product, '-');
         },
         applyProductDataToForm(data) {
             const normalizedThumbnail = this.normalizeImageInput(data.thumbnail || '');

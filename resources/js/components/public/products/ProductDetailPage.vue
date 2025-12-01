@@ -128,7 +128,7 @@
                                 <span class="text-h3 font-weight-black text-primary">{{ formatPrice(product) }}</span>
                                 <span v-if="product.oldPrice"
                                     class="text-h6 text-medium-emphasis text-decoration-line-through ml-3 mb-1">
-                                    ${{ product.oldPrice }}
+                                    Tk {{ formatNumber(product.oldPrice) }}
                                 </span>
                             </div>
                             <div class="d-flex align-center gap-4 flex-wrap mt-4">
@@ -515,6 +515,7 @@
 <script>
 import ShareDialog from './ShareDialog.vue';
 import { resolveUploadUrl } from '../../../utils/uploads';
+import { formatNumber as formatNumberUtil, formatProductPrice } from '../../../utils/formatters';
 
 export default {
     name: 'ProductDetailPage',
@@ -785,10 +786,11 @@ export default {
                 this.relatedProducts = [];
             }
         },
+        formatNumber(value) {
+            return formatNumberUtil(value);
+        },
         formatPrice(product) {
-            if (product.price_range) return product.price_range;
-            if (product.price) return `$${parseFloat(product.price).toFixed(2)}`;
-            return 'Contact for Price';
+            return formatProductPrice(product, 'Contact for Price');
         },
         formatSpecLabel(key) {
             return key

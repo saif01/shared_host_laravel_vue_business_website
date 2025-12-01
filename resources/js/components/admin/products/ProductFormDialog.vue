@@ -31,7 +31,7 @@
                             Media
                         </v-tab>
                         <v-tab value="pricing">
-                            <v-icon icon="mdi-currency-usd" class="mr-2"></v-icon>
+                            <v-icon icon="mdi-cash" class="mr-2"></v-icon>
                             Pricing
                         </v-tab>
                         <v-tab value="categories">
@@ -225,14 +225,14 @@
                         <v-window-item value="pricing">
                             <v-row>
                                 <v-col cols="12" md="6">
-                                    <v-text-field v-model.number="localForm.price" label="Price" variant="outlined"
-                                        type="number" step="0.01" prepend-inner-icon="mdi-currency-usd"
-                                        hint="Numeric price value"
+                                    <v-text-field v-model.number="localForm.price" label="Price (Tk)" variant="outlined"
+                                        type="number" step="0.01" prepend-inner-icon="mdi-cash"
+                                        hint="Numeric price value in Bangladeshi Taka"
                                         @update:model-value="$emit('update:form', localForm)"></v-text-field>
                                 </v-col>
                                 <v-col cols="12" md="6">
                                     <v-text-field v-model="localForm.price_range" label="Price Range" variant="outlined"
-                                        hint="e.g., '$50 - $100' or 'Contact for Price'"
+                                        hint="e.g., 'Tk 50 - Tk 100' or 'Contact for Price'"
                                         @update:model-value="$emit('update:form', localForm)"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">

@@ -157,6 +157,7 @@
 
 <script setup>
 import { computed } from 'vue';
+import { formatNumber, formatProductPrice } from '../../../utils/formatters';
 
 const props = defineProps({
     modelValue: {
@@ -190,9 +191,7 @@ const getCategoryName = (product) => {
 };
 
 const formatPrice = (product) => {
-    if (product.price_range) return product.price_range;
-    if (product.price) return `$${parseFloat(product.price).toFixed(2)}`;
-    return 'Contact for Price';
+    return formatProductPrice(product, 'Contact for Price');
 };
 
 const getSpecValue = (product, key) => {

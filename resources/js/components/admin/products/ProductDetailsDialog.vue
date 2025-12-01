@@ -1,13 +1,13 @@
 <template>
-    <v-dialog :model-value="modelValue" @update:model-value="$emit('update:modelValue', $event)" max-width="1400" scrollable>
+    <v-dialog :model-value="modelValue" @update:model-value="$emit('update:modelValue', $event)" max-width="1400"
+        scrollable>
         <v-card>
             <v-card-title class="d-flex align-center justify-space-between bg-info text-white pa-4">
                 <div class="d-flex align-center">
                     <v-icon icon="mdi-eye" class="mr-3"></v-icon>
                     <span class="text-h5 font-weight-bold">Product Details</span>
                 </div>
-                <v-btn icon="mdi-close" variant="text" color="white" @click="close"
-                    :disabled="loading"></v-btn>
+                <v-btn icon="mdi-close" variant="text" color="white" @click="close" :disabled="loading"></v-btn>
             </v-card-title>
 
             <v-card-text class="pa-0">
@@ -31,7 +31,7 @@
                             Media
                         </v-tab>
                         <v-tab value="pricing">
-                            <v-icon icon="mdi-currency-usd" class="mr-2"></v-icon>
+                            <v-icon icon="mdi-cash" class="mr-2"></v-icon>
                             Pricing
                         </v-tab>
                         <v-tab value="categories">
@@ -105,8 +105,8 @@
                                 <v-col cols="12">
                                     <div class="text-subtitle-1 text-medium-emphasis mb-2">Thumbnail</div>
                                     <div v-if="productDetails.thumbnail" class="mb-4">
-                                        <v-img :src="resolveImageUrl(productDetails.thumbnail)" max-height="300"
-                                            contain class="rounded elevation-2"></v-img>
+                                        <v-img :src="resolveImageUrl(productDetails.thumbnail)" max-height="300" contain
+                                            class="rounded elevation-2"></v-img>
                                         <div class="text-caption text-medium-emphasis mt-2">{{
                                             productDetails.thumbnail }}</div>
                                     </div>
@@ -136,12 +136,13 @@
                                 <v-col cols="12" md="6">
                                     <div class="text-subtitle-1 text-medium-emphasis mb-2">Price</div>
                                     <div class="text-h6 font-weight-bold mb-4">
-                                        {{ productDetails.price ? '$' + productDetails.price : '-' }}
+                                        {{ formatPrice(productDetails.price) }}
                                     </div>
                                 </v-col>
                                 <v-col cols="12" md="6">
                                     <div class="text-subtitle-1 text-medium-emphasis mb-2">Price Range</div>
-                                    <div class="text-body-1 mb-4">{{ productDetails.price_range || '-' }}</div>
+                                    <div class="text-body-1 mb-4">{{ formatPriceRange(productDetails.price_range) }}
+                                    </div>
                                 </v-col>
                                 <v-col cols="12">
                                     <div class="text-subtitle-1 text-medium-emphasis mb-2">Show Price on Website
@@ -160,8 +161,8 @@
                                     <div class="text-subtitle-1 text-medium-emphasis mb-2">Categories</div>
                                     <div v-if="productDetails.categories && productDetails.categories.length > 0"
                                         class="d-flex flex-wrap gap-2 mb-4">
-                                        <v-chip v-for="cat in productDetails.categories" :key="cat.id"
-                                            color="primary" variant="tonal">
+                                        <v-chip v-for="cat in productDetails.categories" :key="cat.id" color="primary"
+                                            variant="tonal">
                                             {{ cat.name }}
                                         </v-chip>
                                     </div>
@@ -216,8 +217,7 @@
                                 </v-list>
                             </div>
                             <div v-else class="text-center py-8">
-                                <v-icon icon="mdi-star-outline" size="48" color="grey-lighten-1"
-                                    class="mb-4"></v-icon>
+                                <v-icon icon="mdi-star-outline" size="48" color="grey-lighten-1" class="mb-4"></v-icon>
                                 <p class="text-body-1 text-medium-emphasis">No features available</p>
                             </div>
                         </v-window-item>
@@ -238,8 +238,7 @@
                                 </v-list>
                             </div>
                             <div v-else class="text-center py-8">
-                                <v-icon icon="mdi-download-off" size="48" color="grey-lighten-1"
-                                    class="mb-4"></v-icon>
+                                <v-icon icon="mdi-download-off" size="48" color="grey-lighten-1" class="mb-4"></v-icon>
                                 <p class="text-body-1 text-medium-emphasis">No downloads available</p>
                             </div>
                         </v-window-item>
@@ -276,11 +275,10 @@
                                 </v-col>
                                 <v-col cols="12">
                                     <div class="text-subtitle-1 text-medium-emphasis mb-2">What's Covered</div>
-                                    <div
-                                        v-if="warrantyInfo.coverage && warrantyInfo.coverage.length > 0">
+                                    <div v-if="warrantyInfo.coverage && warrantyInfo.coverage.length > 0">
                                         <v-list>
-                                            <v-list-item v-for="(item, index) in warrantyInfo.coverage"
-                                                :key="index" prepend-icon="mdi-check" color="success">
+                                            <v-list-item v-for="(item, index) in warrantyInfo.coverage" :key="index"
+                                                prepend-icon="mdi-check" color="success">
                                                 <v-list-item-title>{{ item }}</v-list-item-title>
                                             </v-list-item>
                                         </v-list>
@@ -313,8 +311,8 @@
                                 <v-col cols="12">
                                     <div class="text-subtitle-1 text-medium-emphasis mb-2">Open Graph Image</div>
                                     <div v-if="productDetails.og_image" class="mb-2">
-                                        <v-img :src="resolveImageUrl(productDetails.og_image)" max-height="200"
-                                            contain class="rounded"></v-img>
+                                        <v-img :src="resolveImageUrl(productDetails.og_image)" max-height="200" contain
+                                            class="rounded"></v-img>
                                     </div>
                                     <div class="text-body-1">{{ productDetails.og_image || '-' }}</div>
                                 </v-col>
@@ -381,6 +379,7 @@
 
 <script>
 import { resolveUploadUrl } from '../../../utils/uploads';
+import { formatNumber as formatNumberUtil, formatPrice as formatPriceUtil, formatPriceRange as formatPriceRangeUtil } from '../../../utils/formatters';
 
 export default {
     name: 'ProductDetailsDialog',
@@ -437,6 +436,15 @@ export default {
         },
         resolveImageUrl(imageValue) {
             return resolveUploadUrl(imageValue);
+        },
+        formatNumber(value) {
+            return formatNumberUtil(value);
+        },
+        formatPrice(price) {
+            return formatPriceUtil(price, '-');
+        },
+        formatPriceRange(priceRange) {
+            return formatPriceRangeUtil(priceRange, '-');
         }
     },
     watch: {
@@ -448,4 +456,3 @@ export default {
     }
 };
 </script>
-
