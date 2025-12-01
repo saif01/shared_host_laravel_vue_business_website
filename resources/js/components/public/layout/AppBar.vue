@@ -1,19 +1,19 @@
 <template>
-    <v-app-bar app class="main-app-bar px-md-12 transition-all" :class="{ 'scrolled-app-bar': isScrolled }" height="80"
+    <v-app-bar app class="main-app-bar px-md-12 transition-all" :class="{ 'scrolled-app-bar': isScrolled }" height="64"
         elevation="0">
         <div class="d-flex align-center w-100 position-relative z-index-2">
             <!-- Logo Area -->
             <router-link to="/" class="text-decoration-none d-flex align-center mr-8 logo-group">
-                <div class="logo-box mr-3 elevation-4">
+                <div class="logo-box mr-3 elevation-3">
                     <v-img :src="logo || '/assets/logo/default.png'" alt="Logo" cover
                         class="logo-image rounded-logo"></v-img>
                 </div>
 
-                <div class="d-flex flex-column">
-                    <span class="text-h6 font-weight-black text-grey-darken-4 lh-1 tracking-tight logo-text">{{
+                <div class="d-flex flex-column logo-text-container">
+                    <span class="text-subtitle-1 font-weight-black text-grey-darken-4 lh-1 tracking-tight logo-text">{{
                         siteName.toUpperCase() }}</span>
-                    <span class="text-caption font-weight-bold text-primary tracking-widest">{{ siteTagline
-                        }}</span>
+                    <span class="text-caption font-weight-bold text-primary tracking-widest tagline-text">{{ siteTagline
+                    }}</span>
                 </div>
             </router-link>
 
@@ -31,8 +31,9 @@
 
             <!-- CTA Button -->
             <div class="d-none d-md-flex">
-                <v-btn color="primary" variant="flat" rounded="pill"
-                    class="font-weight-bold px-6 text-capitalize elevation-3 hover-glow" :to="{ name: 'Contact' }">
+                <v-btn color="primary" variant="flat" rounded="pill" size="default"
+                    class="font-weight-bold px-6 text-capitalize elevation-3 hover-glow cta-btn"
+                    :to="{ name: 'Contact' }">
                     Get a Quote
                 </v-btn>
             </div>
@@ -149,7 +150,18 @@ export default {
     opacity: 1;
 }
 
-/* logo-box styles moved to app.css */
+/* Logo Area */
+.logo-group {
+    transition: transform 0.3s ease;
+}
+
+.logo-box {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
 
 .logo-icon {
     transition: transform 0.3s ease;
@@ -157,6 +169,24 @@ export default {
 
 .logo-group:hover .logo-icon {
     transform: scale(1.1);
+}
+
+.logo-group:hover .logo-box {
+    transform: scale(1.05);
+}
+
+.logo-text-container {
+    line-height: 1;
+}
+
+.logo-text {
+    font-size: 1rem;
+    line-height: 1.1;
+}
+
+.tagline-text {
+    font-size: 0.65rem;
+    margin-top: 2px;
 }
 
 .logo-image {
@@ -208,13 +238,18 @@ export default {
     width: 100%;
 }
 
+.cta-btn {
+    height: 40px !important;
+    font-size: 0.875rem !important;
+}
+
 .hover-glow {
     transition: all 0.3s ease;
 }
 
 .hover-glow:hover {
     box-shadow: 0 0 15px rgba(37, 99, 235, 0.4) !important;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
 }
 
 .mobile-menu-btn {
@@ -234,17 +269,22 @@ export default {
 /* Responsive Styles */
 @media (max-width: 960px) {
     .main-app-bar {
+        height: 60px !important;
         padding-left: 16px !important;
         padding-right: 16px !important;
+    }
+
+    .logo-box {
+        width: 36px;
+        height: 36px;
     }
 
     .logo-text {
         font-size: 0.875rem !important;
     }
 
-    .logo-box {
-        width: 36px;
-        height: 36px;
+    .tagline-text {
+        font-size: 0.6rem !important;
     }
 
     .logo-icon {
@@ -254,13 +294,9 @@ export default {
 
 @media (max-width: 600px) {
     .main-app-bar {
-        height: 64px !important;
+        height: 56px !important;
         padding-left: 12px !important;
         padding-right: 12px !important;
-    }
-
-    .logo-text {
-        font-size: 0.75rem !important;
     }
 
     .logo-box {
@@ -269,17 +305,47 @@ export default {
         margin-right: 8px !important;
     }
 
+    .logo-text {
+        font-size: 0.75rem !important;
+    }
+
+    .tagline-text {
+        font-size: 0.55rem !important;
+    }
+
     .logo-icon {
         font-size: 18px !important;
     }
 
     .mr-8 {
-        margin-right: 12px !important;
+        margin-right: 8px !important;
     }
 
     .mobile-menu-btn {
-        padding: 8px;
-        margin-left: 6px !important;
+        padding: 6px;
+        margin-left: 4px !important;
+    }
+}
+
+@media (max-width: 360px) {
+    .main-app-bar {
+        height: 52px !important;
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .logo-box {
+        width: 28px;
+        height: 28px;
+        margin-right: 6px !important;
+    }
+
+    .logo-text {
+        font-size: 0.7rem !important;
+    }
+
+    .tagline-text {
+        font-size: 0.5rem !important;
     }
 }
 </style>
