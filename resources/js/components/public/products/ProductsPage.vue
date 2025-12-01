@@ -35,7 +35,7 @@
         </section>
 
         <!-- Main Content -->
-        <section class="py-12 bg-grey-lighten-5 min-vh-100">
+        <section class="pb-12 bg-grey-lighten-5 min-vh-100">
             <v-container>
                 <!-- Filter Bar Component -->
                 <FilterBar :categories="categories" :active-category="activeCategory" :search-query="searchQuery"
