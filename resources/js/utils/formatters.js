@@ -114,13 +114,7 @@ export function formatNumber(value) {
 export function formatProductPrice(product, fallback = 'Contact for Price') {
     if (!product) return fallback;
 
-    // Check price_range first
-    if (product.price_range) {
-        // Replace $ with Tk if present
-        return product.price_range.replace(/\$/g, 'Tk ');
-    }
-
-    // Check price
+    // Prefer explicit price when available
     if (product.price !== null && product.price !== undefined && product.price !== '') {
         const formatted = formatNumber(product.price);
         if (formatted !== null) {
@@ -131,6 +125,12 @@ export function formatProductPrice(product, fallback = 'Contact for Price') {
         if (!isNaN(num)) {
             return `Tk ${num.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
         }
+    }
+
+    // Fallback to price_range text when price is missing
+    if (product.price_range) {
+        // Replace $ with Tk if present
+        return product.price_range.replace(/\$/g, 'Tk ');
     }
 
     return fallback;
