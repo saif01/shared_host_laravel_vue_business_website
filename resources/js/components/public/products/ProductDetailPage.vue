@@ -293,6 +293,13 @@
                                 <v-icon icon="mdi-shield-check-outline" class="mr-2"></v-icon>
                                 Warranty & Service
                             </v-tab>
+                            <v-tab value="reviews" class="font-weight-bold text-capitalize">
+                                <v-icon icon="mdi-star-outline" class="mr-2"></v-icon>
+                                Reviews
+                                <v-chip v-if="product.rating_count" size="small" color="primary" class="ml-2">
+                                    {{ product.rating_count }}
+                                </v-chip>
+                            </v-tab>
                         </v-tabs>
                         <v-divider></v-divider>
                         <v-card-text class="pa-8 bg-white">
@@ -505,6 +512,11 @@
                                         </v-card>
                                     </div>
                                 </v-window-item>
+
+                                <!-- Reviews Tab -->
+                                <v-window-item value="reviews">
+                                    <ProductReviewSection :product-id="product.id" />
+                                </v-window-item>
                             </v-window>
                         </v-card-text>
                     </v-card>
@@ -571,13 +583,15 @@
 
 <script>
 import ShareDialog from './ShareDialog.vue';
+import ProductReviewSection from './ProductReviewSection.vue';
 import { resolveUploadUrl } from '../../../utils/uploads';
 import { formatNumber as formatNumberUtil, formatProductPrice } from '../../../utils/formatters';
 
 export default {
     name: 'ProductDetailPage',
     components: {
-        ShareDialog
+        ShareDialog,
+        ProductReviewSection
     },
     data() {
         return {
