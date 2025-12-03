@@ -94,6 +94,11 @@
                                         hint="Stock Keeping Unit"
                                         @update:model-value="$emit('update:form', localForm)"></v-text-field>
                                 </v-col>
+                                <v-col cols="12" md="6">
+                                    <v-text-field v-model="localForm.brand" label="Brand" variant="outlined"
+                                        hint="Product manufacturer or brand name" prepend-inner-icon="mdi-tag"
+                                        @update:model-value="$emit('update:form', localForm)"></v-text-field>
+                                </v-col>
                                 <v-col cols="12">
                                     <v-textarea v-model="localForm.short_description" label="Short Description"
                                         variant="outlined" rows="2" hint="Brief description for listings"
@@ -228,13 +233,43 @@
                                     <v-text-field v-model.number="localForm.price" label="Price (Tk)" variant="outlined"
                                         type="number" step="0.01" prepend-inner-icon="mdi-cash"
                                         hint="Numeric price value in Bangladeshi Taka"
-                                        @update:model-value="$emit('update:form', localForm)"></v-text-field>
+                                        @update:model-value="updateDiscountedPrice"></v-text-field>
                                 </v-col>
                                 <v-col cols="12" md="6">
                                     <v-text-field v-model="localForm.price_range" label="Price Range" variant="outlined"
                                         hint="e.g., 'Tk 50 - Tk 100' or 'Contact for Price'"
                                         @update:model-value="$emit('update:form', localForm)"></v-text-field>
                                 </v-col>
+
+                                <v-col cols="12">
+                                    <v-divider class="my-2"></v-divider>
+                                    <div class="text-subtitle-1 font-weight-bold mb-3">Discount Settings</div>
+                                </v-col>
+
+                                <v-col cols="12" md="4">
+                                    <v-text-field v-model.number="localForm.discount_percent" label="Discount (%)"
+                                        variant="outlined" type="number" step="0.01" min="0" max="100"
+                                        prepend-inner-icon="mdi-sale" hint="Discount percentage (0-100)"
+                                        @update:model-value="updateDiscountedPrice"></v-text-field>
+                                </v-col>
+                                <v-col cols="12" md="4">
+                                    <v-text-field v-model.number="localForm.discounted_price"
+                                        label="Discounted Price (Tk)" variant="outlined" type="number" step="0.01"
+                                        min="0" prepend-inner-icon="mdi-cash-multiple" hint="Final price after discount"
+                                        :disabled="true"
+                                        :style="{ opacity: localForm.discount_percent > 0 ? 1 : 0.6 }"></v-text-field>
+                                </v-col>
+                                <v-col cols="12" md="4" class="d-flex align-center">
+                                    <v-chip v-if="localForm.discount_percent > 0" color="success" variant="flat"
+                                        class="mt-2">
+                                        <v-icon icon="mdi-tag" size="small" class="mr-1"></v-icon>
+                                        {{ localForm.discount_percent }}% OFF
+                                    </v-chip>
+                                    <v-chip v-else color="grey" variant="tonal" class="mt-2">
+                                        No Discount
+                                    </v-chip>
+                                </v-col>
+
                                 <v-col cols="12">
                                     <v-switch v-model="localForm.show_price" label="Show Price on Website"
                                         color="primary"
@@ -290,20 +325,69 @@
 
                         <!-- Features Tab -->
                         <v-window-item value="features">
-                            <div class="text-subtitle-1 font-weight-bold mb-4">Key Features</div>
-                            <div v-for="(feature, index) in featuresList" :key="index" class="mb-3">
-                                <v-text-field v-model="featuresList[index]" :label="`Feature ${index + 1}`"
-                                    variant="outlined"
-                                    @update:model-value="$emit('update:features-list', featuresList)">
-                                    <template v-slot:append>
-                                        <v-btn icon="mdi-delete" color="error" variant="text"
-                                            @click="$emit('remove-feature', index)"></v-btn>
-                                    </template>
-                                </v-text-field>
-                            </div>
-                            <v-btn color="primary" variant="outlined" prepend-icon="mdi-plus"
-                                @click="$emit('add-feature')">Add
-                                Feature</v-btn>
+                            <v-row>
+                                <v-col cols="12">
+                                    <v-alert type="info" variant="tonal" density="compact" class="mb-4">
+                                        <div class="text-body-2">
+                                            <strong>Filter Features:</strong> Select features for filtering products
+                                            (e.g., wireless,
+                                            waterproof).
+                                            <br>
+                                            <strong>Key Features:</strong> Detailed text features shown on product page.
+                                        </div>
+                                    </v-alert>
+                                </v-col>
+
+                                <v-col cols="12">
+                                    <div class="text-subtitle-1 font-weight-bold mb-3">
+                                        <v-icon icon="mdi-filter-variant" class="mr-2"></v-icon>
+                                        Filter Features
+                                    </div>
+                                    <v-select v-model="localForm.features" :items="filterFeatureOptions"
+                                        label="Select Filter Features" variant="outlined" multiple chips closable-chips
+                                        hint="Choose features for product filtering" persistent-hint
+                                        @update:model-value="$emit('update:form', localForm)">
+                                        <template v-slot:chip="{ item, props: chipProps }">
+                                            <v-chip v-bind="chipProps" size="small" color="primary" variant="flat">
+                                                <v-icon :icon="getFeatureIcon(item.value)" size="14"
+                                                    class="mr-1"></v-icon>
+                                                {{ item.title }}
+                                            </v-chip>
+                                        </template>
+                                        <template v-slot:item="{ item, props: itemProps }">
+                                            <v-list-item v-bind="itemProps">
+                                                <template v-slot:prepend>
+                                                    <v-icon :icon="getFeatureIcon(item.value)" color="primary"></v-icon>
+                                                </template>
+                                            </v-list-item>
+                                        </template>
+                                    </v-select>
+                                </v-col>
+
+                                <v-col cols="12">
+                                    <v-divider class="my-4"></v-divider>
+                                </v-col>
+
+                                <v-col cols="12">
+                                    <div class="text-subtitle-1 font-weight-bold mb-3">
+                                        <v-icon icon="mdi-star" class="mr-2"></v-icon>
+                                        Key Features (Detailed)
+                                    </div>
+                                    <div v-for="(feature, index) in featuresList" :key="index" class="mb-3">
+                                        <v-text-field v-model="featuresList[index]" :label="`Feature ${index + 1}`"
+                                            variant="outlined"
+                                            @update:model-value="$emit('update:features-list', featuresList)">
+                                            <template v-slot:append>
+                                                <v-btn icon="mdi-delete" color="error" variant="text"
+                                                    @click="$emit('remove-feature', index)"></v-btn>
+                                            </template>
+                                        </v-text-field>
+                                    </div>
+                                    <v-btn color="primary" variant="outlined" prepend-icon="mdi-plus"
+                                        @click="$emit('add-feature')">Add Key
+                                        Feature</v-btn>
+                                </v-col>
+                            </v-row>
                         </v-window-item>
 
                         <!-- Downloads Tab -->
@@ -519,14 +603,66 @@
                                     <v-switch v-model="localForm.featured" label="Featured Product" color="amber"
                                         @update:model-value="$emit('update:form', localForm)"></v-switch>
                                 </v-col>
+
+                                <v-col cols="12">
+                                    <v-divider class="my-2"></v-divider>
+                                    <div class="text-subtitle-1 font-weight-bold mb-3">Inventory & Availability</div>
+                                </v-col>
+
                                 <v-col cols="12" md="6">
                                     <v-text-field v-model.number="localForm.stock" label="Stock Quantity"
-                                        variant="outlined" type="number"
+                                        variant="outlined" type="number" min="0"
+                                        prepend-inner-icon="mdi-package-variant" hint="Available stock quantity"
                                         @update:model-value="$emit('update:form', localForm)"></v-text-field>
                                 </v-col>
                                 <v-col cols="12" md="6">
+                                    <v-select v-model="localForm.availability" :items="availabilityOptions"
+                                        label="Availability Status" variant="outlined"
+                                        prepend-inner-icon="mdi-check-circle" hint="Product availability status"
+                                        @update:model-value="$emit('update:form', localForm)">
+                                        <template v-slot:item="{ item, props: itemProps }">
+                                            <v-list-item v-bind="itemProps">
+                                                <template v-slot:prepend>
+                                                    <v-icon :icon="getAvailabilityIcon(item.value)"
+                                                        :color="getAvailabilityColor(item.value)"></v-icon>
+                                                </template>
+                                            </v-list-item>
+                                        </template>
+                                    </v-select>
+                                </v-col>
+
+                                <v-col cols="12">
+                                    <v-divider class="my-2"></v-divider>
+                                    <div class="text-subtitle-1 font-weight-bold mb-3">Product Rating</div>
+                                </v-col>
+
+                                <v-col cols="12" md="6">
+                                    <div class="mb-2">
+                                        <v-label class="text-body-2 mb-2">Rating (Stars)</v-label>
+                                        <v-rating v-model.number="localForm.rating" :length="5" :size="32"
+                                            active-color="amber" color="grey-lighten-1" half-increments
+                                            @update:model-value="$emit('update:form', localForm)"></v-rating>
+                                        <div class="text-caption text-medium-emphasis mt-1">
+                                            Current: {{ localForm.rating || 0 }} / 5 stars
+                                        </div>
+                                    </div>
+                                </v-col>
+                                <v-col cols="12" md="6">
+                                    <v-text-field v-model.number="localForm.rating_count" label="Number of Ratings"
+                                        variant="outlined" type="number" min="0" prepend-inner-icon="mdi-account-group"
+                                        hint="Total number of customer ratings"
+                                        @update:model-value="$emit('update:form', localForm)"></v-text-field>
+                                </v-col>
+
+                                <v-col cols="12">
+                                    <v-divider class="my-2"></v-divider>
+                                    <div class="text-subtitle-1 font-weight-bold mb-3">Display Settings</div>
+                                </v-col>
+
+                                <v-col cols="12" md="6">
                                     <v-text-field v-model.number="localForm.order" label="Display Order"
-                                        variant="outlined" type="number" hint="Lower numbers appear first"
+                                        variant="outlined" type="number" prepend-inner-icon="mdi-sort-numeric-ascending"
+                                        hint="Lower numbers appear first"
                                         @update:model-value="$emit('update:form', localForm)"></v-text-field>
                                 </v-col>
                             </v-row>
@@ -689,7 +825,21 @@ export default {
             localFormTab: this.formTab,
             localThumbnailFile: this.thumbnailFile,
             localGalleryFiles: this.galleryFiles,
-            localDownloadsList: []
+            localDownloadsList: [],
+            filterFeatureOptions: [
+                { value: 'wireless', title: 'Wireless' },
+                { value: 'waterproof', title: 'Waterproof' },
+                { value: 'bluetooth', title: 'Bluetooth' },
+                { value: 'rechargeable', title: 'Rechargeable' },
+                { value: 'warranty', title: 'Warranty' },
+                { value: 'eco_friendly', title: 'Eco-Friendly' }
+            ],
+            availabilityOptions: [
+                { value: 'in_stock', title: 'In Stock' },
+                { value: 'out_of_stock', title: 'Out of Stock' },
+                { value: 'pre_order', title: 'Pre-Order' },
+                { value: 'coming_soon', title: 'Coming Soon' }
+            ]
         };
     },
     watch: {
@@ -872,6 +1022,46 @@ export default {
             if (length < 120) return 'warning';
             if (length > 160) return 'error';
             return 'success';
+        },
+        updateDiscountedPrice() {
+            // Calculate discounted price automatically when price or discount changes
+            if (this.localForm.price && this.localForm.discount_percent > 0) {
+                const price = parseFloat(this.localForm.price) || 0;
+                const discount = parseFloat(this.localForm.discount_percent) || 0;
+                this.localForm.discounted_price = Math.round(price * (1 - discount / 100) * 100) / 100;
+            } else {
+                this.localForm.discounted_price = null;
+            }
+            this.$emit('update:form', this.localForm);
+        },
+        getFeatureIcon(feature) {
+            const iconMap = {
+                'wireless': 'mdi-wifi',
+                'waterproof': 'mdi-water',
+                'bluetooth': 'mdi-bluetooth',
+                'rechargeable': 'mdi-battery-charging',
+                'warranty': 'mdi-shield-check',
+                'eco_friendly': 'mdi-leaf'
+            };
+            return iconMap[feature] || 'mdi-check-circle';
+        },
+        getAvailabilityIcon(availability) {
+            const iconMap = {
+                'in_stock': 'mdi-check-circle',
+                'out_of_stock': 'mdi-close-circle',
+                'pre_order': 'mdi-clock-outline',
+                'coming_soon': 'mdi-new-box'
+            };
+            return iconMap[availability] || 'mdi-help-circle';
+        },
+        getAvailabilityColor(availability) {
+            const colorMap = {
+                'in_stock': 'success',
+                'out_of_stock': 'error',
+                'pre_order': 'warning',
+                'coming_soon': 'info'
+            };
+            return colorMap[availability] || 'grey';
         }
     }
 };
