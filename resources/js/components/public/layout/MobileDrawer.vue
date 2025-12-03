@@ -14,8 +14,18 @@
 
             <v-list nav class="bg-transparent">
                 <v-list-item v-for="item in menuItems" :key="item.id" :to="item.url" :active="isActiveRoute(item.url)"
-                    class="mb-2 rounded-lg" :class="{ 'bg-primary-lighten-5 text-primary': isActiveRoute(item.url) }"
-                    @click="handleNavigate">
+                    class="mb-2 rounded-xl premium-nav-item"
+                    :class="{ 'premium-nav-item-active': isActiveRoute(item.url) }" @click="handleNavigate">
+                    <!-- Active State Effects -->
+                    <template v-if="isActiveRoute(item.url)">
+                        <span class="active-indicator-bar">
+                            <span class="indicator-pulse"></span>
+                        </span>
+                        <div class="active-shimmer"></div>
+                        <span class="active-dot-top"></span>
+                        <span class="active-dot-bottom"></span>
+                    </template>
+
                     <v-list-item-title class="font-weight-bold">{{ item.label }}</v-list-item-title>
                 </v-list-item>
             </v-list>
@@ -120,6 +130,196 @@ export default {
 .rounded-logo {
     border-radius: 8px !important;
     overflow: hidden;
+}
+
+/* ============================================
+   PREMIUM NAV ITEM STYLES
+   ============================================ */
+
+.premium-nav-item {
+    position: relative;
+    overflow: visible !important;
+    transition: all 0.3s ease;
+}
+
+/* ============================================
+   ACTIVE MENU - OUTSTANDING DESIGN
+   ============================================ */
+
+.premium-nav-item-active {
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #60a5fa 100%) !important;
+    color: #ffffff !important;
+    box-shadow:
+        0 8px 20px rgba(37, 99, 235, 0.4),
+        0 4px 12px rgba(37, 99, 235, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+    position: relative;
+    animation: activeMenuGlow 3s ease-in-out infinite;
+}
+
+@keyframes activeMenuGlow {
+
+    0%,
+    100% {
+        box-shadow:
+            0 8px 20px rgba(37, 99, 235, 0.4),
+            0 4px 12px rgba(37, 99, 235, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    50% {
+        box-shadow:
+            0 12px 30px rgba(37, 99, 235, 0.6),
+            0 6px 16px rgba(37, 99, 235, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+}
+
+.premium-nav-item-active::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.3) 0%,
+            transparent 40%,
+            transparent 60%,
+            rgba(245, 158, 11, 0.2) 100%);
+    border-radius: inherit;
+    pointer-events: none;
+    animation: gradientWave 4s ease-in-out infinite;
+}
+
+@keyframes gradientWave {
+
+    0%,
+    100% {
+        background: linear-gradient(135deg,
+                rgba(255, 255, 255, 0.3) 0%,
+                transparent 40%,
+                transparent 60%,
+                rgba(245, 158, 11, 0.2) 100%);
+    }
+
+    50% {
+        background: linear-gradient(135deg,
+                rgba(245, 158, 11, 0.2) 0%,
+                transparent 40%,
+                transparent 60%,
+                rgba(255, 255, 255, 0.3) 100%);
+    }
+}
+
+.premium-nav-item-active .v-list-item-title {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+}
+
+/* Active Indicator Bar (Left Side) */
+.active-indicator-bar {
+    position: absolute;
+    left: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 60%;
+    background: linear-gradient(180deg, #f59e0b, #fbbf24);
+    border-radius: 4px;
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.6);
+    z-index: 10;
+}
+
+.indicator-pulse {
+    position: absolute;
+    inset: 0;
+    background: inherit;
+    border-radius: inherit;
+    animation: barPulse 2s ease-in-out infinite;
+}
+
+@keyframes barPulse {
+
+    0%,
+    100% {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scaleY(1.2);
+        opacity: 0.7;
+    }
+}
+
+/* Shimmer Effect */
+.active-shimmer {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.5),
+            transparent);
+    animation: shimmerSweep 3s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+@keyframes shimmerSweep {
+    0% {
+        left: -100%;
+    }
+
+    50%,
+    100% {
+        left: 200%;
+    }
+}
+
+/* Decorative Dots */
+.active-dot-top,
+.active-dot-bottom {
+    position: absolute;
+    right: 12px;
+    width: 6px;
+    height: 6px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.8), transparent);
+    border-radius: 50%;
+    animation: dotFloat 2s ease-in-out infinite;
+}
+
+.active-dot-top {
+    top: 12px;
+    animation-delay: 0s;
+}
+
+.active-dot-bottom {
+    bottom: 12px;
+    animation-delay: 1s;
+}
+
+@keyframes dotFloat {
+
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+        opacity: 0.4;
+    }
+
+    50% {
+        transform: translateY(-4px) scale(1.3);
+        opacity: 1;
+    }
+}
+
+/* Hover Effect on Active Item */
+.premium-nav-item-active:hover {
+    transform: translateX(4px) scale(1.02);
+    box-shadow:
+        0 12px 32px rgba(37, 99, 235, 0.6),
+        0 6px 18px rgba(37, 99, 235, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
 }
 
 /* Hide drawer on desktop */
