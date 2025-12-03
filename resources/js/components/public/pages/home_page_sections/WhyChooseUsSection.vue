@@ -1,46 +1,81 @@
 <template>
-    <section class="py-20 bg-surface position-relative overflow-hidden">
-        <!-- Decorative blobs -->
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
+    <section class="why-choose-section py-16 position-relative overflow-hidden">
+        <!-- Animated gradient background -->
+        <div class="gradient-bg"></div>
+        <div class="pattern-overlay"></div>
 
-        <v-container class="position-relative z-index-1">
-            <v-row align="center">
-                <v-col cols="12" md="6" class="pr-md-12">
-                    <div class="text-overline text-primary font-weight-bold mb-2 tracking-widest">{{ overline || 'WHY CHOOSE US' }}</div>
-                    <h2 class="text-h3 font-weight-bold mb-8 text-grey-darken-3">{{ title || 'Reliable Power, Guaranteed' }}</h2>
+        <v-container class="position-relative">
+            <!-- Header -->
+            <v-row justify="center" class="mb-12">
+                <v-col cols="12" lg="8" class="text-center">
+                    <div class="overline-badge d-inline-flex align-center px-4 py-2 rounded-pill mb-4">
+                        <v-icon icon="mdi-star-four-points" size="16" class="mr-2"></v-icon>
+                        <span class="text-caption font-weight-bold">{{ overline || 'WHY CHOOSE US' }}</span>
+                    </div>
+                    <h2 class="text-h3 text-md-h2 font-weight-bold mb-4 gradient-text">
+                        {{ title || 'Reliable Power, Guaranteed' }}
+                    </h2>
+                    <p class="text-h6 font-weight-regular text-medium-emphasis mx-auto" style="max-width: 600px;">
+                        Experience excellence in every aspect of our service
+                    </p>
+                </v-col>
+            </v-row>
 
-                    <div class="feature-list">
-                        <div v-for="(feature, i) in features" :key="i" class="feature-item d-flex align-start mb-8">
-                            <div class="feature-icon mr-6 rounded-circle bg-primary-lighten-5 pa-3 text-primary">
-                                <v-icon :icon="feature.icon" size="24"></v-icon>
-                            </div>
-                            <div>
-                                <h4 class="text-h6 font-weight-bold mb-2">{{ feature.title }}</h4>
-                                <p class="text-body-1 text-medium-emphasis">{{ feature.desc }}</p>
+            <!-- Content Grid -->
+            <v-row align="center" class="position-relative">
+                <!-- Features Side -->
+                <v-col cols="12" lg="6" order="2" order-lg="1">
+                    <div class="features-grid">
+                        <div v-for="(feature, i) in features" :key="i" class="feature-card"
+                            :style="{ '--delay': i * 0.1 + 's' }">
+                            <div class="feature-card-inner pa-6">
+                                <div class="feature-icon-wrapper mb-4">
+                                    <div class="icon-glow"></div>
+                                    <v-icon :icon="feature.icon" size="32" class="feature-icon"></v-icon>
+                                </div>
+                                <h4 class="text-h6 font-weight-bold mb-3">{{ feature.title }}</h4>
+                                <p class="text-body-2 text-medium-emphasis mb-0">{{ feature.desc }}</p>
+                                <div class="feature-accent"></div>
                             </div>
                         </div>
                     </div>
                 </v-col>
-                <v-col cols="12" md="6">
-                    <div class="image-composition position-relative">
-                        <div class="composition-bg rounded-xl bg-grey-lighten-3"></div>
-                        <v-img
-                            :src="imageUrl ? resolveImageUrl(imageUrl) : '/assets/img/default.jpg'"
-                            class="rounded-xl elevation-10 position-relative z-index-2 composition-img"
-                            :cover="true" height="100%" width="100%">
-                            <template v-slot:placeholder>
-                                <div class="d-flex align-center justify-center fill-height bg-grey-lighten-3">
-                                    <v-progress-circular indeterminate color="primary"></v-progress-circular>
+
+                <!-- Image Side -->
+                <v-col cols="12" lg="6" order="1" order-lg="2" class="mb-8 mb-lg-0">
+                    <div class="image-showcase">
+                        <div class="showcase-frame">
+                            <!-- Decorative elements -->
+                            <div class="frame-corner frame-corner-tl"></div>
+                            <div class="frame-corner frame-corner-tr"></div>
+                            <div class="frame-corner frame-corner-bl"></div>
+                            <div class="frame-corner frame-corner-br"></div>
+
+                            <v-img :src="imageUrl ? resolveImageUrl(imageUrl) : '/assets/img/default.jpg'"
+                                class="showcase-image rounded-lg" :cover="true" height="500">
+                                <template v-slot:placeholder>
+                                    <div class="d-flex align-center justify-center fill-height">
+                                        <v-progress-circular indeterminate color="primary"></v-progress-circular>
+                                    </div>
+                                </template>
+                            </v-img>
+
+                            <!-- Floating stats cards -->
+                            <div class="stat-card stat-card-1 glass-card">
+                                <div class="stat-icon mb-2">
+                                    <v-icon icon="mdi-check-decagram" color="success" size="28"></v-icon>
                                 </div>
-                            </template>
-                        </v-img>
-                        <div class="composition-card glass-card-dark pa-6 rounded-lg elevation-10">
-                            <div class="d-flex align-center mb-2">
-                                <v-icon icon="mdi-check-decagram" color="success" class="mr-2"></v-icon>
-                                <span class="text-h6 font-weight-bold text-white">100% Verified</span>
+                                <div class="text-h5 font-weight-bold text-white mb-1">100%</div>
+                                <div class="text-caption text-white-70">Quality Assured</div>
                             </div>
-                            <div class="text-caption text-white opacity-80">Quality Assurance</div>
+
+                            <div class="stat-card stat-card-2 glass-card">
+                                <div class="stat-icon mb-2">
+                                    <v-icon icon="mdi-shield-check" color="primary" size="28"></v-icon>
+                                </div>
+                                <div class="text-h5 font-weight-bold text-white mb-1">24/7</div>
+                                <div class="text-caption text-white-70">Support</div>
+                            </div>
                         </div>
                     </div>
                 </v-col>
@@ -97,123 +132,360 @@ export default {
 </script>
 
 <style scoped>
-.blob {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(60px);
-    opacity: 0.4;
-    z-index: 0;
+.why-choose-section {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    min-height: 600px;
 }
 
-.blob-1 {
-    width: 500px;
-    height: 500px;
-    background: #e0f2fe;
-    top: -100px;
-    right: -100px;
-}
-
-.blob-2 {
-    width: 400px;
-    height: 400px;
-    background: #fef3c7;
-    bottom: -50px;
-    left: -100px;
-}
-
-.image-composition {
-    width: 100%;
-    height: 520px;
-    position: relative;
-    display: flex;
-    align-items: stretch;
-}
-
-.composition-img {
-    width: 100%;
-    max-width: 100%;
-    height: 100%;
-    position: relative;
-    z-index: 2;
-    overflow: hidden;
-    border-radius: 24px;
-    box-shadow: 0 24px 64px rgba(15, 23, 42, 0.22);
-    background: radial-gradient(circle at 25% 15%, rgba(37, 99, 235, 0.14), transparent 40%),
-        radial-gradient(circle at 80% 0%, rgba(217, 119, 6, 0.18), transparent 38%),
-        #0f172a;
-}
-
-.composition-img::after {
-    content: '';
+/* Animated Background */
+.gradient-bg {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(15, 23, 42, 0.38) 0%, rgba(15, 23, 42, 0) 35%);
+    background:
+        radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.04) 0%, transparent 50%);
+    animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+
+    0%,
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.1) rotate(5deg);
+        opacity: 0.8;
+    }
+}
+
+.pattern-overlay {
+    position: absolute;
+    inset: 0;
+    background-image:
+        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0, 0, 0, 0.01) 10px, rgba(0, 0, 0, 0.01) 20px);
     pointer-events: none;
 }
 
-:deep(.composition-img .v-img__img) {
-    height: 100%;
-    object-fit: cover;
-    object-position: center 45%;
+/* Header Styles */
+.overline-badge {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1));
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    color: rgb(59, 130, 246);
+    transition: all 0.3s ease;
 }
 
-.composition-bg {
+.gradient-text {
+    background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Features Grid */
+.features-grid {
+    display: grid;
+    gap: 20px;
+}
+
+.feature-card {
+    animation: fadeInUp 0.6s ease forwards;
+    animation-delay: var(--delay);
+    opacity: 0;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.feature-card-inner {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+}
+
+.feature-card-inner:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(59, 130, 246, 0.12);
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+.feature-card-inner::before {
+    content: '';
     position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+}
+
+.feature-card-inner:hover::before {
+    transform: scaleX(1);
+}
+
+.feature-icon-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1));
+    transition: all 0.3s ease;
+}
+
+.feature-card-inner:hover .feature-icon-wrapper {
+    transform: scale(1.1) rotate(5deg);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(147, 51, 234, 0.15));
+}
+
+.icon-glow {
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.4), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.feature-card-inner:hover .icon-glow {
+    opacity: 1;
+}
+
+.feature-icon {
+    color: rgb(59, 130, 246);
+    position: relative;
+    z-index: 1;
+}
+
+.feature-accent {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.05), transparent 70%);
+    border-radius: 16px 0 16px 0;
+    pointer-events: none;
+}
+
+/* Image Showcase */
+.image-showcase {
+    position: relative;
+    padding: 20px;
+}
+
+.showcase-frame {
+    position: relative;
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.showcase-image {
+    border-radius: 16px !important;
+    box-shadow: 0 30px 60px rgba(15, 23, 42, 0.15);
+    overflow: hidden;
+    position: relative;
+}
+
+.showcase-image::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Frame Corners */
+.frame-corner {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border: 3px solid;
+    border-image: linear-gradient(135deg, #3b82f6, #8b5cf6) 1;
+    z-index: 2;
+}
+
+.frame-corner-tl {
+    top: 0;
+    left: 0;
+    border-right: none;
+    border-bottom: none;
+    border-radius: 8px 0 0 0;
+}
+
+.frame-corner-tr {
+    top: 0;
+    right: 0;
+    border-left: none;
+    border-bottom: none;
+    border-radius: 0 8px 0 0;
+}
+
+.frame-corner-bl {
+    bottom: 0;
+    left: 0;
+    border-right: none;
+    border-top: none;
+    border-radius: 0 0 0 8px;
+}
+
+.frame-corner-br {
+    bottom: 0;
+    right: 0;
+    border-left: none;
+    border-top: none;
+    border-radius: 0 0 8px 0;
+}
+
+/* Floating Stats Cards */
+.glass-card {
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    position: absolute;
+    z-index: 3;
+    animation: floatSlow 4s ease-in-out infinite;
+}
+
+@keyframes floatSlow {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+.stat-card-1 {
     top: 30px;
     right: -20px;
-    width: 100%;
-    height: calc(100% - 30px);
-    z-index: 1;
-    background: linear-gradient(135deg, #dbeafe 0%, #fff7ed 100%);
-    border-radius: 24px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+    animation-delay: 0s;
 }
 
-.glass-card-dark {
-    background: rgba(30, 41, 59, 0.8);
-    backdrop-filter: blur(12px);
-    position: absolute;
-    bottom: 40px;
-    left: -30px;
-    z-index: 3;
-    min-width: 200px;
+.stat-card-2 {
+    bottom: 30px;
+    left: -20px;
+    animation-delay: 2s;
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.text-white-70 {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Responsive Design */
+@media (max-width: 1280px) {
+    .features-grid {
+        gap: 16px;
+    }
 }
 
 @media (max-width: 960px) {
-    .image-composition {
-        height: 420px;
+    .image-showcase {
+        padding: 10px;
+        margin-bottom: 40px;
     }
 
-    .composition-img {
-        border-radius: 20px;
-        box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18);
+    .showcase-image {
+        height: 400px !important;
     }
 
-    .composition-bg {
-        display: none;
+    .stat-card-1 {
+        top: 20px;
+        right: 10px;
     }
 
-    .glass-card-dark {
-        left: 20px;
+    .stat-card-2 {
         bottom: 20px;
+        left: 10px;
+    }
+
+    .frame-corner {
+        width: 30px;
+        height: 30px;
+        border-width: 2px;
     }
 }
 
 @media (max-width: 600px) {
-    .image-composition {
-        height: 360px;
+    .why-choose-section {
+        padding-top: 48px !important;
+        padding-bottom: 48px !important;
     }
 
-    .composition-img {
-        box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16);
+    .showcase-image {
+        height: 320px !important;
     }
 
-    .glass-card-dark {
-        left: 10px;
-        bottom: 10px;
-        min-width: 160px;
-        padding: 16px !important;
+    .glass-card {
+        padding: 16px;
+    }
+
+    .stat-card-1,
+    .stat-card-2 {
+        position: static;
+        display: inline-block;
+        margin: 10px;
+    }
+
+    .feature-card-inner {
+        padding: 20px !important;
+    }
+
+    .feature-icon-wrapper {
+        width: 56px;
+        height: 56px;
+    }
+
+    .frame-corner {
+        display: none;
     }
 }
 </style>
-
