@@ -503,6 +503,58 @@ onUnmounted(() => {
     padding: 14px 14px 16px;
 }
 
+/* Mobile drawer specific styles */
+@media (max-width: 1279px) {
+    .filter-shell {
+        margin-bottom: 0 !important;
+    }
+
+    .filter-card {
+        border-radius: 12px;
+        box-shadow: none !important;
+        border: none !important;
+        padding: 8px !important;
+        background: transparent !important;
+    }
+
+    .filter-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding-bottom: 10px;
+    }
+
+    .top-actions {
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .filter-grid {
+        gap: 10px;
+        padding: 10px 0 4px;
+    }
+
+    .panel {
+        padding: 8px;
+    }
+
+    .category-block {
+        margin-top: 10px;
+        padding-top: 10px;
+    }
+
+    .advanced-filters-block {
+        margin-top: 10px;
+        padding-top: 10px;
+    }
+
+    .filter-item {
+        padding: 10px;
+    }
+}
+
 .filter-card.sticky-filter {
     /* Sticky behavior handled by parent container in sidebar layout */
     box-shadow: 0 18px 45px -20px rgba(0, 0, 0, 0.25) !important;

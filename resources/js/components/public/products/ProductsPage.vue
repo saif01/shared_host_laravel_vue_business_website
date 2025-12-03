@@ -37,9 +37,19 @@
         <!-- Main Content -->
         <section class="pb-12 bg-grey-lighten-5 min-vh-100">
             <v-container fluid>
+                <!-- Mobile Filter Toggle Button -->
+                <v-btn class="mobile-filter-toggle"
+                    :class="{ 'has-active-filters': hasActiveFilters, 'mobile-visible': true, 'dialog-closed': !mobileFiltersOpen }"
+                    color="primary" size="large" elevation="6" @click="mobileFiltersOpen = true">
+                    <v-icon icon="mdi-filter-variant" size="20" />
+                    <span class="filter-text ml-2">Filters</span>
+                    <v-badge v-if="hasActiveFilters" :content="activeFiltersCount" color="error" class="filter-badge"
+                        offset-x="-8" offset-y="-8" />
+                </v-btn>
+
                 <v-row class="products-layout">
-                    <!-- Left Sidebar - Filter Bar -->
-                    <v-col cols="12" lg="3" xl="2" class="filter-sidebar">
+                    <!-- Desktop Sidebar - Filter Bar -->
+                    <v-col lg="3" xl="2" class="filter-sidebar d-none d-lg-block">
                         <FilterBar :categories="categories" :active-category="activeCategory"
                             :search-query="searchQuery" :sort-by="sortBy" :sort-options="sortOptions"
                             :sort-by-label="sortByLabel" :has-active-filters="hasActiveFilters"
@@ -54,6 +64,62 @@
                             @update:features="setSelectedFeatures" @update:discount="setDiscount"
                             @clear-filters="clearAllFilters" @open-comparison="openComparison" />
                     </v-col>
+
+                    <!-- Mobile Dialog - Filter Bar -->
+                    <v-dialog v-model="mobileFiltersOpen" fullscreen transition="dialog-bottom-transition"
+                        class="mobile-filters-dialog d-lg-none" scrollable>
+                        <v-card class="mobile-filter-card">
+                            <v-toolbar color="primary" class="mobile-filter-toolbar">
+                                <v-btn icon="mdi-close" @click="mobileFiltersOpen = false" />
+                                <v-toolbar-title class="font-weight-bold">Filters</v-toolbar-title>
+                                <v-spacer />
+                                <v-chip v-if="hasActiveFilters" color="white" variant="flat" size="small"
+                                    class="filter-count-chip">
+                                    {{ activeFiltersCount }} active
+                                </v-chip>
+                            </v-toolbar>
+
+                            <v-card-text class="mobile-dialog-content pa-4">
+                                <div class="results-banner mb-4">
+                                    <v-icon icon="mdi-tag-multiple" color="primary" size="20" class="mr-2" />
+                                    <span class="text-body-1 font-weight-medium">
+                                        {{ advancedFilteredProducts.length }} products found
+                                    </span>
+                                </div>
+
+                                <FilterBar :categories="categories" :active-category="activeCategory"
+                                    :search-query="searchQuery" :sort-by="sortBy" :sort-options="sortOptions"
+                                    :sort-by-label="sortByLabel" :has-active-filters="hasActiveFilters"
+                                    :active-filters-count="activeFiltersCount"
+                                    :comparison-count="comparisonProducts.length"
+                                    :results-count="advancedFilteredProducts.length" :price-range="priceRange"
+                                    :availability="availability" :brands="availableBrands"
+                                    :selected-brands="selectedBrands" :min-rating="minRating"
+                                    :features="availableFeatures" :selected-features="selectedFeatures"
+                                    :discount="discount" @update:active-category="setActiveCategory"
+                                    @update:search-query="setSearchQuery" @update:sort-by="setSortBy"
+                                    @update:price-range="setPriceRange" @update:availability="setAvailability"
+                                    @update:brands="setSelectedBrands" @update:min-rating="setMinRating"
+                                    @update:features="setSelectedFeatures" @update:discount="setDiscount"
+                                    @clear-filters="clearAllFilters" @open-comparison="openComparison" />
+                            </v-card-text>
+
+                            <v-divider />
+
+                            <v-card-actions class="mobile-dialog-footer pa-4">
+                                <v-btn variant="outlined" color="grey-darken-1" size="large" class="flex-grow-1"
+                                    @click="clearAllFilters">
+                                    <v-icon icon="mdi-refresh" class="mr-2" />
+                                    Reset
+                                </v-btn>
+                                <v-btn color="primary" size="large" class="flex-grow-1"
+                                    @click="mobileFiltersOpen = false">
+                                    <v-icon icon="mdi-check" class="mr-2" />
+                                    Apply Filters
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
 
                     <!-- Right Content - Products -->
                     <v-col cols="12" lg="9" xl="10" class="products-content">
@@ -104,7 +170,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue';
+import { ref, onMounted, onUnmounted, computed, watch, nextTick } from 'vue';
 import { useProducts } from '../../../composables/useProducts';
 import { useCategories } from '../../../composables/useCategories';
 import { useProductFilters } from '../../../composables/useProductFilters';
@@ -149,6 +215,9 @@ const {
 // Pagination state
 const displayedCount = ref(PRODUCTS_PER_PAGE);
 const loadingMore = ref(false);
+
+// Mobile filters state
+const mobileFiltersOpen = ref(false);
 
 // Advanced filter states
 const priceRange = ref([0, 10000]);
@@ -311,18 +380,251 @@ watch([activeCategory, searchQuery, sortBy, priceRange, availability, selectedBr
     displayedCount.value = PRODUCTS_PER_PAGE;
 }, { deep: true });
 
+// Ensure mobile filter button stays visible after dialog closes
+watch(mobileFiltersOpen, (newVal) => {
+    if (!newVal) {
+        nextTick(() => {
+            // Force DOM update to ensure button visibility
+            const button = document.querySelector('.mobile-filter-toggle');
+            if (button && window.innerWidth < 1280) {
+                button.style.display = 'inline-flex';
+                button.style.visibility = 'visible';
+                button.style.opacity = '1';
+                button.style.pointerEvents = 'all';
+            }
+        });
+    }
+});
+
+// Handle window resize to ensure button visibility
+const handleResize = () => {
+    nextTick(() => {
+        const button = document.querySelector('.mobile-filter-toggle');
+        if (button) {
+            if (window.innerWidth < 1280) {
+                button.style.display = 'inline-flex';
+                button.style.visibility = 'visible';
+                button.style.opacity = '1';
+                button.style.pointerEvents = 'all';
+            }
+        }
+    });
+};
+
 // Lifecycle hooks
 onMounted(async () => {
     await Promise.all([
         fetchCategories(),
         fetchProducts()
     ]);
+
+    // Ensure mobile filter button is visible on mount for mobile devices
+    nextTick(() => {
+        if (window.innerWidth < 1280) {
+            const button = document.querySelector('.mobile-filter-toggle');
+            if (button) {
+                button.style.display = 'inline-flex';
+                button.style.visibility = 'visible';
+                button.style.opacity = '1';
+                button.style.pointerEvents = 'all';
+            }
+        }
+    });
+
+    // Add resize listener
+    window.addEventListener('resize', handleResize);
+});
+
+onUnmounted(() => {
+    window.removeEventListener('resize', handleResize);
 });
 </script>
 
 <style scoped>
 .products-page-modern {
     background: #f8fafc;
+}
+
+/* Mobile Filter Toggle Button */
+.mobile-filter-toggle {
+    position: fixed !important;
+    bottom: 24px;
+    right: 24px;
+    z-index: 1500;
+    border-radius: 28px !important;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
+    transition: all 0.3s ease;
+    animation: slideInFromRight 0.5s ease-out;
+    padding: 12px 24px !important;
+    min-height: 56px !important;
+    white-space: nowrap;
+}
+
+.mobile-filter-toggle.mobile-visible {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: all !important;
+}
+
+.mobile-filter-toggle .filter-text {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-left: 8px;
+}
+
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(120px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.mobile-filter-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2) !important;
+}
+
+.mobile-filter-toggle:active {
+    transform: translateY(0);
+}
+
+.mobile-filter-toggle.has-active-filters {
+    animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+
+    0%,
+    100% {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    50% {
+        box-shadow: 0 8px 32px rgba(var(--v-theme-primary), 0.4);
+    }
+}
+
+.mobile-filter-toggle .filter-badge :deep(.v-badge__badge) {
+    font-size: 0.7rem;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    animation: pulse 2s infinite;
+    font-weight: 700;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* Mobile Filters Dialog */
+.mobile-filters-dialog {
+    z-index: 2000;
+}
+
+.mobile-filters-dialog :deep(.v-overlay__scrim) {
+    backdrop-filter: blur(4px);
+    background: rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Ensure button stays visible when dialog is open */
+.mobile-filters-dialog:not([model-value="false"])~.mobile-filter-toggle {
+    z-index: 2500 !important;
+}
+
+.mobile-filter-card {
+    background: linear-gradient(180deg, #f9fafb 0%, #ffffff 100%) !important;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.mobile-filter-toolbar {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.mobile-filter-toolbar :deep(.v-toolbar__content) {
+    padding: 4px 8px;
+}
+
+.filter-count-chip {
+    color: rgb(var(--v-theme-primary)) !important;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.results-banner {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, rgba(var(--v-theme-primary), 0.08), rgba(var(--v-theme-primary), 0.04));
+    border-radius: 12px;
+    border: 1px solid rgba(var(--v-theme-primary), 0.2);
+}
+
+.mobile-dialog-content {
+    overflow-y: auto;
+    flex: 1 1 auto;
+    background: #f9fafb;
+    height: 0;
+}
+
+.mobile-dialog-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.mobile-dialog-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.mobile-dialog-content::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+}
+
+.mobile-dialog-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.25);
+}
+
+.mobile-dialog-footer {
+    background: white;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+    gap: 12px;
+    flex: 0 0 auto;
+}
+
+.mobile-dialog-footer .v-btn {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-radius: 12px;
+    min-height: 48px;
+}
+
+.mobile-dialog-footer .v-btn:first-child {
+    flex: 1;
+}
+
+.mobile-dialog-footer .v-btn:last-child {
+    flex: 2;
 }
 
 /* Products Layout */
@@ -363,21 +665,113 @@ onMounted(async () => {
 /* Hero section styles moved to app.css */
 
 /* Responsive Styles */
-@media (max-width: 1280px) {
-    .filter-sidebar {
-        position: relative;
-        top: 0;
-        max-height: none;
-        overflow-y: visible;
-        padding-right: 12px;
+/* Desktop - hide mobile elements */
+@media (min-width: 1280px) {
+
+    .mobile-filter-toggle,
+    .mobile-filter-toggle.mobile-visible {
+        display: none !important;
     }
 
     .products-content {
-        padding-left: 12px;
+        width: 100%;
     }
 }
 
+/* Mobile - ensure full width content */
+@media (max-width: 1279px) {
+    .products-content {
+        width: 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+        padding-left: 0 !important;
+    }
+
+    .filter-sidebar {
+        display: none !important;
+    }
+
+    /* Show mobile toggle button */
+    .mobile-filter-toggle {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: all !important;
+    }
+
+    .mobile-filter-toggle.mobile-visible {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: all !important;
+        transform: translateZ(0);
+    }
+
+    .mobile-filter-toggle.dialog-closed {
+        z-index: 1500 !important;
+    }
+
+    .mobile-filter-toggle.mobile-visible.dialog-closed {
+        z-index: 1500 !important;
+        pointer-events: all !important;
+    }
+
+    .mobile-filter-toggle .filter-text {
+        display: inline !important;
+        visibility: visible !important;
+    }
+
+    .mobile-filter-toggle .v-icon {
+        display: inline-flex !important;
+    }
+
+    .mobile-dialog-content :deep(.filter-shell) {
+        margin-bottom: 0;
+    }
+
+    .mobile-dialog-content :deep(.filter-card) {
+        border-radius: 12px;
+        box-shadow: none !important;
+        border: none;
+        background: white !important;
+    }
+}
+
+
+
 @media (max-width: 960px) {
+    .mobile-filter-toggle {
+        bottom: 20px !important;
+        right: 20px !important;
+        font-size: 0.9rem;
+        padding: 12px 20px !important;
+        display: inline-flex !important;
+    }
+
+    .products-layout {
+        margin: 0 !important;
+    }
+
+    .mobile-filter-toolbar :deep(.v-toolbar-title) {
+        font-size: 1.1rem;
+    }
+
+    .results-banner {
+        padding: 10px 14px;
+    }
+
+    .mobile-dialog-content {
+        padding: 12px !important;
+    }
+
+    .mobile-dialog-footer {
+        padding: 12px !important;
+    }
+
     .page-hero {
         min-height: 400px !important;
         padding: 48px 16px !important;
@@ -410,6 +804,46 @@ onMounted(async () => {
 }
 
 @media (max-width: 600px) {
+    .mobile-filter-toggle {
+        bottom: 16px !important;
+        right: 16px !important;
+        padding: 10px 20px !important;
+        min-height: 52px !important;
+        display: inline-flex !important;
+    }
+
+    .mobile-filter-toggle .filter-text {
+        font-size: 0.9rem;
+        display: inline !important;
+    }
+
+    .mobile-filter-toolbar :deep(.v-toolbar-title) {
+        font-size: 1rem;
+    }
+
+    .filter-count-chip {
+        font-size: 0.7rem !important;
+    }
+
+    .results-banner {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+
+    .mobile-dialog-content {
+        padding: 8px !important;
+    }
+
+    .mobile-dialog-footer {
+        padding: 8px !important;
+        gap: 8px;
+    }
+
+    .mobile-dialog-footer .v-btn {
+        min-height: 44px;
+        font-size: 0.9rem;
+    }
+
     .page-hero {
         min-height: 350px !important;
         padding: 32px 12px !important;
