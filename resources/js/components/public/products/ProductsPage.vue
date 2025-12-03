@@ -71,8 +71,7 @@
                         class="mobile-filters-dialog d-lg-none" scrollable persistent>
                         <v-card class="mobile-filter-card">
                             <v-toolbar color="primary" class="mobile-filter-toolbar" elevation="2">
-                                <v-btn icon="mdi-close" @click="mobileFiltersOpen = false"
-                                    aria-label="Close filters" />
+                                <v-btn icon="mdi-close" @click="mobileFiltersOpen = false" aria-label="Close filters" />
                                 <v-toolbar-title class="font-weight-bold">
                                     <v-icon icon="mdi-filter-variant" size="20" class="mr-2" />
                                     Filters

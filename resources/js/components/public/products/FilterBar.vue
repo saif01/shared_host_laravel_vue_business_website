@@ -235,7 +235,8 @@
                                 <v-icon icon="mdi-star" size="18" color="primary" class="mr-2" />
                                 <span class="filter-label mb-0">Minimum Rating</span>
                                 <v-spacer />
-                                <v-chip v-if="minRating > 0" size="x-small" color="primary" variant="tonal" class="mr-2">
+                                <v-chip v-if="minRating > 0" size="x-small" color="primary" variant="tonal"
+                                    class="mr-2">
                                     {{ minRating }}+ ⭐
                                 </v-chip>
                             </div>
@@ -259,8 +260,8 @@
                                 <v-icon icon="mdi-feature-search" size="18" color="primary" class="mr-2" />
                                 <span class="filter-label mb-0">Features</span>
                                 <v-spacer />
-                                <v-chip v-if="selectedFeatures.length > 0" size="x-small" color="primary" variant="tonal"
-                                    class="mr-2">
+                                <v-chip v-if="selectedFeatures.length > 0" size="x-small" color="primary"
+                                    variant="tonal" class="mr-2">
                                     {{ selectedFeatures.length }}
                                 </v-chip>
                             </div>
