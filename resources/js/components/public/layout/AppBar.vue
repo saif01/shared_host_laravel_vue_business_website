@@ -20,9 +20,16 @@
             <v-spacer></v-spacer>
 
             <!-- Desktop Navigation -->
-            <div class="d-none d-md-flex align-center gap-8">
+            <div class="d-none d-md-flex align-center gap-1">
                 <router-link v-for="item in menuItems" :key="item.id" :to="item.url"
-                    :class="['nav-link', 'text-body-2', 'font-weight-bold', 'text-grey-darken-3', { 'active-nav-link': isActiveRoute(item.url) }]">
+                    :class="['nav-link', { 'active-nav-link': isActiveRoute(item.url) }]">
+                    <template v-if="isActiveRoute(item.url)">
+                        <span class="nav-indicator-dot"></span>
+                        <span class="nav-link-shimmer"></span>
+                        <span class="nav-particle"></span>
+                        <span class="nav-particle"></span>
+                        <span class="nav-glow-line"></span>
+                    </template>
                     {{ item.label }}
                 </router-link>
             </div>
@@ -205,37 +212,277 @@ export default {
     transform: scale(1.05);
 }
 
-/* Utility classes moved to app.css */
+/* ============================================
+   NAVIGATION LINKS - PREMIUM ACTIVE STATE
+   ============================================ */
 
 .nav-link {
     text-decoration: none;
     position: relative;
-    padding: 8px 0;
-    transition: color 0.2s ease;
+    padding: 10px 18px;
+    margin: 0 2px;
+    border-radius: 50px;
+    overflow: visible;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    color: #64748b;
 }
 
-.nav-link:hover,
-.active-nav-link {
-    color: #2563eb !important;
-    /* Primary Blue */
+.nav-link:hover {
+    color: #475569 !important;
+    transform: translateY(-2px);
 }
 
-.nav-link::after {
+/* Simple underline for hover on non-active links */
+.nav-link:not(.active-nav-link)::after {
     content: '';
     position: absolute;
-    bottom: 0;
+    bottom: 6px;
     left: 50%;
     width: 0;
     height: 2px;
-    background: linear-gradient(90deg, #2563eb, #f59e0b);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(90deg, #2563eb, #60a5fa);
+    transition: all 0.3s ease;
     transform: translateX(-50%);
     border-radius: 2px;
+    opacity: 0;
 }
 
-.nav-link:hover::after,
+.nav-link:not(.active-nav-link):hover::after {
+    width: 60%;
+    opacity: 0.5;
+}
+
+/* ============================================
+   ACTIVE MENU - OUTSTANDING DESIGN
+   ============================================ */
+
+.active-nav-link {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    position: relative;
+    z-index: 10;
+    padding: 11px 20px;
+}
+
+/* Multi-layer Background System for Active State */
+.active-nav-link::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #60a5fa 100%);
+    border-radius: 50px;
+    z-index: -1;
+    box-shadow:
+        0 4px 15px rgba(37, 99, 235, 0.4),
+        0 2px 8px rgba(37, 99, 235, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    animation: activeGlow 3s ease-in-out infinite;
+}
+
+@keyframes activeGlow {
+
+    0%,
+    100% {
+        box-shadow:
+            0 4px 15px rgba(37, 99, 235, 0.4),
+            0 2px 8px rgba(37, 99, 235, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    50% {
+        box-shadow:
+            0 6px 25px rgba(37, 99, 235, 0.6),
+            0 3px 12px rgba(37, 99, 235, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+}
+
+/* Animated Gradient Overlay */
 .active-nav-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.3) 0%,
+            transparent 40%,
+            transparent 60%,
+            rgba(245, 158, 11, 0.2) 100%);
+    border-radius: 50px;
+    z-index: -1;
+    animation: gradientShift 4s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+
+    0%,
+    100% {
+        background: linear-gradient(135deg,
+                rgba(255, 255, 255, 0.3) 0%,
+                transparent 40%,
+                transparent 60%,
+                rgba(245, 158, 11, 0.2) 100%);
+    }
+
+    50% {
+        background: linear-gradient(135deg,
+                rgba(245, 158, 11, 0.2) 0%,
+                transparent 40%,
+                transparent 60%,
+                rgba(255, 255, 255, 0.3) 100%);
+    }
+}
+
+/* Shimmer Effect on Active Link */
+.active-nav-link .nav-link-shimmer {
+    position: absolute;
+    top: 0;
+    left: -100%;
     width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.6),
+            transparent);
+    animation: shimmerMove 3s ease-in-out infinite;
+    z-index: 1;
+    pointer-events: none;
+}
+
+@keyframes shimmerMove {
+    0% {
+        left: -100%;
+    }
+
+    50%,
+    100% {
+        left: 200%;
+    }
+}
+
+/* Pulsing Indicator Dot */
+.active-nav-link .nav-indicator-dot {
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    border-radius: 50%;
+    box-shadow:
+        0 0 10px rgba(245, 158, 11, 0.8),
+        0 0 20px rgba(245, 158, 11, 0.4);
+    animation: indicatorPulse 2s ease-in-out infinite;
+    z-index: 2;
+}
+
+@keyframes indicatorPulse {
+
+    0%,
+    100% {
+        transform: translateX(-50%) scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: translateX(-50%) scale(1.5);
+        opacity: 0.7;
+    }
+}
+
+/* Bottom Glow Line */
+.active-nav-link .nav-glow-line {
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 3px;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(37, 99, 235, 0.8),
+            rgba(245, 158, 11, 0.8),
+            transparent);
+    border-radius: 3px;
+    filter: blur(2px);
+    animation: glowLineExpand 2s ease-in-out infinite;
+}
+
+@keyframes glowLineExpand {
+
+    0%,
+    100% {
+        width: 60%;
+        opacity: 0.8;
+    }
+
+    50% {
+        width: 80%;
+        opacity: 1;
+    }
+}
+
+/* Particle Effects around Active Link */
+.active-nav-link .nav-particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.8), transparent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.active-nav-link .nav-particle:nth-child(1) {
+    top: 20%;
+    left: 10%;
+    animation: floatParticle1 3s ease-in-out infinite;
+}
+
+.active-nav-link .nav-particle:nth-child(2) {
+    top: 60%;
+    right: 15%;
+    animation: floatParticle2 3.5s ease-in-out infinite;
+}
+
+@keyframes floatParticle1 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0;
+    }
+
+    50% {
+        transform: translate(-3px, -5px) scale(1.2);
+        opacity: 1;
+    }
+}
+
+@keyframes floatParticle2 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0;
+    }
+
+    50% {
+        transform: translate(3px, -5px) scale(1.2);
+        opacity: 1;
+    }
+}
+
+/* Hover effect on active link */
+.active-nav-link:hover {
+    transform: translateY(-3px) scale(1.05);
+}
+
+.active-nav-link:hover::before {
+    box-shadow:
+        0 8px 30px rgba(37, 99, 235, 0.6),
+        0 4px 15px rgba(37, 99, 235, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .cta-btn {
@@ -290,6 +537,7 @@ export default {
     .logo-icon {
         font-size: 20px !important;
     }
+
 }
 
 @media (max-width: 600px) {
