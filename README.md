@@ -252,9 +252,9 @@ npm run build
 
 #### Products Management
 - **Comprehensive Product Management**: 11-tab form system:
-  1. **Basic Info**: Title, slug, SKU, short description, full description
+  1. **Basic Info**: Title, slug, SKU, brand, short description, full description
   2. **Media**: Thumbnail and gallery images with preview and upload
-  3. **Pricing**: Price, price range, show/hide price toggle
+  3. **Pricing**: Price, discount percentage, discounted price, price range, show/hide price toggle
   4. **Categories & Tags**: Multi-select with auto-creation support
   5. **Specifications**: Dynamic key-value pairs for technical specs
   6. **Features**: Key features list with descriptions
@@ -262,7 +262,7 @@ npm run build
   8. **FAQs**: Question-answer pairs for customer support
   9. **Warranty & Service**: Warranty information and service details
   10. **SEO**: Meta title, description, keywords, OG image
-  11. **Settings**: Published status, featured flag, stock management, display order
+  11. **Settings**: Published status, featured flag, stock management, availability status, display order
 - **Product Details View**: Complete read-only view of all product information
 - **Image Management**: 
   - Thumbnail upload with preview
@@ -274,6 +274,19 @@ npm run build
   - File type detection
   - File size display
   - Preview before upload
+- **Product Review Management**:
+  - Comprehensive review moderation system
+  - Review listing with filtering by status (pending, approved, rejected)
+  - Search by product name, reviewer name, email, or comment
+  - Sorting by date, rating, helpful count
+  - Quick actions: Approve, Reject, Edit, Delete
+  - Bulk status updates
+  - Review statistics dashboard
+  - Automatic product rating calculation from approved reviews
+  - Rating distribution visualization
+  - Verified purchase badges
+  - Helpful/Not Helpful voting system
+  - Admin notes and moderation tracking
 
 #### Categories Management
 - **Hierarchical Categories**: 
@@ -480,8 +493,42 @@ npm run build
     - **Downloads**: Datasheets, manuals, documentation (PDF, ZIP, etc.)
     - **FAQs**: Expandable FAQ section
     - **Warranty & Service**: Warranty coverage and support information
+    - **Reviews**: Product review and rating system
   - Related products section
   - Trust badges (Warranty, Delivery, Support)
+
+- **Product Review & Rating System**:
+  - **Public Review Submission** (No login required):
+    - Guest users can submit reviews with name and email
+    - Authenticated users automatically attributed
+    - 5-star rating system with half-star support
+    - Review title and detailed comment
+    - All reviews start with "pending" status
+    - Form validation and error handling
+    - Success notifications after submission
+  - **Review Display**:
+    - Overall rating summary with star visualization
+    - Total review count and average rating
+    - Rating distribution bar chart (5-star to 1-star breakdown)
+    - Percentage breakdown per rating level
+    - Only approved reviews displayed to public
+    - Pagination support for large review lists
+    - Sorting options (Most Recent, Highest Rated, Lowest Rated, Most Helpful)
+    - Filter by rating (All, 5-star, 4-star, etc.)
+  - **Review Cards**:
+    - Reviewer name and submission date
+    - Star rating visualization
+    - Review title and comment
+    - Verified purchase badge (if applicable)
+    - Helpful voting buttons (upvote/downvote)
+    - Vote count display
+    - Responsive card layout
+  - **Rating Statistics**:
+    - Average rating with decimal precision
+    - Total review count
+    - Rating distribution percentages
+    - Visual progress bars for each rating level
+    - Real-time updates after admin approval
 
 #### Services Display
 - **Services Listing**: Grid view of all published services
@@ -758,6 +805,13 @@ All admin endpoints require authentication via Bearer token.
 - `PUT /api/v1/products/{id}` - Update product (requires `manage-products` permission)
 - `DELETE /api/v1/products/{id}` - Delete product (requires `manage-products` permission)
 
+**Product Review Management (Admin):**
+- `GET /api/v1/products/reviews/all` - List all reviews with filtering, sorting, search (requires `manage-products` permission)
+- `PUT /api/v1/products/{product}/reviews/{review}/approve` - Approve review (requires `manage-products` permission)
+- `PUT /api/v1/products/{product}/reviews/{review}/reject` - Reject review (requires `manage-products` permission)
+- `PUT /api/v1/products/{product}/reviews/{review}` - Update review (requires `manage-products` permission)
+- `DELETE /api/v1/products/{product}/reviews/{review}` - Delete review (requires `manage-products` permission)
+
 **Category Management:**
 - `GET /api/v1/categories` - List categories (supports filtering by type, parent_id, published)
 - `POST /api/v1/categories` - Create category (requires `manage-products` permission)
@@ -836,9 +890,15 @@ All admin endpoints require authentication via Bearer token.
 - `GET /api/openapi/pages/{slug}` - Get page by slug (for public page viewing)
 - `GET /api/openapi/services` - List published services
 - `GET /api/openapi/services/{slug}` - Get service by slug
-- `GET /api/openapi/products` - List published products (supports category filter, search, sorting)
-- `GET /api/openapi/products/{slug}` - Get product by slug (includes categories, tags, specifications, downloads)
+- `GET /api/openapi/products` - List published products (supports category filter, brand filter, availability filter, rating filter, search, sorting)
+- `GET /api/openapi/products/{slug}` - Get product by slug (includes categories, tags, specifications, downloads, rating, review count)
 - `GET /api/openapi/categories` - List categories (supports type filter, pagination)
+
+**Product Reviews (Public):**
+- `GET /api/openapi/products/{product}/reviews` - List approved reviews for a product (supports pagination, filtering by rating, sorting)
+- `POST /api/openapi/products/{product}/reviews` - Submit a review (no authentication required, guest submissions allowed)
+- `GET /api/openapi/products/{product}/reviews/stats` - Get review statistics (average rating, total count, rating distribution)
+- `POST /api/openapi/products/{product}/reviews/{review}/helpful` - Mark review as helpful/not helpful (no authentication required)
 - `GET /api/openapi/blog` - List published blog posts (supports search, category filter, tag filter, sorting, pagination)
 - `GET /api/openapi/blog/{slug}` - Get blog post by slug (includes author, categories, tags, auto-increments views)
 - `GET /api/openapi/blog/categories` - List published blog categories
@@ -975,6 +1035,9 @@ public/
 - File uploads are stored in `public/uploads/{folder}/` for easy access
 - Dashboard includes AI-powered insights and real-time analytics
 - All charts use Chart.js for modern, interactive visualizations
+- Product reviews support guest submissions with automatic spam protection
+- Product ratings are automatically calculated from approved reviews
+- Review moderation system with approve/reject workflow
 
 ## 🛠️ Development
 
