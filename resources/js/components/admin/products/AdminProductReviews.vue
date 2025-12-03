@@ -303,9 +303,9 @@ export default {
                 }
 
                 // Get all reviews from all products
+                // Axios interceptor automatically adds Authorization header
                 const response = await this.$axios.get('/api/v1/products/reviews/all', {
-                    params,
-                    headers: this.getAuthHeaders()
+                    params
                 });
 
                 this.reviews = response.data.data || [];
@@ -335,10 +335,9 @@ export default {
         async approveReview(review) {
             try {
                 this.processing = true;
+                // Axios interceptor automatically adds Authorization header
                 await this.$axios.put(
-                    `/api/v1/products/${review.product_id}/reviews/${review.id}/approve`,
-                    {},
-                    { headers: this.getAuthHeaders() }
+                    `/api/v1/products/${review.product_id}/reviews/${review.id}/approve`
                 );
                 
                 this.$toast.success('Review approved successfully');
@@ -353,10 +352,9 @@ export default {
         async rejectReview(review) {
             try {
                 this.processing = true;
+                // Axios interceptor automatically adds Authorization header
                 await this.$axios.put(
-                    `/api/v1/products/${review.product_id}/reviews/${review.id}/reject`,
-                    {},
-                    { headers: this.getAuthHeaders() }
+                    `/api/v1/products/${review.product_id}/reviews/${review.id}/reject`
                 );
                 
                 this.$toast.success('Review rejected successfully');
@@ -377,9 +375,9 @@ export default {
 
             try {
                 this.processing = true;
+                // Axios interceptor automatically adds Authorization header
                 await this.$axios.delete(
-                    `/api/v1/products/${this.reviewToDelete.product_id}/reviews/${this.reviewToDelete.id}`,
-                    { headers: this.getAuthHeaders() }
+                    `/api/v1/products/${this.reviewToDelete.product_id}/reviews/${this.reviewToDelete.id}`
                 );
                 
                 this.$toast.success('Review deleted successfully');
