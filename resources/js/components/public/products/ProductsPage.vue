@@ -36,48 +36,64 @@
 
         <!-- Main Content -->
         <section class="pb-12 bg-grey-lighten-5 min-vh-100">
-            <v-container>
-                <!-- Filter Bar Component -->
-                <FilterBar :categories="categories" :active-category="activeCategory" :search-query="searchQuery"
-                    :sort-by="sortBy" :sort-options="sortOptions" :sort-by-label="sortByLabel"
-                    :has-active-filters="hasActiveFilters" :active-filters-count="activeFiltersCount"
-                    :comparison-count="comparisonProducts.length" :results-count="filteredProducts.length"
-                    @update:active-category="setActiveCategory" @update:search-query="setSearchQuery"
-                    @update:sort-by="setSortBy" @clear-filters="clearFilters" @open-comparison="openComparison" />
+            <v-container fluid>
+                <v-row class="products-layout">
+                    <!-- Left Sidebar - Filter Bar -->
+                    <v-col cols="12" lg="3" xl="2" class="filter-sidebar">
+                        <FilterBar :categories="categories" :active-category="activeCategory"
+                            :search-query="searchQuery" :sort-by="sortBy" :sort-options="sortOptions"
+                            :sort-by-label="sortByLabel" :has-active-filters="hasActiveFilters"
+                            :active-filters-count="activeFiltersCount" :comparison-count="comparisonProducts.length"
+                            :results-count="advancedFilteredProducts.length" :price-range="priceRange"
+                            :availability="availability" :brands="availableBrands" :selected-brands="selectedBrands"
+                            :min-rating="minRating" :features="availableFeatures" :selected-features="selectedFeatures"
+                            :discount="discount" @update:active-category="setActiveCategory"
+                            @update:search-query="setSearchQuery" @update:sort-by="setSortBy"
+                            @update:price-range="setPriceRange" @update:availability="setAvailability"
+                            @update:brands="setSelectedBrands" @update:min-rating="setMinRating"
+                            @update:features="setSelectedFeatures" @update:discount="setDiscount"
+                            @clear-filters="clearAllFilters" @open-comparison="openComparison" />
+                    </v-col>
 
-                <!-- Loading State -->
-                <div v-if="loading" class="text-center py-16">
-                    <v-progress-circular indeterminate color="primary" size="64" />
-                    <p class="text-body-1 text-medium-emphasis mt-4">Loading products...</p>
-                </div>
+                    <!-- Right Content - Products -->
+                    <v-col cols="12" lg="9" xl="10" class="products-content">
+                        <!-- Loading State -->
+                        <div v-if="loading" class="text-center py-16">
+                            <v-progress-circular indeterminate color="primary" size="64" />
+                            <p class="text-body-1 text-medium-emphasis mt-4">Loading products...</p>
+                        </div>
 
-                <!-- Empty State -->
-                <div v-else-if="filteredProducts.length === 0" class="text-center py-16">
-                    <v-icon icon="mdi-package-variant" size="64" color="grey-lighten-1" class="mb-4" />
-                    <h3 class="text-h6 font-weight-bold text-grey-darken-2 mb-2">No products found</h3>
-                    <p class="text-body-2 text-medium-emphasis mb-6">
-                        Try adjusting your filters or search terms.
-                    </p>
-                    <v-btn variant="outlined" color="primary" @click="clearFilters">
-                        Clear Filters
-                    </v-btn>
-                </div>
+                        <!-- Empty State -->
+                        <div v-else-if="advancedFilteredProducts.length === 0" class="text-center py-16">
+                            <v-icon icon="mdi-package-variant" size="64" color="grey-lighten-1" class="mb-4" />
+                            <h3 class="text-h6 font-weight-bold text-grey-darken-2 mb-2">No products found</h3>
+                            <p class="text-body-2 text-medium-emphasis mb-6">
+                                Try adjusting your filters or search terms.
+                            </p>
+                            <v-btn variant="outlined" color="primary" @click="clearAllFilters">
+                                Clear Filters
+                            </v-btn>
+                        </div>
 
-                <!-- Products Grid -->
-                <v-row v-else>
-                    <v-col v-for="product in displayedProducts" :key="product.id" cols="12" sm="6" lg="4" xl="3">
-                        <ProductCard :product="product" :comparison-disabled="!canAddMore && !isInComparison(product)"
-                            @toggle-comparison="handleToggleComparison" />
+                        <!-- Products Grid -->
+                        <v-row v-else>
+                            <v-col v-for="product in displayedProducts" :key="product.id" cols="12" sm="6" xl="4"
+                                xxl="3">
+                                <ProductCard :product="product"
+                                    :comparison-disabled="!canAddMore && !isInComparison(product)"
+                                    @toggle-comparison="handleToggleComparison" />
+                            </v-col>
+                        </v-row>
+
+                        <!-- Load More Section (if needed) -->
+                        <div v-if="displayedProducts.length > 0 && hasMoreProducts" class="text-center mt-12">
+                            <v-btn variant="outlined" color="primary" size="large" rounded="pill"
+                                class="px-10 font-weight-bold" @click="loadMore" :loading="loadingMore">
+                                Load More Products
+                            </v-btn>
+                        </div>
                     </v-col>
                 </v-row>
-
-                <!-- Load More Section (if needed) -->
-                <div v-if="displayedProducts.length > 0 && hasMoreProducts" class="text-center mt-12">
-                    <v-btn variant="outlined" color="primary" size="large" rounded="pill" class="px-10 font-weight-bold"
-                        @click="loadMore" :loading="loadingMore">
-                        Load More Products
-                    </v-btn>
-                </div>
             </v-container>
         </section>
 
@@ -134,20 +150,131 @@ const {
 const displayedCount = ref(PRODUCTS_PER_PAGE);
 const loadingMore = ref(false);
 
+// Advanced filter states
+const priceRange = ref([0, 10000]);
+const availability = ref([]);
+const selectedBrands = ref([]);
+const minRating = ref(0);
+const selectedFeatures = ref([]);
+const discount = ref(null);
+
+// Available filter options
+const availableBrands = computed(() => {
+    // Extract unique brands from products
+    const brandsSet = new Set();
+    products.value.forEach(product => {
+        if (product.brand) {
+            brandsSet.add(product.brand);
+        }
+    });
+    return Array.from(brandsSet).sort();
+});
+
+const availableFeatures = computed(() => {
+    // Define common product features
+    return [
+        { value: 'wireless', label: 'Wireless', icon: 'mdi-wifi' },
+        { value: 'waterproof', label: 'Waterproof', icon: 'mdi-water' },
+        { value: 'bluetooth', label: 'Bluetooth', icon: 'mdi-bluetooth' },
+        { value: 'rechargeable', label: 'Rechargeable', icon: 'mdi-battery-charging' },
+        { value: 'warranty', label: 'Warranty', icon: 'mdi-shield-check' },
+        { value: 'eco_friendly', label: 'Eco-Friendly', icon: 'mdi-leaf' }
+    ];
+});
+
 // Computed properties
 const comparisonSpecs = computed(() => {
     return getComparisonSpecs();
 });
 
+// Apply advanced filters to filteredProducts
+const advancedFilteredProducts = computed(() => {
+    let filtered = [...filteredProducts.value];
+
+    // Price range filter
+    if (priceRange.value[0] > 0 || priceRange.value[1] < 10000) {
+        filtered = filtered.filter(product => {
+            const price = parseFloat(product.price) || 0;
+            return price >= priceRange.value[0] && price <= priceRange.value[1];
+        });
+    }
+
+    // Availability filter
+    if (availability.value.length > 0) {
+        filtered = filtered.filter(product => {
+            return availability.value.includes(product.availability);
+        });
+    }
+
+    // Brand filter
+    if (selectedBrands.value.length > 0) {
+        filtered = filtered.filter(product => {
+            return selectedBrands.value.includes(product.brand);
+        });
+    }
+
+    // Rating filter
+    if (minRating.value > 0) {
+        filtered = filtered.filter(product => {
+            const rating = parseFloat(product.rating) || 0;
+            return rating >= minRating.value;
+        });
+    }
+
+    // Features filter
+    if (selectedFeatures.value.length > 0) {
+        filtered = filtered.filter(product => {
+            if (!product.features || !Array.isArray(product.features)) return false;
+            return selectedFeatures.value.some(feature => product.features.includes(feature));
+        });
+    }
+
+    // Discount filter
+    if (discount.value) {
+        filtered = filtered.filter(product => {
+            const discountPercent = parseFloat(product.discount_percent) || 0;
+            if (discount.value === 'any') return discountPercent > 0;
+            return discountPercent >= parseFloat(discount.value);
+        });
+    }
+
+    return filtered;
+});
+
 // Display only the first N products from filtered results
 const displayedProducts = computed(() => {
-    return filteredProducts.value.slice(0, displayedCount.value);
+    return advancedFilteredProducts.value.slice(0, displayedCount.value);
 });
 
 // Check if there are more products to load
 const hasMoreProducts = computed(() => {
-    return filteredProducts.value.length > displayedCount.value;
+    return advancedFilteredProducts.value.length > displayedCount.value;
 });
+
+// Advanced filter setter methods
+const setPriceRange = (range) => {
+    priceRange.value = range;
+};
+
+const setAvailability = (availabilityValue) => {
+    availability.value = availabilityValue;
+};
+
+const setSelectedBrands = (brands) => {
+    selectedBrands.value = brands;
+};
+
+const setMinRating = (rating) => {
+    minRating.value = rating;
+};
+
+const setSelectedFeatures = (features) => {
+    selectedFeatures.value = features;
+};
+
+const setDiscount = (discountValue) => {
+    discount.value = discountValue;
+};
 
 // Methods
 const handleToggleComparison = (product) => {
@@ -168,10 +295,21 @@ const loadMore = () => {
     }, 200);
 };
 
+// Enhanced clear filters function
+const clearAllFilters = () => {
+    clearFilters(); // Clear basic filters
+    priceRange.value = [0, 10000];
+    availability.value = [];
+    selectedBrands.value = [];
+    minRating.value = 0;
+    selectedFeatures.value = [];
+    discount.value = null;
+};
+
 // Reset pagination when filters change
-watch([activeCategory, searchQuery, sortBy], () => {
+watch([activeCategory, searchQuery, sortBy, priceRange, availability, selectedBrands, minRating, selectedFeatures, discount], () => {
     displayedCount.value = PRODUCTS_PER_PAGE;
-});
+}, { deep: true });
 
 // Lifecycle hooks
 onMounted(async () => {
@@ -187,9 +325,58 @@ onMounted(async () => {
     background: #f8fafc;
 }
 
+/* Products Layout */
+.products-layout {
+    align-items: flex-start;
+}
+
+.filter-sidebar {
+    position: sticky;
+    top: 80px;
+    align-self: flex-start;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+    padding-right: 16px;
+}
+
+.filter-sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.filter-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.filter-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.filter-sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.products-content {
+    padding-left: 24px;
+}
+
 /* Hero section styles moved to app.css */
 
 /* Responsive Styles */
+@media (max-width: 1280px) {
+    .filter-sidebar {
+        position: relative;
+        top: 0;
+        max-height: none;
+        overflow-y: visible;
+        padding-right: 12px;
+    }
+
+    .products-content {
+        padding-left: 12px;
+    }
+}
+
 @media (max-width: 960px) {
     .page-hero {
         min-height: 400px !important;

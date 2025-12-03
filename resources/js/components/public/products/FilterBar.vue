@@ -22,8 +22,7 @@
                         {{ activeFiltersCount }} active
                     </v-chip>
                     <v-btn variant="text" color="grey-darken-1" size="small" prepend-icon="mdi-close-circle"
-                        class="text-capitalize clear-btn" :disabled="!hasActiveFilters"
-                        @click="$emit('clear-filters')">
+                        class="text-capitalize clear-btn" :disabled="!hasActiveFilters" @click="$emit('clear-filters')">
                         Clear filters
                     </v-btn>
                 </div>
@@ -95,7 +94,10 @@
                 <div class="category-heading">
                     <div>
                         <span class="eyebrow">Categories</span>
-                        <div class="subcopy">Swipe through the full catalog</div>
+                        <div class="subcopy">
+                            <v-icon icon="mdi-gesture-swipe-horizontal" size="12" class="mr-1" />
+                            Scroll to explore
+                        </div>
                     </div>
                     <v-chip v-if="hasActiveFilters" size="x-small" color="primary" variant="tonal"
                         class="d-none d-sm-inline-flex">
@@ -103,27 +105,161 @@
                     </v-chip>
                 </div>
                 <div class="category-filter-wrapper">
-                    <div class="category-filter d-flex align-center overflow-x-auto w-100 pb-1 gap-2">
+                    <!-- Scroll indicators -->
+                    <div v-if="showLeftArrow" class="scroll-indicator left-indicator" @click="scrollCategories('left')">
+                        <v-icon icon="mdi-chevron-left" color="primary" size="small" />
+                    </div>
+                    <div v-if="showRightArrow" class="scroll-indicator right-indicator"
+                        @click="scrollCategories('right')">
+                        <v-icon icon="mdi-chevron-right" color="primary" size="small" />
+                    </div>
+
+                    <div ref="categoryScroll" class="category-filter" @scroll="checkScroll">
                         <v-btn v-for="category in categories" :key="category.id" variant="flat"
                             :color="activeCategory === category.id ? 'primary' : 'grey-lighten-3'"
-                            class="category-btn font-weight-bold text-capitalize rounded-pill flex-shrink-0"
-                            :class="{
+                            class="category-btn font-weight-bold text-capitalize rounded-pill flex-shrink-0" :class="{
                                 'category-btn-active': activeCategory === category.id,
                                 'category-btn-inactive': activeCategory !== category.id
-                            }" size="small" density="comfortable"
-                            @click="$emit('update:activeCategory', category.id)" :aria-pressed="activeCategory === category.id">
+                            }" size="small" density="comfortable" @click="$emit('update:activeCategory', category.id)"
+                            :aria-pressed="activeCategory === category.id">
                             <v-icon v-if="category.icon" :icon="category.icon" size="14" class="mr-1" />
                             <span class="category-text">{{ category.name }}</span>
                         </v-btn>
                     </div>
                 </div>
             </div>
+
+            <!-- Advanced Filters Section -->
+            <div class="advanced-filters-block">
+                <div class="filter-section-header">
+                    <span class="eyebrow">Advanced Filters</span>
+                    <v-btn variant="text" size="x-small" color="primary" class="text-capitalize"
+                        @click="toggleAdvancedFilters">
+                        {{ showAdvancedFilters ? 'Hide' : 'Show' }}
+                        <v-icon :icon="showAdvancedFilters ? 'mdi-chevron-up' : 'mdi-chevron-down'" size="small"
+                            class="ml-1" />
+                    </v-btn>
+                </div>
+
+                <v-expand-transition>
+                    <div v-show="showAdvancedFilters" class="filters-content">
+                        <!-- Price Range Filter -->
+                        <div class="filter-item">
+                            <div class="filter-item-header">
+                                <v-icon icon="mdi-currency-usd" size="18" color="primary" class="mr-2" />
+                                <span class="filter-label">Price Range</span>
+                            </div>
+                            <div class="price-inputs">
+                                <v-text-field v-model="localPriceRange[0]" type="number" density="compact"
+                                    variant="outlined" label="Min" prefix="$" hide-details class="price-field"
+                                    @update:model-value="handlePriceChange" />
+                                <span class="price-separator">—</span>
+                                <v-text-field v-model="localPriceRange[1]" type="number" density="compact"
+                                    variant="outlined" label="Max" prefix="$" hide-details class="price-field"
+                                    @update:model-value="handlePriceChange" />
+                            </div>
+                            <v-range-slider v-model="localPriceRange" :min="0" :max="10000" :step="50" color="primary"
+                                class="mt-4" thumb-label="always" hide-details @update:model-value="handlePriceChange">
+                                <template #thumb-label="{ modelValue }">
+                                    ${{ modelValue }}
+                                </template>
+                            </v-range-slider>
+                        </div>
+
+                        <!-- Availability Filter -->
+                        <div class="filter-item">
+                            <div class="filter-item-header">
+                                <v-icon icon="mdi-package-variant-closed" size="18" color="primary" class="mr-2" />
+                                <span class="filter-label">Availability</span>
+                            </div>
+                            <v-chip-group v-model="localAvailability" column multiple
+                                @update:model-value="$emit('update:availability', localAvailability)">
+                                <v-chip v-for="option in availabilityOptions" :key="option.value" :value="option.value"
+                                    filter variant="outlined" color="primary" size="small">
+                                    <v-icon :icon="option.icon" size="14" class="mr-1" />
+                                    {{ option.label }}
+                                </v-chip>
+                            </v-chip-group>
+                        </div>
+
+                        <!-- Brand Filter -->
+                        <div class="filter-item">
+                            <div class="filter-item-header">
+                                <v-icon icon="mdi-tag-multiple" size="18" color="primary" class="mr-2" />
+                                <span class="filter-label">Brand</span>
+                            </div>
+                            <v-select v-model="localBrands" :items="brands" multiple chips closable-chips
+                                density="compact" variant="outlined" placeholder="Select brands" hide-details
+                                class="brand-select" @update:model-value="$emit('update:brands', localBrands)">
+                                <template #chip="{ item, props: chipProps }">
+                                    <v-chip v-bind="chipProps" size="small" color="primary" variant="flat">
+                                        {{ item.title }}
+                                    </v-chip>
+                                </template>
+                            </v-select>
+                        </div>
+
+                        <!-- Rating Filter -->
+                        <div class="filter-item">
+                            <div class="filter-item-header">
+                                <v-icon icon="mdi-star" size="18" color="primary" class="mr-2" />
+                                <span class="filter-label">Minimum Rating</span>
+                            </div>
+                            <v-chip-group v-model="localMinRating" mandatory
+                                @update:model-value="$emit('update:minRating', localMinRating)">
+                                <v-chip v-for="rating in [5, 4, 3, 2, 1]" :key="rating" :value="rating" filter
+                                    variant="outlined" color="primary" size="small">
+                                    {{ rating }}
+                                    <v-icon icon="mdi-star" size="12" class="ml-1" color="amber" />
+                                    & up
+                                </v-chip>
+                            </v-chip-group>
+                        </div>
+
+                        <!-- Features Filter -->
+                        <div class="filter-item">
+                            <div class="filter-item-header">
+                                <v-icon icon="mdi-feature-search" size="18" color="primary" class="mr-2" />
+                                <span class="filter-label">Features</span>
+                            </div>
+                            <div class="features-grid">
+                                <v-checkbox v-for="feature in features" :key="feature.value"
+                                    :model-value="localFeatures.includes(feature.value)" :label="feature.label"
+                                    :value="feature.value" density="compact" hide-details color="primary"
+                                    class="feature-checkbox" @update:model-value="toggleFeature(feature.value)">
+                                    <template #label>
+                                        <div class="d-flex align-center">
+                                            <v-icon :icon="feature.icon" size="14" class="mr-1" />
+                                            <span class="text-body-2">{{ feature.label }}</span>
+                                        </div>
+                                    </template>
+                                </v-checkbox>
+                            </div>
+                        </div>
+
+                        <!-- Discount Filter -->
+                        <div class="filter-item">
+                            <div class="filter-item-header">
+                                <v-icon icon="mdi-sale" size="18" color="primary" class="mr-2" />
+                                <span class="filter-label">Discounts & Offers</span>
+                            </div>
+                            <v-chip-group v-model="localDiscount"
+                                @update:model-value="$emit('update:discount', localDiscount)">
+                                <v-chip v-for="option in discountOptions" :key="option.value" :value="option.value"
+                                    filter variant="outlined" color="primary" size="small">
+                                    {{ option.label }}
+                                </v-chip>
+                            </v-chip-group>
+                        </div>
+                    </div>
+                </v-expand-transition>
+            </div>
         </v-card>
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, watch } from 'vue';
 import { debounce } from '../../../utils/debounce';
 
 const props = defineProps({
@@ -166,6 +302,38 @@ const props = defineProps({
     resultsCount: {
         type: Number,
         default: 0
+    },
+    priceRange: {
+        type: Array,
+        default: () => [0, 10000]
+    },
+    availability: {
+        type: Array,
+        default: () => []
+    },
+    brands: {
+        type: Array,
+        default: () => []
+    },
+    selectedBrands: {
+        type: Array,
+        default: () => []
+    },
+    minRating: {
+        type: Number,
+        default: 0
+    },
+    features: {
+        type: Array,
+        default: () => []
+    },
+    selectedFeatures: {
+        type: Array,
+        default: () => []
+    },
+    discount: {
+        type: String,
+        default: null
     }
 });
 
@@ -173,12 +341,76 @@ const emit = defineEmits([
     'update:activeCategory',
     'update:searchQuery',
     'update:sortBy',
+    'update:priceRange',
+    'update:availability',
+    'update:brands',
+    'update:minRating',
+    'update:features',
+    'update:discount',
     'clear-filters',
     'open-comparison'
 ]);
 
 // Sticky filter on scroll
 const isSticky = ref(false);
+
+// Advanced filters state
+const showAdvancedFilters = ref(true);
+
+// Local filter states
+const localPriceRange = ref([...props.priceRange]);
+const localAvailability = ref([...props.availability]);
+const localBrands = ref([...props.selectedBrands]);
+const localMinRating = ref(props.minRating);
+const localFeatures = ref([...props.selectedFeatures]);
+const localDiscount = ref(props.discount);
+
+// Filter options
+const availabilityOptions = [
+    { value: 'in_stock', label: 'In Stock', icon: 'mdi-check-circle' },
+    { value: 'out_of_stock', label: 'Out of Stock', icon: 'mdi-close-circle' },
+    { value: 'pre_order', label: 'Pre-Order', icon: 'mdi-clock-outline' },
+    { value: 'coming_soon', label: 'Coming Soon', icon: 'mdi-new-box' }
+];
+
+const discountOptions = [
+    { value: 'any', label: 'Any Discount' },
+    { value: '10', label: '10% or more' },
+    { value: '25', label: '25% or more' },
+    { value: '50', label: '50% or more' }
+];
+
+// Watch for prop changes and update local states
+watch(() => props.priceRange, (newVal) => {
+    localPriceRange.value = [...newVal];
+}, { deep: true });
+
+watch(() => props.availability, (newVal) => {
+    localAvailability.value = [...newVal];
+}, { deep: true });
+
+watch(() => props.selectedBrands, (newVal) => {
+    localBrands.value = [...newVal];
+}, { deep: true });
+
+watch(() => props.minRating, (newVal) => {
+    localMinRating.value = newVal;
+});
+
+watch(() => props.selectedFeatures, (newVal) => {
+    localFeatures.value = [...newVal];
+}, { deep: true });
+
+watch(() => props.discount, (newVal) => {
+    localDiscount.value = newVal;
+});
+
+// Watch categories to update scroll indicators
+watch(() => props.categories, () => {
+    setTimeout(() => {
+        checkScroll();
+    }, 100);
+}, { deep: true });
 
 const handleScroll = () => {
     isSticky.value = window.scrollY > 200;
@@ -189,12 +421,70 @@ const handleSearchInput = debounce((value) => {
     emit('update:searchQuery', value || '');
 }, 300);
 
+// Debounced price change handler
+const handlePriceChange = debounce(() => {
+    emit('update:priceRange', localPriceRange.value);
+}, 500);
+
+// Toggle advanced filters
+const toggleAdvancedFilters = () => {
+    showAdvancedFilters.value = !showAdvancedFilters.value;
+};
+
+// Toggle feature selection
+const toggleFeature = (featureValue) => {
+    const index = localFeatures.value.indexOf(featureValue);
+    if (index > -1) {
+        localFeatures.value.splice(index, 1);
+    } else {
+        localFeatures.value.push(featureValue);
+    }
+    emit('update:features', localFeatures.value);
+};
+
+// Category scroll functionality
+const categoryScroll = ref(null);
+const showLeftArrow = ref(false);
+const showRightArrow = ref(false);
+
+const checkScroll = () => {
+    if (!categoryScroll.value) return;
+
+    const element = categoryScroll.value;
+    showLeftArrow.value = element.scrollLeft > 10;
+    showRightArrow.value = element.scrollLeft < (element.scrollWidth - element.clientWidth - 10);
+};
+
+const scrollCategories = (direction) => {
+    if (!categoryScroll.value) return;
+
+    const scrollAmount = 200;
+    const element = categoryScroll.value;
+
+    if (direction === 'left') {
+        element.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    } else {
+        element.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+
+    setTimeout(checkScroll, 100);
+};
+
 onMounted(() => {
     window.addEventListener('scroll', handleScroll);
+
+    // Check scroll indicators on mount and when categories change
+    setTimeout(() => {
+        checkScroll();
+    }, 100);
+
+    // Add resize listener to update scroll indicators
+    window.addEventListener('resize', checkScroll);
 });
 
 onUnmounted(() => {
     window.removeEventListener('scroll', handleScroll);
+    window.removeEventListener('resize', checkScroll);
 });
 </script>
 
@@ -214,9 +504,7 @@ onUnmounted(() => {
 }
 
 .filter-card.sticky-filter {
-    position: sticky;
-    top: 64px;
-    z-index: 90;
+    /* Sticky behavior handled by parent container in sidebar layout */
     box-shadow: 0 18px 45px -20px rgba(0, 0, 0, 0.25) !important;
     border-color: rgba(var(--v-theme-primary), 0.18);
 }
@@ -293,7 +581,7 @@ onUnmounted(() => {
 
 .filter-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr);
+    grid-template-columns: 1fr;
     gap: 12px;
     padding: 12px 0 4px;
 }
@@ -357,7 +645,8 @@ onUnmounted(() => {
     display: flex;
     align-items: center;
     gap: 6px;
-    justify-content: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .sort-btn {
@@ -451,47 +740,88 @@ onUnmounted(() => {
 .subcopy {
     font-size: 0.82rem;
     color: #6b7280;
+    display: flex;
+    align-items: center;
+    margin-top: 2px;
 }
 
 .category-filter-wrapper {
     position: relative;
     width: 100%;
+    padding: 0 4px;
 }
 
 .category-filter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     overflow-x: auto;
     overflow-y: hidden;
     width: 100%;
-    padding: 2px 0 2px;
+    padding: 8px 0 10px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(var(--v-theme-primary), 0.3) rgba(0, 0, 0, 0.05);
 }
 
-@media (min-width: 960px) {
-    .category-filter {
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-    }
+.category-filter::-webkit-scrollbar {
+    height: 6px;
+    display: block;
+}
 
-    .category-filter::-webkit-scrollbar {
+.category-filter::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 10px;
+    margin: 0 4px;
+}
+
+.category-filter::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, rgba(var(--v-theme-primary), 0.4), rgba(var(--v-theme-primary), 0.6));
+    border-radius: 10px;
+    transition: background 0.3s ease;
+}
+
+.category-filter::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(90deg, rgba(var(--v-theme-primary), 0.6), rgba(var(--v-theme-primary), 0.8));
+}
+
+/* Scroll Indicators */
+.scroll-indicator {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 2;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px);
+}
+
+.scroll-indicator:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.left-indicator {
+    left: -8px;
+}
+
+.right-indicator {
+    right: -8px;
+}
+
+@media (max-width: 1280px) {
+    .scroll-indicator {
         display: none;
-    }
-}
-
-@media (max-width: 959px) {
-    .category-filter {
-        scrollbar-width: thin;
-        scrollbar-color: rgba(0, 0, 0, 0.16) transparent;
-    }
-
-    .category-filter::-webkit-scrollbar {
-        height: 5px;
-        display: block;
-    }
-
-    .category-filter::-webkit-scrollbar-thumb {
-        background-color: rgba(0, 0, 0, 0.2);
-        border-radius: 8px;
     }
 }
 
@@ -526,11 +856,97 @@ onUnmounted(() => {
     box-shadow: 0 8px 18px -12px rgba(0, 0, 0, 0.15) !important;
 }
 
-@media (max-width: 1024px) {
-    .filter-grid {
-        grid-template-columns: 1fr;
-    }
+/* Advanced Filters Section */
+.advanced-filters-block {
+    border-top: 1px dashed rgba(0, 0, 0, 0.06);
+    margin-top: 12px;
+    padding-top: 12px;
+}
 
+.filter-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.filters-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 12px;
+}
+
+.filter-item {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    border-radius: 12px;
+    padding: 14px;
+    transition: all 0.25s ease;
+}
+
+.filter-item:hover {
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 6px 18px -12px rgba(0, 0, 0, 0.15);
+}
+
+.filter-item-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.filter-label {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #0f172a;
+}
+
+/* Price Range Filter */
+.price-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.price-field {
+    flex: 1;
+}
+
+.price-separator {
+    font-weight: 600;
+    color: #6b7280;
+    padding: 0 4px;
+}
+
+/* Brand Select */
+.brand-select :deep(.v-field) {
+    border-radius: 8px;
+}
+
+/* Features Grid */
+.features-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+}
+
+.feature-checkbox :deep(.v-label) {
+    font-size: 0.875rem;
+}
+
+/* Chip Groups */
+.filter-item :deep(.v-chip-group) {
+    gap: 8px;
+}
+
+.filter-item :deep(.v-chip) {
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+
+@media (max-width: 1024px) {
     .panel {
         padding: 9px;
     }
