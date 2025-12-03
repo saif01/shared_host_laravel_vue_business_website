@@ -200,10 +200,10 @@ class ProductReviewController extends Controller
             ->where('id', $reviewId)
             ->firstOrFail();
 
-        // Check permission
-        if (Auth::check() && Auth::user()->role === 'admin') {
-            // Admin can update any review
-        } elseif (!Auth::check() || Auth::id() !== $review->user_id) {
+        // Check permission: User must have manage-products permission OR be the review owner
+        $hasManagePermission = Auth::check() && Auth::user()->hasPermission('manage-products');
+        
+        if (!$hasManagePermission && (!Auth::check() || Auth::id() !== $review->user_id)) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -218,8 +218,8 @@ class ProductReviewController extends Controller
             $validated['rating'] = round($validated['rating'] * 2) / 2;
         }
 
-        // Reset to pending if content changed (except for admin)
-        if (!Auth::check() || Auth::user()->role !== 'admin') {
+        // Reset to pending if content changed (except for users with manage-products permission)
+        if (!$hasManagePermission) {
             if ($review->status === 'approved' && 
                 (isset($validated['rating']) || isset($validated['comment']))) {
                 $validated['status'] = 'pending';
@@ -243,10 +243,10 @@ class ProductReviewController extends Controller
             ->where('id', $reviewId)
             ->firstOrFail();
 
-        // Check permission
-        if (Auth::check() && Auth::user()->role === 'admin') {
-            // Admin can delete any review
-        } elseif (!Auth::check() || Auth::id() !== $review->user_id) {
+        // Check permission: User must have manage-products permission OR be the review owner
+        $hasManagePermission = Auth::check() && Auth::user()->hasPermission('manage-products');
+        
+        if (!$hasManagePermission && (!Auth::check() || Auth::id() !== $review->user_id)) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -265,12 +265,12 @@ class ProductReviewController extends Controller
 
     /**
      * Approve a review (Admin only)
+     * This endpoint is protected by the 'manage-products' permission in routes
      */
     public function approve($productId, $reviewId)
     {
-        if (!Auth::check() || Auth::user()->role !== 'admin') {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
+        // Permission check is handled by middleware in routes
+        // This method will only be reached if user has manage-products permission
 
         $review = ProductReview::where('product_id', $productId)
             ->where('id', $reviewId)
@@ -296,12 +296,12 @@ class ProductReviewController extends Controller
 
     /**
      * Reject a review (Admin only)
+     * This endpoint is protected by the 'manage-products' permission in routes
      */
     public function reject($productId, $reviewId)
     {
-        if (!Auth::check() || Auth::user()->role !== 'admin') {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
+        // Permission check is handled by middleware in routes
+        // This method will only be reached if user has manage-products permission
 
         $review = ProductReview::where('product_id', $productId)
             ->where('id', $reviewId)
